@@ -52,6 +52,8 @@ AkunambolMainWindow::AkunambolMainWindow()
 
     ui.setupUi(m_widget);
 
+    ui.pixmapLabel->setPixmap(KIcon("akunambol").pixmap(48,48));
+
     // a call to KXmlGuiWindow::setupGUI() populates the GUI
     // with actions, using KXMLGUI.
     // It also applies the saved mainwindow settings, if any, and ask the
