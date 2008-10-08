@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>akunambolview_base</class>
- <widget class="QWidget" name="akunambolview_base" >
+ <class>akunambolMainWindow</class>
+ <widget class="QWidget" name="akunambolMainWindow" >
   <property name="geometry" >
    <rect>
     <x>0</x>

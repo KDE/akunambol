@@ -43,12 +43,12 @@ int main(int argc, char **argv)
     KCmdLineArgs::addCmdLineOptions(options);
     KApplication app;
 
-    akunambol *widget = new akunambol;
+    AkunambolMainWindow *widget = new AkunambolMainWindow;
 
     // see if we are starting with session management
     if (app.isSessionRestored())
     {
-        RESTORE(akunambol);
+        //RESTORE(akunambol);
     }
     else
     {

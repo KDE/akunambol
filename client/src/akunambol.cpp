@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "akunambol.h"
-#include "akunambolview.h"
 #include "settings.h"
 
 #include <QtGui/QDropEvent>
@@ -35,16 +34,15 @@
 
 #include <KDE/KLocale>
 
-akunambol::akunambol()
-    : KXmlGuiWindow(),
-      m_view(new akunambolView(this)),
-      m_printer(0)
+AkunambolMainWindow::AkunambolMainWindow()
+    : KMainWindow(),
+      m_widget(new QWidget(this))
 {
     // accept dnd
     setAcceptDrops(true);
 
     // tell the KXmlGuiWindow that this is indeed the main widget
-    setCentralWidget(m_view);
+    setCentralWidget(m_widget);
 
     // then, setup our actions
     setupActions();
@@ -52,42 +50,29 @@ akunambol::akunambol()
     // add a status bar
     statusBar()->show();
 
+    ui.setupUi(m_widget);
+
     // a call to KXmlGuiWindow::setupGUI() populates the GUI
     // with actions, using KXMLGUI.
     // It also applies the saved mainwindow settings, if any, and ask the
     // mainwindow to automatically save settings if changed: window size,
     // toolbar position, icon size, etc.
-    setupGUI();
+    //setupGUI();
 }
 
-akunambol::~akunambol()
+AkunambolMainWindow::~AkunambolMainWindow()
 {
 }
 
-void akunambol::setupActions()
+void AkunambolMainWindow::setupActions()
 {
-    KStandardAction::openNew(this, SLOT(fileNew()), actionCollection());
+    /*KStandardAction::openNew(this, SLOT(fileNew()), actionCollection());
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
 
-    KStandardAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
-
-    // custom menu and menu item - the slot is in the class akunambolView
-    KAction *custom = new KAction(KIcon("colorize"), i18n("Swi&tch Colors"), this);
-    actionCollection()->addAction( QLatin1String("switch_action"), custom );
-    connect(custom, SIGNAL(triggered(bool)), m_view, SLOT(switchColors()));
+    KStandardAction::preferences(this, SLOT(optionsPreferences()), actionCollection());*/
 }
 
-void akunambol::fileNew()
-{
-    // this slot is called whenever the File->New menu is selected,
-    // the New shortcut is pressed (usually CTRL+N) or the New toolbar
-    // button is clicked
-
-    // create a new window
-    (new akunambol)->show();
-}
-
-void akunambol::optionsPreferences()
+void AkunambolMainWindow::optionsPreferences()
 {
     // The preference dialog is derived from prefs_base.ui
     //
@@ -97,13 +82,7 @@ void akunambol::optionsPreferences()
     if ( KConfigDialog::showDialog( "settings" ) )  {
         return;
     }
-    KConfigDialog *dialog = new KConfigDialog(this, "settings", Settings::self());
-    QWidget *generalSettingsDlg = new QWidget;
-    ui_prefs_base.setupUi(generalSettingsDlg);
-    dialog->addPage(generalSettingsDlg, i18n("General"), "package_setting");
-    connect(dialog, SIGNAL(settingsChanged(QString)), m_view, SLOT(settingsChanged()));
-    dialog->setAttribute( Qt::WA_DeleteOnClose );
-    dialog->show();
+
 }
 
 #include "akunambol.moc"

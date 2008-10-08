@@ -22,14 +22,9 @@
 #define AKUNAMBOL_H
 
 
-#include <kxmlguiwindow.h>
+#include <kmainwindow.h>
 
-#include "ui_prefs_base.h"
-
-class akunambolView;
-class QPrinter;
-class KToggleAction;
-class KUrl;
+#include "ui_akunambolMainWindow.h"
 
 /**
  * This class serves as the main window for akunambol.  It handles the
@@ -39,34 +34,29 @@ class KUrl;
  * @author Riccardo Iaconelli <riccardo@kde.org>
  * @version 0.1
  */
-class akunambol : public KXmlGuiWindow
+class AkunambolMainWindow : public KMainWindow
 {
     Q_OBJECT
 public:
     /**
      * Default Constructor
      */
-    akunambol();
+    AkunambolMainWindow();
 
     /**
      * Default Destructor
      */
-    virtual ~akunambol();
+    virtual ~AkunambolMainWindow();
 
 private slots:
-    void fileNew();
     void optionsPreferences();
 
 private:
     void setupActions();
 
 private:
-    Ui::prefs_base ui_prefs_base ;
-    akunambolView *m_view;
-
-    QPrinter   *m_printer;
-    KToggleAction *m_toolbarAction;
-    KToggleAction *m_statusbarAction;
+    Ui::akunambolMainWindow ui;
+    QWidget * m_widget;
 };
 
 #endif // _AKUNAMBOL_H_

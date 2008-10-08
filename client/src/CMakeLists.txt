@@ -1,10 +1,9 @@
 set(akunambol_SRCS
    akunambol.cpp
    main.cpp
-   akunambolview.cpp
  )
 
-kde4_add_ui_files(akunambol_SRCS akunambolview_base.ui prefs_base.ui)
+kde4_add_ui_files(akunambol_SRCS akunambolMainWindow.ui prefs_base.ui)
 
 kde4_add_kcfg_files(akunambol_SRCS settings.kcfgc )
 
