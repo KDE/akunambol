@@ -1,4 +1,6 @@
 
+// #include <QtGui>
+
 #include "config.h"
 #include "mainwindow.h"
 
@@ -9,7 +11,16 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     ui.setupUi(this);
     connect(ui.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui.actionConfigure_Akunambol, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
+
+//    resize(minimumSizeHint()); // This looks like a sensible default
+//    setIcons();
 }
+
+//void MainWindow::setIcons()
+//{
+//    ui.actionQuit->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
+//    ui.actionConfigure_Akunambol->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
+//}
 
 void MainWindow::launchConfigDialog()
 {

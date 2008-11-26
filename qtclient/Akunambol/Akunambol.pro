@@ -12,3 +12,4 @@ HEADERS += mainwindow.h \
     config.h
 FORMS += mainwindow.ui \
     config.ui
+RESOURCES += resource.qrc

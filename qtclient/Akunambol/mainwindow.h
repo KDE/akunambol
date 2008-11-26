@@ -20,6 +20,8 @@ private slots:
 private:
     void parseConfigDialog();
     void loadConfig();
+//    void setIcons();
+    
     Ui::MainWindowClass ui;
 
     Config *m_c;
