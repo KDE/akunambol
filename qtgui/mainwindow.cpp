@@ -3,6 +3,7 @@
 
 #include <QStyle>
 #include <QSettings>
+#include <QMessageBox>
 #include "config.h"
 #include "mainwindow.h"
 
@@ -13,15 +14,22 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     ui.setupUi(this);
     connect(ui.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui.actionConfigure_Akunambol, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
+    connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(launchAboutDialog()));
 
 //    resize(minimumSizeHint()); // This looks like a sensible default
     setIcons();
     loadConfig();
+    statusBar()->showMessage(tr("Configuration loaded."));
 }
 
 void MainWindow::setIcons()
 {
     ui.actionQuit->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
+}
+
+void MainWindow::launchAboutDialog()
+{
+    QMessageBox::about(this, tr("About Akunambol"), tr("this release will eat your babies :)"));
 }
 
 void MainWindow::launchConfigDialog()
@@ -57,8 +65,6 @@ void MainWindow::parseConfigDialog()
         m_user = m_c->user();
         m_password = m_c->password();
         writeConfig();
-    } else {
-        // Don't do anything?
     }
 }
 

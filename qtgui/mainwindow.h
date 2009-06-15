@@ -16,6 +16,7 @@ public:
 
 private slots:
     void launchConfigDialog();
+    void launchAboutDialog();
 
 private:
     void parseConfigDialog();
