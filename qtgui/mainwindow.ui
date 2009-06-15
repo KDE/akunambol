@@ -137,7 +137,7 @@ p, li { white-space: pre-wrap; }
     <string>&amp;Configure Akunambol</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+C</string>
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>
