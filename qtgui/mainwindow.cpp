@@ -1,6 +1,8 @@
 
 // #include <QtGui>
 
+#include <QStyle>
+#include <QSettings>
 #include "config.h"
 #include "mainwindow.h"
 
@@ -13,14 +15,14 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     connect(ui.actionConfigure_Akunambol, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
 
 //    resize(minimumSizeHint()); // This looks like a sensible default
-//    setIcons();
+    setIcons();
+    loadConfig();
 }
 
-//void MainWindow::setIcons()
-//{
-//    ui.actionQuit->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
-//    ui.actionConfigure_Akunambol->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
-//}
+void MainWindow::setIcons()
+{
+    ui.actionQuit->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
+}
 
 void MainWindow::launchConfigDialog()
 {
@@ -37,6 +39,16 @@ void MainWindow::launchConfigDialog()
 void MainWindow::loadConfig()
 {
     // TODO: Read config from disk
+    QSettings s("Funambol", "Akunambol");
+    m_user = s.value("user").toString();
+    m_password = s.value("password").toString(); // TODO decrypt?
+}
+
+void MainWindow::writeConfig()
+{
+    QSettings s("Funambol", "Akunambol");
+    s.setValue("user", m_user);
+    s.setValue("password", m_password); // TODO encrypt?
 }
 
 void MainWindow::parseConfigDialog()
@@ -44,6 +56,7 @@ void MainWindow::parseConfigDialog()
     if (m_c->result() == QDialog::Accepted) {
         m_user = m_c->user();
         m_password = m_c->password();
+        writeConfig();
     } else {
         // Don't do anything?
     }
