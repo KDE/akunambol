@@ -1,20 +1,36 @@
 project(akunabmol)
 
+# Search KDE packages
+find_package(KDE4 REQUIRED)
+find_package(Akonadi REQUIRED)
+find_package(KdepimLibs REQUIRED)
+
 # Search for Funambol
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
-find_package (Funambol REQUIRED)
+find_package(Funambol REQUIRED)
 
-# search packages used by KDE
-find_package (KDE4 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
-include(MacroOptionalAddSubdirectory)
 include(CheckIncludeFiles)
-include(FindKdepimLibs)
 
-#find_program(XSLTPROC_EXECUTABLE xsltproc)
-#macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" FALSE "" "Needed for building Akonadi resources. Recommended.")
+include_directories(${QT_INCLUDES} ${Funambol_INCLUDE_DIR})
 
-add_subdirectory(qtgui)
-#add_subdirectory(resource)
+set(akunambol_SRCS
+    qtgui/config.cpp
+    qtgui/main.cpp
+    qtgui/mainwindow.cpp
+)
+
+set(akunambol_RCCS qtgui/resource.qrc)
+
+kde4_add_ui_files(akunambol_SRCS qtgui/config.ui qtgui/mainwindow.ui)
+
+Qt4_add_resources(akunambol_SRCS ${akunambol_RCCS})
+
+kde4_add_executable(akunambol ${akunambol_SRCS})
+
+target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} )
+
+install(TARGETS akunambol DESTINATION ${BIN_INSTALL_DIR} )
+
 
