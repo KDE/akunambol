@@ -13,6 +13,9 @@ find_path(Funambol_INCLUDE_DIR
   NAMES funambol/common/client/SyncClient.h
 )
 
+# Hack?
+set(Funambol_INCLUDE_DIR ${Funambol_INCLUDE_DIR}/funambol/posix ${Funambol_INCLUDE_DIR}/funambol/common)
+
 # Finally the library itself
 find_library(Funambol_LIBRARY
   NAMES funambol

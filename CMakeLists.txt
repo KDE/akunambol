@@ -19,7 +19,8 @@ set(akunambol_SRCS
     qtgui/config.cpp
     qtgui/main.cpp
     qtgui/mainwindow.cpp
-)
+    syncsource/akonadisource.cpp
+    )
 
 set(akunambol_RCCS qtgui/resource.qrc)
 
@@ -29,8 +30,7 @@ Qt4_add_resources(akunambol_SRCS ${akunambol_RCCS})
 
 kde4_add_executable(akunambol ${akunambol_SRCS})
 
-target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} )
+target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY})
 
 install(TARGETS akunambol DESTINATION ${BIN_INSTALL_DIR} )
-
 
