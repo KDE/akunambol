@@ -2,12 +2,12 @@
 #ifndef AKONADISOURCE_H
 #define AKONADISOURCE_H
 
-#include <funambol/common/client/CacheSyncSource.h>
+#include <client/CacheSyncSource.h>
 
 class AkonadiSource : public CacheSyncSource
 {
 public:
-    AkonadiSource();
+    AkonadiSource(AbstractSyncSourceConfig *config);
 };
 
 #endif // AKONADISOURCE_H

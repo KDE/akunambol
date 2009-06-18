@@ -20,6 +20,7 @@ set(akunambol_SRCS
     qtgui/main.cpp
     qtgui/mainwindow.cpp
     syncsource/akonadisource.cpp
+    syncsource/sourcemanager.cpp
     )
 
 set(akunambol_RCCS qtgui/resource.qrc)

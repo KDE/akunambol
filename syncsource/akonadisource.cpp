@@ -1,5 +1,6 @@
 #include "akonadisource.h"
 
-AkonadiSource::AkonadiSource()
+AkonadiSource::AkonadiSource(AbstractSyncSourceConfig *config)
+    : CacheSyncSource("akonadi", config)
 {
 }
