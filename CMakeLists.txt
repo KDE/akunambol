@@ -13,7 +13,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 
-include_directories(${QT_INCLUDES} ${Funambol_INCLUDE_DIR})
+include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Funambol_INCLUDE_DIR})
 
 set(akunambol_SRCS
     qtgui/config.cpp

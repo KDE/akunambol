@@ -4,6 +4,9 @@
 #include <QStyle>
 #include <QSettings>
 #include <QMessageBox>
+
+#include "../syncsource/sourcemanager.h"
+
 #include "config.h"
 #include "mainwindow.h"
 
@@ -20,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     setIcons();
     loadConfig();
     statusBar()->showMessage(tr("Configuration loaded."));
+    SourceManager s;
 }
 
 void MainWindow::setIcons()
