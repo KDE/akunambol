@@ -1,5 +1,9 @@
 project(akunabmol)
 
+# Search for Funambol
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+find_package (Funambol REQUIRED)
+
 # search packages used by KDE
 find_package (KDE4 REQUIRED)
 include(KDE4Defaults)

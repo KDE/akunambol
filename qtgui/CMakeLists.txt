@@ -15,7 +15,7 @@ kde4_add_ui_files(akunambol_SRCS config.ui mainwindow.ui)
 
 #kde4_add_kcfg_files(akunambol_SRCS settings.kcfgc )
 
-Qt4_add_resources( akunambol_SRCS ${akunambol_RCCS})
+Qt4_add_resources(akunambol_SRCS ${akunambol_RCCS})
 
 kde4_add_executable(akunambol ${akunambol_SRCS})
 
