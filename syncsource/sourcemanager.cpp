@@ -1,6 +1,7 @@
 
 #include "sourcemanager.h"
 
+#include <QString>
 #include <KDebug>
 
 #include <base/adapter/PlatformAdapter.h>
@@ -29,6 +30,18 @@ SourceManager::SourceManager()
 SourceManager::~SourceManager()
 {
     delete m_conf;
+}
+
+DMTClientConfig* SourceManager::config()
+{
+    return m_conf;
+}
+
+void SourceManager::setData(QString username, QString password, QString url)
+{
+    m_conf->getAccessConfig().setUsername(username.toAscii());
+    m_conf->getAccessConfig().setPassword(password.toAscii());
+    m_conf->getAccessConfig().setSyncURL(url.toAscii());
 }
 
 void SourceManager::initConfig()
