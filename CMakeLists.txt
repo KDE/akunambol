@@ -43,6 +43,22 @@ target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY})
 
 install(TARGETS akunambol DESTINATION ${BIN_INSTALL_DIR} )
 
+## Akonadi retreiver test application
+
+set(akonadi_SRCS
+    akonadi/main.cpp
+    akonadi/akonadi-dialog.cpp
+    )
+
+kde4_add_ui_files(akonadi_SRCS akonadi/akonadi-dialog.ui)
+
+kde4_add_executable(akonadi-test ${akonadi_SRCS})
+
+target_link_libraries(akonadi-test ${KDE4_KDEUI_LIBS} ${Akonadi_LIBS})
+
+
+## Funambol SDK test application
+
 set(test_SRCS
     test/main.cpp
     test/dialog.cpp
