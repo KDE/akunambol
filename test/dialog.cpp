@@ -25,6 +25,7 @@ Dialog::~Dialog()
 
 void Dialog::sync()
 {
+    DMTClientConfig conf("Funambol/test");
     kDebug() << "perform sync";
     s->setData(ui->usernameLineEdit->text(), ui->passwordLineEdit->text(), ui->serverLineEdit->text());
     FileSyncSource f(ui->pathLineEdit->text().toAscii(), s->config()->getSyncSourceConfig("akonadi") );
