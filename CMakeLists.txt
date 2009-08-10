@@ -10,7 +10,7 @@ find_package(Akonadi REQUIRED)
 find_package(KdepimLibs REQUIRED)
 
 # Search for Funambol
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 find_package(Funambol REQUIRED)
 
 include(KDE4Defaults)

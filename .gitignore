@@ -5,3 +5,4 @@ build/
 .cproject
 Debug/
 *.o
+config.h
