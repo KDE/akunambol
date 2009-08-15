@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     setIcons();
     loadConfig();
     statusBar()->showMessage(tr("Configuration loaded."));
-    SourceManager s;
+//    SourceManager s;
 }
 
 void MainWindow::setIcons()

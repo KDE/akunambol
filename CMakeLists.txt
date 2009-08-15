@@ -17,12 +17,16 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 
-include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Funambol_INCLUDE_DIR})
+include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Akonadi_INCLUDES} ${Funambol_INCLUDE_DIR})
 
 set(syncsource_SRCS
-    syncsource/akonadisource.cpp
-    syncsource/sourcemanager.cpp
+	#    syncsource/akonadisource.cpp
+	#    syncsource/sourcemanager.cpp
     )
+
+set(akonadi_extractor_SRCS
+    akonadi/akonadiwalker.cpp
+)
 
 set(akunambol_SRCS
     qtgui/config.cpp
@@ -48,28 +52,40 @@ install(TARGETS akunambol DESTINATION ${BIN_INSTALL_DIR} )
 set(akonadi_SRCS
     akonadi/main.cpp
     akonadi/akonadi-dialog.cpp
+    ${akonadi_extractor_SRCS}
     )
+
+set_source_files_properties(${akonadi_SRCS} PROPRIETIES COMPILE_FLAGS -fexceptions)
 
 kde4_add_ui_files(akonadi_SRCS akonadi/akonadi-dialog.ui)
 
 kde4_add_executable(akonadi-test ${akonadi_SRCS})
 
-target_link_libraries(akonadi-test ${KDE4_KDEUI_LIBS} ${Akonadi_LIBS})
+target_link_libraries(akonadi-test
+    ${KDE4_KDEUI_LIBS}
+    ${Kdepimlibs_LIBS}
+    ${KDE4_KMIME_LIBS}
+    ${KDE4_AKONADI_KMIME_LIBS}
+    ${KDE4_KABC_LIBS}
+    ${KDE4_KPIMUTILS_LIBS}
+    ${KDE4_AKONADI_LIBS}
+    microblog
+)
 
 
 ## Funambol SDK test application
 
 set(test_SRCS
-    test/main.cpp
-    test/dialog.cpp
+	#    test/main.cpp
+	#    test/dialog.cpp
     ${syncsource_SRCS}
     )
 
-kde4_add_ui_files(test_SRCS test/dialog.ui)
+#kde4_add_ui_files(test_SRCS test/dialog.ui)
 
-kde4_add_executable(test-source ${test_SRCS})
+#kde4_add_executable(test-source ${test_SRCS})
 
-target_link_libraries(test-source ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY})
+#target_link_libraries(test-source ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY})
 
 
 
