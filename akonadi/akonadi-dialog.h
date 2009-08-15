@@ -27,6 +27,7 @@ class Dialog : public QDialog
     private Q_SLOTS:
         void init();
         void loadContactsFor(int id);
+        void displayContacts(int wa);
 
     private:
         void populateTable();
