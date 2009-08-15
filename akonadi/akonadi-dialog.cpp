@@ -2,6 +2,8 @@
 #include "ui_akonadi-dialog.h"
 #include "contacts.h"
 
+#include <QtGui>
+
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
@@ -22,9 +24,8 @@ Dialog::Dialog(QWidget *parent)
     ui->setupUi(this);
     
     c = new Contacts(this);
-//     initContacts();
-    
-//     fetchContactsCollections();
+    connect(c, SIGNAL(ready()), SLOT(init()));
+    connect(ui->tableWidget, SIGNAL(cellClicked(int, int)), SLOT(loadContactsFor(int)));
 }
 
 Dialog::~Dialog()
@@ -33,46 +34,31 @@ Dialog::~Dialog()
     delete c;
 }
 
-void Dialog::contactItemAdded( const Akonadi::Item &item )
+void Dialog::init()
 {
-/*    kDebug() << "WAAAAAAA";
-    if (item.hasPayload<KABC::Addressee>()) {
-        //kDebug() << item.id() << "item has payload ...";
-        KABC::Addressee a = item.payload<KABC::Addressee>();
-        if (!a.isEmpty()) {
-            const QString source = QString("Contact-%1").arg(item.id());
-            // Phone and related
-            QStringList phoneNumbers;
-            foreach (const KABC::PhoneNumber &pn, a.phoneNumbers()) {
-                const QString key = QString("Phone-%1").arg(pn.typeLabel());
-//                setData(source, key, a.phoneNumber(pn.type()).number());
-                phoneNumbers << a.phoneNumber(pn.type()).number();
-            }
-        }*/
-//     }
+    populateTable();
 }
 
-void Dialog::fetchContactCollectionsDone(KJob* job)
+void Dialog::populateTable()
 {
-    // called when the job fetching contact collections from Akonadi emits result()
-/*    if ( job->error() ) {
-        kDebug() << "Job Error:" << job->errorString();
-    } else {
-        CollectionFetchJob* cjob = static_cast<CollectionFetchJob*>( job );
-        int i = 0;
-        foreach( const Collection &collection, cjob->collections() ) {
-            if (collection.contentMimeTypes().contains("text/directory")) {
-                //kDebug() << "ContactCollection setting data:" << collection.name() << collection.url() << collection.contentMimeTypes();
-                i++;
-                //setData("ContactCollections", QString("ContactCollection-%1").arg(collection.id()), collection.name());
-            }
-        }
-        kDebug() << i << "Contact collections are in now";
-//         scheduleSourcesUpdated();
-    }*/
+    ui->tableWidget->setRowCount(c->collections().count());
+    ui->tableWidget->setColumnCount(2);
+    ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
+    QStringList headers;
+    headers << "ID" << "Name";
+    ui->tableWidget->setHorizontalHeaderLabels(headers);
+    
+    int i = 0;
+    foreach(Collection collection, c->collections()) {
+        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(QString::number(collection.id())));
+        ui->tableWidget->setItem(i, 1, new QTableWidgetItem(collection.name()));
+        i++;
+        kDebug() << "collection added: id" << collection.id();
+    }
 }
 
-void Dialog::wa()
+void Dialog::loadContactsFor(int id)
 {
-//     kDebug() << "WA";
+    kDebug() << ui->tableWidget->item(id, 0)->text().toInt();
 }
+

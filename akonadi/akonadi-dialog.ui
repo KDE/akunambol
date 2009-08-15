@@ -17,9 +17,15 @@
    <item row="0" column="0">
     <widget class="QTableWidget" name="tableWidget"/>
    </item>
+   <item row="1" column="0">
+    <widget class="QTableWidget" name="contactsTable"/>
+   </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
+ <slots>
+  <slot>loadContactsOfCollection(int)</slot>
+ </slots>
 </ui>

@@ -20,18 +20,18 @@ class Dialog : public QDialog
 {
     Q_OBJECT
 
-  public:
-      Dialog(QWidget *parent = 0);
-      ~Dialog();
+    public:
+        Dialog(QWidget *parent = 0);
+        ~Dialog();
+        
+    private Q_SLOTS:
+        void init();
+        void loadContactsFor(int id);
 
-  private slots:
-      void contactItemAdded(const Akonadi::Item & item);
-      void fetchContactCollectionsDone(KJob* job);
-      void wa();
-
-  private:
-      Contacts *c;
-      Ui::Dialog *ui;
+    private:
+        void populateTable();
+        Contacts *c;
+        Ui::Dialog *ui;
 };
 
 #endif // DIALOG_H
