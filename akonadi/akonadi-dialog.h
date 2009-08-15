@@ -4,6 +4,7 @@
 #include <QtGui/QDialog>
 
 class KJob;
+class Contacts;
 
 namespace Ui
 {
@@ -29,9 +30,7 @@ class Dialog : public QDialog
       void wa();
 
   private:
-      void initContacts();
-      void fetchContactsCollections();
-      Akonadi::Monitor *m_contactMonitor;
+      Contacts *c;
       Ui::Dialog *ui;
 };
 

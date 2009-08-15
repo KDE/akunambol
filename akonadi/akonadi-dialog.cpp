@@ -1,5 +1,6 @@
 #include "akonadi-dialog.h"
 #include "ui_akonadi-dialog.h"
+#include "contacts.h"
 
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/ItemFetchJob>
@@ -20,42 +21,21 @@ Dialog::Dialog(QWidget *parent)
 {
     ui->setupUi(this);
     
-    initContacts();
+    c = new Contacts(this);
+//     initContacts();
     
-    fetchContactsCollections();
+//     fetchContactsCollections();
 }
 
 Dialog::~Dialog()
 {
     delete ui;
-}
-
-void Dialog::initContacts()
-{
-    m_contactMonitor = new Monitor( this );
-    m_contactMonitor->setMimeTypeMonitored("text/directory");
-    m_contactMonitor->setCollectionMonitored(Collection::root(), false);
-    m_contactMonitor->itemFetchScope().fetchFullPayload();
-    connect(m_contactMonitor, SIGNAL(itemAdded(Akonadi::Item, Akonadi::Collection)),
-            SLOT(contactItemAdded(Akonadi::Item)) );
-//    connect(m_emailMonitor, SIGNAL(itemChanged(Akonadi::Item, QSet<QByteArray>)),
-//            SLOT(contactItemAdded(Akonadi::Item)) );
-    // remove the monitor on a source that's not used
-//    connect(this, SIGNAL(sourceRemoved(QString)), SLOT(stopMonitor(QString)));
-}
-
-void Dialog::fetchContactsCollections()
-{ 
-    int id = 2;
-    ItemFetchJob *fetch = new ItemFetchJob( Collection( id ), this );
-    m_contactMonitor->setCollectionMonitored(Collection(id), true);
-    fetch->fetchScope().fetchFullPayload();
-    connect( fetch, SIGNAL(result(KJob*)), SLOT(wa()) );
+    delete c;
 }
 
 void Dialog::contactItemAdded( const Akonadi::Item &item )
 {
-    kDebug() << "WAAAAAAA";
+/*    kDebug() << "WAAAAAAA";
     if (item.hasPayload<KABC::Addressee>()) {
         //kDebug() << item.id() << "item has payload ...";
         KABC::Addressee a = item.payload<KABC::Addressee>();
@@ -68,14 +48,14 @@ void Dialog::contactItemAdded( const Akonadi::Item &item )
 //                setData(source, key, a.phoneNumber(pn.type()).number());
                 phoneNumbers << a.phoneNumber(pn.type()).number();
             }
-        }
-    }
+        }*/
+//     }
 }
 
 void Dialog::fetchContactCollectionsDone(KJob* job)
 {
     // called when the job fetching contact collections from Akonadi emits result()
-    if ( job->error() ) {
+/*    if ( job->error() ) {
         kDebug() << "Job Error:" << job->errorString();
     } else {
         CollectionFetchJob* cjob = static_cast<CollectionFetchJob*>( job );
@@ -88,11 +68,11 @@ void Dialog::fetchContactCollectionsDone(KJob* job)
             }
         }
         kDebug() << i << "Contact collections are in now";
-        //scheduleSourcesUpdated();
-    }
+//         scheduleSourcesUpdated();
+    }*/
 }
 
 void Dialog::wa()
 {
-    kDebug() << "WA";
+//     kDebug() << "WA";
 }

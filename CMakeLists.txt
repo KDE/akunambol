@@ -52,6 +52,7 @@ install(TARGETS akunambol DESTINATION ${BIN_INSTALL_DIR} )
 set(akonadi_SRCS
     akonadi/main.cpp
     akonadi/akonadi-dialog.cpp
+    akonadi/contacts.cpp
     ${akonadi_extractor_SRCS}
     )
 
