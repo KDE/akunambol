@@ -17,7 +17,7 @@ int AkonadiSource::insertItem(SyncItem &item)
     }
 
     int ret = STC_COMMAND_FAILED;
-    Akonadi::Item *akItem = 0;
+    Akonadi::Item akItem;
     
     // Get data content.
     char* charData = (char*)item.getData();
@@ -32,4 +32,6 @@ int AkonadiSource::insertItem(SyncItem &item)
     // TODO Check if is an accepted mime type
     // JUst spit it out for the moment
     qDebug() << item.getDataType();
+    
+    
 }
