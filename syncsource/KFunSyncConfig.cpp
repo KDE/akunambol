@@ -38,6 +38,8 @@
 #include "spds/DefaultConfigFactory.h"
 #include "spds/SyncItem.h"
 
+#include <KDebug>
+
 #include "KFunSyncConfig.h"
 
 KFunSyncConfig *KFunSyncConfig::instance = NULL;
@@ -87,7 +89,7 @@ void KFunSyncConfig::dispose() {
  * - handle backward compatibility
  */
 void KFunSyncConfig::init() {
-
+    kDebug();
     // Read the configuration
     if (!read()) {
         // Config not found, generate a default one
@@ -119,11 +121,12 @@ bool KFunSyncConfig::read() {
     if (!open()) {
         return false;
     }
-
+    kDebug() << "before segfaulting";
     //
     // Read client-specific properties from the config
     //
     ManagementNode *node = dmt->readManagementNode(rootContext);
+    kDebug() << "We're segfaulted";
     if (node) {
         delete node;    node = NULL;
 

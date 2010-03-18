@@ -22,12 +22,17 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     connect(ui.actionConfigure_Akunambol, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
     connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(launchAboutDialog()));
     connect(ui.contactsButton, SIGNAL(clicked()), this, SLOT(syncContacts()));
-
+    
 //    resize(minimumSizeHint()); // This looks like a sensible default
     setIcons();
     loadConfig();
     statusBar()->showMessage(tr("Configuration loaded."));
 //    SourceManager s;
+}
+
+void MainWindow::init()
+{
+    
 }
 
 void MainWindow::setIcons()
@@ -61,6 +66,8 @@ void MainWindow::launchConfigDialog()
 
 void MainWindow::loadConfig()
 {
+    m_sourceManager = new SourceManager;
+    
     // TODO: Read config from disk
     QSettings s("Funambol", "Akunambol");
     m_user = s.value("user").toString();

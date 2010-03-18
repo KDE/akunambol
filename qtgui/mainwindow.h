@@ -5,6 +5,7 @@
 #include "ui_mainwindow.h"
 
 class Config;
+class SourceManager;
 
 class MainWindow : public QMainWindow
 {
@@ -20,6 +21,8 @@ private slots:
     void syncContacts();
 
 private:
+    void init();
+    
     void parseConfigDialog();
     void loadConfig();
     void setIcons();
@@ -28,6 +31,7 @@ private:
     Ui::MainWindowClass ui;
 
     Config *m_c;
+    SourceManager *m_sourceManager;
 
     QString m_user;
     QString m_password;

@@ -8,6 +8,8 @@
 #include <client/DMTClientConfig.h>
 #include <spds/DefaultConfigFactory.h>
 
+#include "KFunSyncConfig.h"
+
 #include "../config.h"
 
 USE_FUNAMBOL_NAMESPACE
@@ -22,8 +24,8 @@ static StringBuffer generateDeviceID()
 
 SourceManager::SourceManager()
 {
-    PlatformAdapter::init("Funambol/Akunambol");
-    m_conf = new DMTClientConfig;
+    PlatformAdapter::init(KFUNSYNC_APPLICATION_URI);
+//     m_conf = new DMTClientConfig;
     initConfig();
 }
 
@@ -46,24 +48,10 @@ void SourceManager::setData(QString username, QString password, QString url)
 
 void SourceManager::initConfig()
 {
-    if (!m_conf->read()) {
-        AccessConfig *ac = DefaultConfigFactory::getAccessConfig();
-        ac->setUserAgent("Akunambol " VERSION);
-        m_conf->setAccessConfig(*ac);
-
-        DeviceConfig *dc = DefaultConfigFactory::getDeviceConfig();
-        dc->setDevID(generateDeviceID());
-        dc->setMan("Akunambol");
-        dc->setSwv(VERSION);
-        m_conf->setDeviceConfig(*dc);
-
-        SyncSourceConfig *sc = DefaultConfigFactory::getSyncSourceConfig("akonadi");
-        m_conf->setSyncSourceConfig(*sc);
-
-        m_conf->save();
-        kDebug() << "wwaa";
-        delete ac;
-        delete dc;
-        delete sc;
-    }
+    kDebug();
+    KFunSyncConfig *config = KFunSyncConfig::getInstance();
+    kDebug();
+    // Initialize it (read from file or create the default one
+    config->init();
+    kDebug();
 }

@@ -12,15 +12,16 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
     
     PlatformAdapter::init("akunambol");
     
     // Get the config instance
-    KFunSyncConfig *config = KFunSyncConfig::getInstance();
-    // Initialize it (read from file or create the default one
-    config->init();
+//     KFunSyncConfig *config = KFunSyncConfig::getInstance();
+//     // Initialize it (read from file or create the default one
+//     config->init();
+
+    MainWindow w;
+    w.show();
     
     // Init LOG
 //     LOG.setLevel(config->getDeviceConfig().getLogLevel());

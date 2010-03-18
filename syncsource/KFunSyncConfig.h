@@ -44,7 +44,7 @@ USE_NAMESPACE
 
 // This is relative to the config root specific for each platform.
 // E.g. HKCU/Software on Windows or $HOME/.config on Unix
-#define KFUNSYNC_APPLICATION_URI         "akunambol"
+#define KFUNSYNC_APPLICATION_URI         "Funambol/Akunambol"
 
 // Log settings
 #define KFUNSYNC_LOG_TITLE          "Funambol FileSync Log"
