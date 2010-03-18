@@ -1,7 +1,11 @@
 
-
+// Funambol includes
 #include "base/adapter/PlatformAdapter.h"
+
+// Qt/KDE
 #include <QtGui/QApplication>
+
+// Akunambol
 #include "mainwindow.h"
 #include "../syncsource/KFunSyncConfig.h"
 
