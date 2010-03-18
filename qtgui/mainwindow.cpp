@@ -5,7 +5,10 @@
 #include <QSettings>
 #include <QMessageBox>
 
+#include <KDebug>
+
 #include "../syncsource/sourcemanager.h"
+#include "../akonadi/akonadi-dialog.h"
 
 #include "config.h"
 #include "mainwindow.h"
@@ -18,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     connect(ui.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui.actionConfigure_Akunambol, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
     connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(launchAboutDialog()));
+    connect(ui.contactsButton, SIGNAL(clicked()), this, SLOT(syncContacts()));
 
 //    resize(minimumSizeHint()); // This looks like a sensible default
     setIcons();
@@ -34,6 +38,13 @@ void MainWindow::setIcons()
 void MainWindow::launchAboutDialog()
 {
     QMessageBox::about(this, tr("About Akunambol"), tr("this release will eat your babies :)"));
+}
+
+void MainWindow::syncContacts()
+{
+    kDebug();
+    Dialog w;
+    w.exec();
 }
 
 void MainWindow::launchConfigDialog()

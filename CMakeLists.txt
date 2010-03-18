@@ -28,11 +28,41 @@ set(akonadi_extractor_SRCS
     akonadi/akonadiwalker.cpp
 )
 
+## Akonadi retreiver test application
+
+set(akonadi_SRCS
+#     akonadi/main.cpp
+    akonadi/akonadi-dialog.cpp
+    akonadi/contacts.cpp
+    ${akonadi_extractor_SRCS}
+    )
+
+set_source_files_properties(${akonadi_SRCS} PROPRIETIES COMPILE_FLAGS -fexceptions)
+
+kde4_add_ui_files(akonadi_SRCS akonadi/akonadi-dialog.ui)
+
+# kde4_add_executable(akonadi-test ${akonadi_SRCS})
+
+
+set(akunambol_LINK_LIBS
+    ${KDE4_KDEUI_LIBS}
+    ${Kdepimlibs_LIBS}
+    ${KDE4_KMIME_LIBS}
+    ${KDE4_AKONADI_KMIME_LIBS}
+    ${KDE4_KABC_LIBS}
+    ${KDE4_KPIMUTILS_LIBS}
+    ${KDE4_AKONADI_LIBS}
+    microblog
+)
+
+# target_link_libraries(akonadi-test ${akunambol_LINK_LIBS})
+
 set(akunambol_SRCS
     qtgui/config.cpp
     qtgui/main.cpp
     qtgui/mainwindow.cpp
     ${syncsource_SRCS}
+    ${akonadi_SRCS}
     )
 
 set(akunambol_RCCS qtgui/resource.qrc)
@@ -43,35 +73,9 @@ Qt4_add_resources(akunambol_SRCS ${akunambol_RCCS})
 
 kde4_add_executable(akunambol ${akunambol_SRCS})
 
-target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY})
+target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS})
 
 install(TARGETS akunambol DESTINATION ${BIN_INSTALL_DIR} )
-
-## Akonadi retreiver test application
-
-set(akonadi_SRCS
-    akonadi/main.cpp
-    akonadi/akonadi-dialog.cpp
-    akonadi/contacts.cpp
-    ${akonadi_extractor_SRCS}
-    )
-
-set_source_files_properties(${akonadi_SRCS} PROPRIETIES COMPILE_FLAGS -fexceptions)
-
-kde4_add_ui_files(akonadi_SRCS akonadi/akonadi-dialog.ui)
-
-kde4_add_executable(akonadi-test ${akonadi_SRCS})
-
-target_link_libraries(akonadi-test
-    ${KDE4_KDEUI_LIBS}
-    ${Kdepimlibs_LIBS}
-    ${KDE4_KMIME_LIBS}
-    ${KDE4_AKONADI_KMIME_LIBS}
-    ${KDE4_KABC_LIBS}
-    ${KDE4_KPIMUTILS_LIBS}
-    ${KDE4_AKONADI_LIBS}
-    microblog
-)
 
 
 ## Funambol SDK test application
