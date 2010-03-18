@@ -124,12 +124,12 @@ void Contacts::fetchContactCollectionDone(KJob* job)
     if ( job->error() ) {
         return;
     }
-    ItemFetchJob *j = dynamic_cast<ItemFetchJob*>( job );
+    ItemFetchJob *j = static_cast<ItemFetchJob*>( job );
 //     Item::List items = dynamic_cast<ItemFetchJob*>( job )->items();
     
-    if (!j) {
-        return;
-    }
+//     if (!j) {
+//         return;
+//     }
     
     m_items = j->items();
     Item::List items = m_items;
@@ -137,7 +137,9 @@ void Contacts::fetchContactCollectionDone(KJob* job)
 //     foreach ( const Item &item, items ) {
 //         m_items << item; //contactItemAdded( item );
 //     }
-    emit loadedCollection(items.first().id());
+    if (!items.isEmpty()) {
+        emit loadedCollection(items.first().id());
+    }
 }
 
 void Contacts::wa()
