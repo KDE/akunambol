@@ -69,6 +69,7 @@ void Contacts::fetchContactsCollections()
 
 void Contacts::loadContactsFor(int id)
 {
+    kDebug();
     ItemFetchJob *fetch = new ItemFetchJob(Collection(id), this);
     m_contactMonitor->setCollectionMonitored(Collection(id), true);
     fetch->fetchScope().fetchFullPayload();
@@ -98,6 +99,7 @@ void Contacts::contactItemAdded( const Akonadi::Item &item )
 
 void Contacts::fetchContactCollectionsDone(KJob* job)
 {
+    kDebug();
     // called when the job fetching contact collections from Akonadi emits result()
     if ( job->error() ) {
         kDebug() << "Job Error:" << job->errorString();
