@@ -120,6 +120,7 @@ void Contacts::fetchContactCollectionsDone(KJob* job)
 
 void Contacts::fetchContactCollectionDone(KJob* job)
 {
+    kDebug();
     if ( job->error() ) {
         return;
     }
