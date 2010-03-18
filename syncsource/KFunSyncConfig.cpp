@@ -204,12 +204,12 @@ void KFunSyncConfig::createConfig() {
     delete sc;
 
     // Configure the source to work with ical
-    sc = DefaultConfigFactory::getSyncSourceConfig(KFUNSYNC_CAL_SOURCE_NAME);
-    sc->setType     ("text/calendar");
-    sc->setURI      ("event");
-    sc->setEncoding (SyncItem::encodings::plain);
-    this->setSyncSourceConfig(*sc);
-    delete sc;
+//     sc = DefaultConfigFactory::getSyncSourceConfig(KFUNSYNC_CAL_SOURCE_NAME);
+//     sc->setType     ("text/calendar");
+//     sc->setURI      ("event");
+//     sc->setEncoding (SyncItem::encodings::plain);
+//     this->setSyncSourceConfig(*sc);
+//     delete sc;
 
 
     // save the configuration

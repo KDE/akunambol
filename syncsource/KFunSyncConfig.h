@@ -44,21 +44,21 @@ USE_NAMESPACE
 
 // This is relative to the config root specific for each platform.
 // E.g. HKCU/Software on Windows or $HOME/.config on Unix
-#define KFUNSYNC_APPLICATION_URI         "Funambol/kfunsync"
+#define KFUNSYNC_APPLICATION_URI         "akunambol"
 
 // Log settings
-#define KFUNSYNC_LOG_TITLE	        "Funambol FileSync Log"
-#define KFUNSYNC_LOG_PATH	        "."
-#define KFUNSYNC_LOG_LEVEL	        LOG_LEVEL_DEBUG
+#define KFUNSYNC_LOG_TITLE          "Funambol FileSync Log"
+#define KFUNSYNC_LOG_PATH           "."
+#define KFUNSYNC_LOG_LEVEL          LOG_LEVEL_DEBUG
 
 // Name of the sync source
 #define KFUNSYNC_SOURCE_NAME           "contact"
-#define KFUNSYNC_CAL_SOURCE_NAME       "calendar"
+// #define KFUNSYNC_CAL_SOURCE_NAME       "calendar"
 
 // Device info: stored in the client config and sent to the DS server.
-#define KFUNSYNC_DEVICE_ID         "fkc"  
-#define KFUNSYNC_SW_VERSION        "1.0"
-#define KFUNSYNC_USER_AGENT        "Funambol KDE Pim Sync " KFUNSYNC_SW_VERSION
+#define KFUNSYNC_DEVICE_ID         "aku"  
+#define KFUNSYNC_SW_VERSION        "0.1"
+#define KFUNSYNC_USER_AGENT        "Akunambol " KFUNSYNC_SW_VERSION
 
 /**
  * This class extends DMTClientConfig to store the default configuration suited to this client.
