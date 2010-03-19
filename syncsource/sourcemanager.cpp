@@ -38,7 +38,7 @@ SourceManager::~SourceManager()
     delete m_conf;
 }
 
-DMTClientConfig* SourceManager::config()
+KFunSyncConfig* SourceManager::config()
 {
     return m_conf;
 }
@@ -52,9 +52,9 @@ void SourceManager::setData(QString username, QString password, QString url)
 
 void SourceManager::initConfig()
 {
-    KFunSyncConfig *config = KFunSyncConfig::getInstance();
+    m_conf = KFunSyncConfig::getInstance();
     // Initialize it (read from file or create the default one
-    config->init();
+    m_conf->init();
 }
 
 void SourceManager::sync()

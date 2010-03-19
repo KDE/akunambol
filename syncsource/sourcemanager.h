@@ -3,7 +3,7 @@
 #define SOURCEMANAGER_H
 #include <QObject>
 
-class DMTClientConfig;
+class KFunSyncConfig;
 class QString;
 
 class SourceManager : public QObject
@@ -13,7 +13,7 @@ class SourceManager : public QObject
         SourceManager(QObject *parent = 0);
         ~SourceManager();
 
-        DMTClientConfig* config();
+        KFunSyncConfig* config();
         void setData(QString username, QString password, QString url);
 
     public slots:
@@ -22,7 +22,7 @@ class SourceManager : public QObject
     private:
         void initConfig();
 
-        DMTClientConfig *m_conf;
+        KFunSyncConfig *m_conf;
 };
 
 #endif // SOURCEMANAGER_H

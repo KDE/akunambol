@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)
 {
     m_c = 0;
+    m_sourceManager = 0;
     ui.setupUi(this);
     connect(ui.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui.actionConfigure_Akunambol, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
@@ -47,6 +48,8 @@ void MainWindow::launchAboutDialog()
 
 void MainWindow::syncContacts()
 {
+    m_sourceManager->setData(m_user, m_password, "http://my.funambol.com"); //FIXME UNHARDCODE!
+    
     kDebug();
     Dialog w(m_sourceManager);
     w.exec();
@@ -86,7 +89,6 @@ void MainWindow::parseConfigDialog()
     if (m_c->result() == QDialog::Accepted) {
         m_user = m_c->user();
         m_password = m_c->password();
-	m_sourceManager->setData(m_user, m_password, "http://my.funambol.com"); //FIXME UNHARDCODE!
         writeConfig();
     }
 }
