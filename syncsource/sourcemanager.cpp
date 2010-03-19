@@ -7,8 +7,11 @@
 #include <base/adapter/PlatformAdapter.h>
 #include <client/DMTClientConfig.h>
 #include <spds/DefaultConfigFactory.h>
+#include <client/SyncClient.h>
+// #include <client/CacheSyncSource.h>
 
 #include "KFunSyncConfig.h"
+#include "ContactsSource.h"
 
 #include "../config.h"
 
@@ -22,7 +25,8 @@ static StringBuffer generateDeviceID()
     return devid;
 }
 
-SourceManager::SourceManager()
+SourceManager::SourceManager(QObject *parent)
+    : QObject(parent)
 {
     PlatformAdapter::init(KFUNSYNC_APPLICATION_URI);
 //     m_conf = new DMTClientConfig;
@@ -52,3 +56,32 @@ void SourceManager::initConfig()
     // Initialize it (read from file or create the default one
     config->init();
 }
+
+void SourceManager::sync()
+{
+    // Create the contact sync source passing its name, the SyncSourceConfig 
+    SyncSourceConfig *srcConfig = KFunSyncConfig::getInstance()->getSyncSourceConfig(KFUNSYNC_SOURCE_NAME);
+    ContactsSource contactsSource(KFUNSYNC_SOURCE_NAME, srcConfig , NULL);
+    
+    // Create the calendar sync source passing its name, the SyncSourceConfig 
+//     srcConfig = KFunSyncConfig::getInstance()->getSyncSourceConfig(KFUNSYNC_CAL_SOURCE_NAME);
+//     CalendarSource calendarSource(KFUNSYNC_CAL_SOURCE_NAME, srcConfig, NULL);
+    
+    // Initialize the SyncSource array to sync
+    SyncSource* ssArray[] = { &contactsSource, NULL } ;
+//     SyncSource* ssArray[] = { &calendarSource, NULL } ;
+    
+    // Create the SyncClient
+    SyncClient client;
+    
+    // SYNC!
+    if (client.sync(*KFunSyncConfig::getInstance(), ssArray)) {
+        LOG.error("Error during sync.\n");
+//         return false;
+    }
+    
+    // Save the anchors
+    KFunSyncConfig::getInstance()->save();
+}
+
+#include "sourcemanager.moc"

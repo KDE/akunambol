@@ -48,9 +48,7 @@ class ContactsSource : public CacheSyncSource {
     public:
 
 
-        ContactsSource(const WCHAR* name, AbstractSyncSourceConfig *sc, KeyValueStore* cache) : CacheSyncSource(name, sc, cache)
-        {
-        }
+        ContactsSource(const WCHAR* name, AbstractSyncSourceConfig *sc, KeyValueStore* cache);
 
         virtual ~ContactsSource() {}
     

@@ -14,18 +14,22 @@
 #include <kabc/picture.h>
 #include <kabc/key.h>
 
+#include "../syncsource/sourcemanager.h"
+
 #include <KDebug>
 
 using namespace Akonadi;
 
-Dialog::Dialog(QWidget *parent)
+Dialog::Dialog(SourceManager *s, QWidget *parent)
     : QDialog(parent), ui(new Ui::Dialog)
 {
     ui->setupUi(this);
+    m_sourceManager = s;
     
     c = new Contacts(this);
     connect(c, SIGNAL(ready()), SLOT(init()));
     connect(ui->tableWidget, SIGNAL(cellClicked(int, int)), SLOT(loadContactsFor(int)));
+    connect(ui->syncButton, SIGNAL(clicked()), this, SLOT(startSync()));
 }
 
 Dialog::~Dialog()
@@ -84,4 +88,12 @@ void Dialog::loadContactsFor(int id)
     c->loadContactsForCollection(ui->tableWidget->item(id, 0)->text().toInt());
     connect(c, SIGNAL(loadedCollection(int)), SLOT(displayContacts(int)));
 }
+
+void Dialog::startSync()
+{
+    //TODO check if we did select anything or we should abort
+    m_sourceManager->sync();
+    
+}
+
 

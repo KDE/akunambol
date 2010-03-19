@@ -48,7 +48,7 @@ void MainWindow::launchAboutDialog()
 void MainWindow::syncContacts()
 {
     kDebug();
-    Dialog w;
+    Dialog w(m_sourceManager);
     w.exec();
 }
 
@@ -86,6 +86,7 @@ void MainWindow::parseConfigDialog()
     if (m_c->result() == QDialog::Accepted) {
         m_user = m_c->user();
         m_password = m_c->password();
+	m_sourceManager->setData(m_user, m_password, "http://my.funambol.com"); //FIXME UNHARDCODE!
         writeConfig();
     }
 }

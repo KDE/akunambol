@@ -50,6 +50,13 @@
 
 using namespace KABC;
 
+ContactsSource::ContactsSource ( const char* name, AbstractSyncSourceConfig* sc, KeyValueStore* cache )
+    : CacheSyncSource(name, sc, cache)
+{
+
+}
+
+
 Enumeration* ContactsSource::getAllItemList() {
 
     LOG.info("ContactsSource::getAllItemsList");
