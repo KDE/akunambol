@@ -48,10 +48,7 @@ void SourceManager::setData(QString username, QString password, QString url)
 
 void SourceManager::initConfig()
 {
-    kDebug();
     KFunSyncConfig *config = KFunSyncConfig::getInstance();
-    kDebug();
     // Initialize it (read from file or create the default one
     config->init();
-    kDebug();
 }
