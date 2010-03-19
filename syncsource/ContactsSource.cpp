@@ -33,7 +33,7 @@
  * the words "Powered by Funambol".
  */
 
-// #include <Akonadi/Item>
+#include <Akonadi/ItemDeleteJob>
 
 #include <kabc/stdaddressbook.h>
 #include <kabc/addressbook.h>
@@ -93,8 +93,8 @@ void* ContactsSource::getItemContent(StringBuffer& key, size_t* size) {
 
 //     StdAddressBook* ab = StdAddressBook::self();
     // Load the contact
-    foreach(const Akonadi::Item item, m_items) {
-        QString uid = QString::number(item.id());
+    foreach(const Akonadi::Item i, m_items) {
+        QString uid = QString::number(i.id());
 	StringBuffer k((const char*)uid.toLatin1());
 	if (key != k) {
 	    continue;
@@ -102,7 +102,7 @@ void* ContactsSource::getItemContent(StringBuffer& key, size_t* size) {
 	
 // 	Akonadi::Item item;
 
-	KABC::Addressee contact = item.payload<KABC::Addressee>();
+	KABC::Addressee contact = i.payload<KABC::Addressee>();
 
 	//     Addressee contact = ab->findByUid(key.c_str());
 	if (contact.isEmpty()) {
@@ -178,32 +178,17 @@ int ContactsSource::modifyItem(SyncItem& item) {
 int ContactsSource::removeItem(SyncItem& item) {
     const char *key = item.getKey();
     LOG.info("ContactsSource: removing item: %s", key);
-
-    StdAddressBook* ab = StdAddressBook::self();
+    
     // Search the contact
     QString uid(key);
-    Addressee contact = ab->findByUid(uid);
-    if (contact.isEmpty()) {
-        LOG.error("Cannot find contact with id: %s", item.getKey());
-        return STC_COMMAND_FAILED;
-    }
-
-    AddressBook::Iterator it = ab->find(contact);
-    if (it == ab->end()) {
-        LOG.error("Cannot find contact iterator with id: %s", item.getKey());
-        return STC_COMMAND_FAILED;
-    }
-
-    ab->removeAddressee(it);
-    ab->save();
+    Akonadi::Item i(uid);
+    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(i); // Fire and forget
     return STC_OK;
 }
 
 int ContactsSource::removeAllItems() {
     LOG.info("ContactsSource: remove all items");
-    StdAddressBook* ab = StdAddressBook::self();
-    ab->clear();
-    ab->save();
+    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(m_items); // Fire and forget
 }
 
 const StringBuffer ContactsSource::unfoldVCard(const char* vcard) {
