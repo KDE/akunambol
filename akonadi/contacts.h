@@ -28,7 +28,6 @@ class Contacts : public QObject
         void contactItemAdded(const Akonadi::Item & item);
         void fetchContactCollectionsDone(KJob* job);
         void fetchContactCollectionDone(KJob* job);
-        void wa();
         
     signals:
         void ready();

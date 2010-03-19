@@ -141,8 +141,3 @@ void Contacts::fetchContactCollectionDone(KJob* job)
         emit loadedCollection(items.first().id());
     }
 }
-
-void Contacts::wa()
-{
-    kDebug() << "WA";
-}
