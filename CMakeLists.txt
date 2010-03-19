@@ -3,6 +3,7 @@ project(akunabmol)
 set(VERSION 0.1)
 configure_file(${CMAKE_SOURCE_DIR}/config.h.cmake ${CMAKE_SOURCE_DIR}/config.h)
 
+#set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 # Search KDE packages
 find_package(KDE4 REQUIRED)
@@ -39,7 +40,6 @@ set(akonadi_SRCS
     ${akonadi_extractor_SRCS}
     )
 
-set_source_files_properties(${akonadi_SRCS} PROPRIETIES COMPILE_FLAGS -fexceptions)
 
 kde4_add_ui_files(akonadi_SRCS akonadi/akonadi-dialog.ui)
 
@@ -66,6 +66,9 @@ set(akunambol_SRCS
     ${syncsource_SRCS}
     ${akonadi_SRCS}
     )
+
+
+set_source_files_properties(${akunambol_SRCS} PROPRIETIES COMPILE_FLAGS -fexceptions)
 
 set(akunambol_RCCS qtgui/resource.qrc)
 

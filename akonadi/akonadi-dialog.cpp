@@ -92,6 +92,7 @@ void Dialog::loadContactsFor(int id)
 void Dialog::startSync()
 {
     //TODO check if we did select anything or we should abort
+    m_sourceManager->setAkonadiItems(c->itemsForCollection(0));
     m_sourceManager->sync();
     
 }

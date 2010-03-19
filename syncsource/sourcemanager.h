@@ -3,6 +3,10 @@
 #define SOURCEMANAGER_H
 #include <QObject>
 
+namespace Akonadi {
+    class Item;
+}
+
 class KFunSyncConfig;
 class QString;
 
@@ -15,7 +19,8 @@ class SourceManager : public QObject
 
         KFunSyncConfig* config();
         void setData(QString username, QString password, QString url);
-
+	void setAkonadiItems(QList<Akonadi::Item> items);
+	
     public slots:
         void sync();
 
@@ -23,6 +28,7 @@ class SourceManager : public QObject
         void initConfig();
 
         KFunSyncConfig *m_conf;
+        QList< Akonadi::Item > m_items;
 };
 
 #endif // SOURCEMANAGER_H

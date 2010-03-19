@@ -33,6 +33,8 @@
  * the words "Powered by Funambol".
  */
 
+// #include <Akonadi/Item>
+
 #include <kabc/stdaddressbook.h>
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
@@ -56,11 +58,15 @@ ContactsSource::ContactsSource ( const char* name, AbstractSyncSourceConfig* sc,
 
 }
 
+void ContactsSource::setAkonadiItems(Akonadi::Item::List items)
+{
+    m_items = items;
+}
 
 Enumeration* ContactsSource::getAllItemList() {
 
     LOG.info("ContactsSource::getAllItemsList");
-
+/*
     kDebug();
     StdAddressBook* ab = StdAddressBook::self();
     kDebug();
@@ -68,11 +74,11 @@ Enumeration* ContactsSource::getAllItemList() {
     AddressBook::ConstIterator end = ab->end();
     
 //     LOG.info(it != end);
-    
+    */
     ArrayList items;
-    for(;it != end;++it) {
-        Addressee contact = *it;
-        QString uid = contact.uid();
+//     for(;it != end;++it) {
+    foreach(Akonadi::Item item, m_items) {
+	QString uid = QString::number(item.id());
         StringBuffer key((const char*)uid.toLatin1());
         LOG.info("Found contact: %s", key.c_str());
         items.add(key);
@@ -85,31 +91,43 @@ void* ContactsSource::getItemContent(StringBuffer& key, size_t* size) {
 
     LOG.debug("ContactsSource::getItemContent for %s", key.c_str());
 
-    StdAddressBook* ab = StdAddressBook::self();
+//     StdAddressBook* ab = StdAddressBook::self();
     // Load the contact
-    Addressee contact = ab->findByUid(key.c_str());
-    if (contact.isEmpty()) {
-        LOG.error("Cannot load contact with id: %s", key.c_str());
-        return NULL;
+    foreach(const Akonadi::Item item, m_items) {
+        QString uid = QString::number(item.id());
+	StringBuffer k((const char*)uid.toLatin1());
+	if (key != k) {
+	    continue;
+	}
+	
+// 	Akonadi::Item item;
+
+	KABC::Addressee contact = item.payload<KABC::Addressee>();
+
+	//     Addressee contact = ab->findByUid(key.c_str());
+	if (contact.isEmpty()) {
+	    LOG.error("Cannot load contact with id: %s", key.c_str());
+	    return NULL;
+	}
+
+	// Now convert the item
+	VCardConverter converter;
+	QByteArray bytes = converter.createVCard(contact, VCardConverter::v2_1);
+	const char* data = bytes.constData();
+	// Since we have an interoperability issue on vCard with QP encoding and
+	// folding, we perform an "unfold" (note that folding is not required by
+	// vCard)
+	const StringBuffer item = unfoldVCard(data);
+	*size = item.length();
+
+	char* res = new char[*size];
+	for(int i=0;i<*size;++i) {
+	    res[i] = ((char*)item.c_str())[i];
+	}
+
+	LOG.debug("Contact content: %s", res);
+	return res;
     }
-
-    // Now convert the item
-    VCardConverter converter;
-    QByteArray bytes = converter.createVCard(contact, VCardConverter::v2_1);
-    const char* data = bytes.constData();
-    // Since we have an interoperability issue on vCard with QP encoding and
-    // folding, we perform an "unfold" (note that folding is not required by
-    // vCard)
-    const StringBuffer item = unfoldVCard(data);
-    *size = item.length();
-
-    char* res = new char[*size];
-    for(int i=0;i<*size;++i) {
-        res[i] = ((char*)item.c_str())[i];
-    }
-
-    LOG.debug("Contact content: %s", res);
-    return res;
 }
 
 int ContactsSource::insertItem(SyncItem& item) {

@@ -42,6 +42,7 @@
 #include <client/CacheSyncSource.h>
 #include <spds/SyncItem.h>
 #include <base/util/Enumeration.h>
+#include <Akonadi/Item>
 
 class ContactsSource : public CacheSyncSource {
 
@@ -108,10 +109,13 @@ class ContactsSource : public CacheSyncSource {
         int removeItem(SyncItem& item);
 
         int removeAllItems();
+	
+	void setAkonadiItems(Akonadi::Item::List items);
 
     private:
 
         const StringBuffer unfoldVCard(const char*);
+        QList< Akonadi::Item > m_items;
 
 
 };

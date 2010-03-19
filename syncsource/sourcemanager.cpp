@@ -4,6 +4,8 @@
 #include <QString>
 #include <KDebug>
 
+#include <Akonadi/Item>
+
 #include <base/adapter/PlatformAdapter.h>
 #include <client/DMTClientConfig.h>
 #include <spds/DefaultConfigFactory.h>
@@ -57,11 +59,18 @@ void SourceManager::initConfig()
     m_conf->init();
 }
 
+void SourceManager::setAkonadiItems(QList<Akonadi::Item> items)
+{
+    m_items = items;
+}
+
 void SourceManager::sync()
 {
     // Create the contact sync source passing its name, the SyncSourceConfig 
     SyncSourceConfig *srcConfig = KFunSyncConfig::getInstance()->getSyncSourceConfig(KFUNSYNC_SOURCE_NAME);
-    ContactsSource contactsSource(KFUNSYNC_SOURCE_NAME, srcConfig , NULL);
+    ContactsSource contactsSource(KFUNSYNC_SOURCE_NAME, srcConfig, NULL);
+    contactsSource.setAkonadiItems(m_items);
+ 
     
     // Create the calendar sync source passing its name, the SyncSourceConfig 
 //     srcConfig = KFunSyncConfig::getInstance()->getSyncSourceConfig(KFUNSYNC_CAL_SOURCE_NAME);
