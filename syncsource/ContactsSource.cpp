@@ -61,9 +61,14 @@ Enumeration* ContactsSource::getAllItemList() {
 
     LOG.info("ContactsSource::getAllItemsList");
 
+    kDebug();
     StdAddressBook* ab = StdAddressBook::self();
+    kDebug();
     AddressBook::ConstIterator it = ab->begin();
     AddressBook::ConstIterator end = ab->end();
+    
+//     LOG.info(it != end);
+    
     ArrayList items;
     for(;it != end;++it) {
         Addressee contact = *it;
