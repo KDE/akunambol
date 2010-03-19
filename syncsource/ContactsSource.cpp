@@ -46,6 +46,7 @@
 #include <base/Log.h>
 
 #include "ContactsSource.h"
+#include "../akonadi/contacts.h"
 
 using namespace KABC;
 
