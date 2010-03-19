@@ -60,7 +60,7 @@ void Dialog::populateTable()
 
 void Dialog::displayContacts(int wa)
 {
-    ui->contactsTable->setRowCount(c->itemsFor(0).count());
+    ui->contactsTable->setRowCount(c->itemsForCollection(0).count()); //FIXME
     ui->contactsTable->setColumnCount(3);
     ui->contactsTable->horizontalHeader()->setStretchLastSection(true);
     QStringList headers;
@@ -68,7 +68,7 @@ void Dialog::displayContacts(int wa)
     ui->contactsTable->setHorizontalHeaderLabels(headers);
 //     kDebug() << "waa";
     int i = 0;
-    foreach(Item item, c->itemsFor(0)) {
+    foreach(Item item, c->itemsForCollection(0)) {
         KABC::Addressee a = item.payload<KABC::Addressee>();
         ui->contactsTable->setItem(i, 0, new QTableWidgetItem(QString::number(item.id())));
         ui->contactsTable->setItem(i, 1, new QTableWidgetItem(a.realName()));
@@ -81,7 +81,7 @@ void Dialog::displayContacts(int wa)
 
 void Dialog::loadContactsFor(int id)
 {
-    c->loadContactsFor(ui->tableWidget->item(id, 0)->text().toInt());
+    c->loadContactsForCollection(ui->tableWidget->item(id, 0)->text().toInt());
     connect(c, SIGNAL(loadedCollection(int)), SLOT(displayContacts(int)));
 }
 

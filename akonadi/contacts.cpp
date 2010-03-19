@@ -20,7 +20,7 @@ Contacts::Contacts(QObject *parent)
 {   
     initContacts();
     
-    fetchContactsCollections();
+    fetchCollections();
 }
 
 Contacts::~Contacts()
@@ -33,8 +33,9 @@ QList<Akonadi::Collection> Contacts::collections()
     return m_collections;
 }
 
-QList<Akonadi::Item> Contacts::itemsFor(int id)
+QList<Akonadi::Item> Contacts::itemsForCollection(int id)
 {
+    #warning we should actually care of the id of the collection
     return m_items;
 }
       
@@ -53,7 +54,7 @@ void Contacts::initContacts()
 //    connect(this, SIGNAL(sourceRemoved(QString)), SLOT(stopMonitor(QString)));
 }
 
-void Contacts::fetchContactsCollections()
+void Contacts::fetchCollections()
 { 
     Collection contactCollection(Collection::root());
     contactCollection.setContentMimeTypes(QStringList() << "text/directory");
@@ -63,19 +64,19 @@ void Contacts::fetchContactsCollections()
 //     ItemFetchJob *fetch = new ItemFetchJob( Collection( id ), this );
 //     m_contactMonitor->setCollectionMonitored(Collection(id), true);
 //     fetch->fetchScope().fetchFullPayload();
-    connect( fetch, SIGNAL(result(KJob*)), SLOT(fetchContactCollectionsDone(KJob*)) );
+    connect( fetch, SIGNAL(result(KJob*)), SLOT(fetchCollectionsDone(KJob*)) );
 }
 
 
-void Contacts::loadContactsFor(int id)
+void Contacts::loadContactsForCollection(int id)
 {
     kDebug();
     ItemFetchJob *fetch = new ItemFetchJob(Collection(id), this);
     m_contactMonitor->setCollectionMonitored(Collection(id), true);
     fetch->fetchScope().fetchFullPayload();
-    connect( fetch, SIGNAL(result(KJob*)), SLOT(fetchContactCollectionDone(KJob*)) );
+    connect( fetch, SIGNAL(result(KJob*)), SLOT(fetchContactsDone(KJob*)) );
 //     Q_UNUSED(i)
-    kDebug() << id;
+//     kDebug() << id;
 }
 
 void Contacts::contactItemAdded( const Akonadi::Item &item )
@@ -97,7 +98,7 @@ void Contacts::contactItemAdded( const Akonadi::Item &item )
     }
 }
 
-void Contacts::fetchContactCollectionsDone(KJob* job)
+void Contacts::fetchCollectionsDone(KJob* job)
 {
     kDebug();
     // called when the job fetching contact collections from Akonadi emits result()
@@ -118,7 +119,7 @@ void Contacts::fetchContactCollectionsDone(KJob* job)
     emit ready();
 }
 
-void Contacts::fetchContactCollectionDone(KJob* job)
+void Contacts::fetchContactsDone(KJob* job)
 {
     kDebug();
     if ( job->error() ) {

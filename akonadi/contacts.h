@@ -20,14 +20,14 @@ class Contacts : public QObject
         ~Contacts();
 
         QList<Akonadi::Collection> collections();
-        QList<Akonadi::Item> itemsFor(int id);
+        QList<Akonadi::Item> itemsForCollection(int id);
         
-        void loadContactsFor(int id);
+        void loadContactsForCollection(int id);
         
     private slots:
         void contactItemAdded(const Akonadi::Item & item);
-        void fetchContactCollectionsDone(KJob* job);
-        void fetchContactCollectionDone(KJob* job);
+        void fetchCollectionsDone(KJob* job);
+        void fetchContactsDone(KJob* job);
         
     signals:
         void ready();
@@ -35,7 +35,7 @@ class Contacts : public QObject
 
     private:
         void initContacts();
-        void fetchContactsCollections();
+        void fetchCollections();
         Akonadi::Monitor *m_contactMonitor;
         QList<Akonadi::Collection> m_collections;
         QList<Akonadi::Item> m_items;
