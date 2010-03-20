@@ -34,6 +34,7 @@
  */
 
 #include <Akonadi/ItemDeleteJob>
+#include <Akonadi/ItemModifyJob>
 
 #include <kabc/stdaddressbook.h>
 #include <kabc/addressbook.h>
@@ -66,17 +67,8 @@ void ContactsSource::setAkonadiItems(Akonadi::Item::List items)
 Enumeration* ContactsSource::getAllItemList() {
 
     LOG.info("ContactsSource::getAllItemsList");
-    /*
-        kDebug();
-        StdAddressBook* ab = StdAddressBook::self();
-        kDebug();
-        AddressBook::ConstIterator it = ab->begin();
-        AddressBook::ConstIterator end = ab->end();
-
-    //     LOG.info(it != end);
-        */
     ArrayList items;
-//     for(;it != end;++it) {
+   
     foreach(Akonadi::Item item, m_items) {
         QString uid = QString::number(item.id());
         StringBuffer key((const char*)uid.toLatin1());
@@ -91,7 +83,6 @@ void* ContactsSource::getItemContent(StringBuffer& key, size_t* size) {
 
     LOG.debug("ContactsSource::getItemContent for %s", key.c_str());
 
-//     StdAddressBook* ab = StdAddressBook::self();
     // Load the contact
     foreach(const Akonadi::Item i, m_items) {
         QString uid = QString::number(i.id());
@@ -100,19 +91,16 @@ void* ContactsSource::getItemContent(StringBuffer& key, size_t* size) {
             continue;
         }
 
-// 	Akonadi::Item item;
-
         KABC::Addressee contact = i.payload<KABC::Addressee>();
 
-        //     Addressee contact = ab->findByUid(key.c_str());
         if (contact.isEmpty()) {
             LOG.error("Cannot load contact with id: %s", key.c_str());
             return NULL;
         }
 
         // Now convert the item
-        VCardConverter converter;
-        QByteArray bytes = converter.createVCard(contact, VCardConverter::v2_1);
+        KABC::VCardConverter converter;
+        QByteArray bytes = converter.createVCard(contact, KABC::VCardConverter::v2_1);
         const char* data = bytes.constData();
         // Since we have an interoperability issue on vCard with QP encoding and
         // folding, we perform an "unfold" (note that folding is not required by
@@ -135,19 +123,19 @@ int ContactsSource::insertItem(SyncItem& item) {
     LOG.info("ContactsSource: adding new item");
     LOG.debug("ContactsSource: %s", data);
 
-    VCardConverter converter;
+    Akonadi::Item i;
+    
+    KABC::VCardConverter converter;
     QByteArray bytes(data);
     Addressee contact = converter.parseVCard(bytes);
     if (contact.isEmpty()) {
         LOG.error("Cannot convert incoming item");
         return STC_COMMAND_FAILED;
     }
-    StdAddressBook* ab = StdAddressBook::self();
-    ab->insertAddressee(contact);
-    QString uid = contact.uid();
-    item.setKey(uid.toLatin1());
-    ab->save();
-
+    i.setPayload(contact);
+    item.setKey(QString::number(i.id()).toLatin1());
+    // Insert item? (we need to)
+    
     return STC_ITEM_ADDED;
 }
 
@@ -156,23 +144,24 @@ int ContactsSource::modifyItem(SyncItem& item) {
 
     LOG.info("ContactsSource: modifying item: %s", key);
 
+    QString uid(key);
+    Akonadi::Item i(uid);
+    
+    KABC::Addressee contact = i.payload<KABC::Addressee>();
+    
     const char* data = (const char*)item.getData();
     LOG.debug("ContactsSource: %s", data);
 
-    VCardConverter converter;
+    KABC::VCardConverter converter;
     QByteArray bytes(data);
-    Addressee contact = converter.parseVCard(bytes);
+    contact = converter.parseVCard(bytes);
     if (contact.isEmpty()) {
         LOG.error("Cannot convert incoming item");
         return STC_COMMAND_FAILED;
     }
-    QString uid(key);
-    contact.setUid(uid);
-    StdAddressBook* ab = StdAddressBook::self();
-    ab->insertAddressee(contact);
-    ab->save();
+    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(i); // Fire and forget
 
-    return STC_OK;;
+    return STC_OK;
 }
 
 int ContactsSource::removeItem(SyncItem& item) {
