@@ -71,6 +71,7 @@ void SourceManager::sync()
     SyncSourceConfig *srcConfig = KFunSyncConfig::getInstance()->getSyncSourceConfig(KFUNSYNC_SOURCE_NAME);
     ContactsSource contactsSource(KFUNSYNC_SOURCE_NAME, srcConfig, NULL);
     contactsSource.setAkonadiItems(m_items);
+    contactsSource.setCollectionId(m_collectionId);
  
     
     // Create the calendar sync source passing its name, the SyncSourceConfig 

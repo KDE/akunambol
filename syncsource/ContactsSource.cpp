@@ -34,7 +34,10 @@
  */
 
 #include <Akonadi/ItemDeleteJob>
+#include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemModifyJob>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/Collection>
 
 #include <kabc/stdaddressbook.h>
 #include <kabc/addressbook.h>
@@ -50,6 +53,7 @@
 
 #include "ContactsSource.h"
 #include "../akonadi/contacts.h"
+#include <Akonadi/ItemFetchJob>
 
 using namespace KABC;
 
@@ -84,13 +88,43 @@ void* ContactsSource::getItemContent(StringBuffer& key, size_t* size) {
     LOG.debug("ContactsSource::getItemContent for %s", key.c_str());
 
     // Load the contact
-    foreach(const Akonadi::Item i, m_items) {
-        QString uid = QString::number(i.id());
-        StringBuffer k((const char*)uid.toLatin1());
-        if (key != k) {
-            continue;
+//     foreach(const Akonadi::Item i, m_items) {
+//         QString uid = QString::number(i.id());
+//             StringBuffer k((const char*)uid.toLatin1());
+//             if (key != k) {
+//                 continue;
+//             }
+        
+        QString uid(key);
+        kDebug() << uid;
+        Akonadi::Item iid(uid.toLongLong());
+        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(iid);
+        job->fetchScope().fetchFullPayload();
+//         
+//         if (!job->exec()) {
+//             kDebug() << "Error!!! " << job->errorText();
+//         }
+// Akonadi::Item iid(uid.toLongLong());
+// Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(iid);
+// job->fetchScope().fetchFullPayload();
+// bool success = job->exec();
+
+// kDebug() << "Job ok?" << success;
+        if (!job->exec()) {
+            kDebug() << "Error!!! " << job->errorText();
+            kDebug() << "I'm going to crash and can't avoid it...";
+//             void *a;
+//             return a;
         }
 
+// kDebug() << "Error:" << job->errorText();
+        Akonadi::Item i = job->items().first();
+        
+        if (!i.hasPayload<KABC::Addressee>()) {
+            LOG.info("Invalid item");
+            kDebug() << "INVALID";
+        }
+        
         KABC::Addressee contact = i.payload<KABC::Addressee>();
 
         if (contact.isEmpty()) {
@@ -115,7 +149,7 @@ void* ContactsSource::getItemContent(StringBuffer& key, size_t* size) {
 
         LOG.debug("Contact content: %s", res);
         return res;
-    }
+//     }
 }
 
 int ContactsSource::insertItem(SyncItem& item) {
@@ -125,6 +159,7 @@ int ContactsSource::insertItem(SyncItem& item) {
 
     Akonadi::Item i;
     
+    i.setMimeType("text/directory");
     KABC::VCardConverter converter;
     QByteArray bytes(data);
     Addressee contact = converter.parseVCard(bytes);
@@ -133,8 +168,13 @@ int ContactsSource::insertItem(SyncItem& item) {
         return STC_COMMAND_FAILED;
     }
     i.setPayload(contact);
-    item.setKey(QString::number(i.id()).toLatin1());
-    // Insert item? (we need to)
+    Akonadi::Collection collection(m_collectionId);
+    Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( i, collection );
+    job->exec();
+    
+    Akonadi::Item newItem = job->item();
+    kDebug() << "ID now.." << newItem.id();
+    item.setKey(QString::number(newItem.id()).toLatin1());
     
     return STC_ITEM_ADDED;
 }
@@ -145,10 +185,23 @@ int ContactsSource::modifyItem(SyncItem& item) {
     LOG.info("ContactsSource: modifying item: %s", key);
 
     QString uid(key);
-    Akonadi::Item i(uid);
+    Akonadi::Item iid(uid.toLongLong());
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(iid);
+    job->fetchScope().fetchFullPayload();
     
+    if (!job->exec()) {
+        kDebug() << "Error!!! " << job->errorText();
+    }
+    
+    Akonadi::Item i = job->items().first();
+    
+    if (!i.hasPayload<KABC::Addressee>()) {
+        LOG.info("Invalid item");
+        kDebug() << "INVALID";
+    }
+
     KABC::Addressee contact = i.payload<KABC::Addressee>();
-    
+//     KABC::Addressee contact;
     const char* data = (const char*)item.getData();
     LOG.debug("ContactsSource: %s", data);
 
@@ -159,9 +212,14 @@ int ContactsSource::modifyItem(SyncItem& item) {
         LOG.error("Cannot convert incoming item");
         return STC_COMMAND_FAILED;
     }
-    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(i); // Fire and forget
-
-    return STC_OK;
+    
+    i.setPayload(contact);
+    Akonadi::ItemModifyJob *job2 = new Akonadi::ItemModifyJob(i); // Fire and forget
+    if (job2->exec()){
+        return STC_OK;
+    } else {
+        return STC_COMMAND_FAILED;
+    }
 }
 
 int ContactsSource::removeItem(SyncItem& item) {
@@ -170,14 +228,16 @@ int ContactsSource::removeItem(SyncItem& item) {
 
     // Search the contact
     QString uid(key);
-    Akonadi::Item i(uid);
+    Akonadi::Item i(uid.toLongLong());
     Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(i); // Fire and forget
+    job->start();
     return STC_OK;
 }
 
 int ContactsSource::removeAllItems() {
     LOG.info("ContactsSource: remove all items");
     Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(m_items); // Fire and forget
+    job->start();
 }
 
 const StringBuffer ContactsSource::unfoldVCard(const char* vcard) {

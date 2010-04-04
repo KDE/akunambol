@@ -113,10 +113,12 @@ class ContactsSource : public CacheSyncSource
 
         void setAkonadiItems(Akonadi::Item::List items);
 
+        void setCollectionId(qint64 id) { m_collectionId = id; }
     private:
 
         const StringBuffer unfoldVCard(const char*);
         QList< Akonadi::Item > m_items;
+        qint64 m_collectionId;
 
 
 };

@@ -20,6 +20,7 @@ class SourceManager : public QObject
         KFunSyncConfig* config();
         void setData(QString username, QString password, QString url);
 	void setAkonadiItems(QList<Akonadi::Item> items);
+        void setCollectionId(qint64 id) { m_collectionId = id; }
 	
     public slots:
         void sync();
@@ -29,6 +30,7 @@ class SourceManager : public QObject
 
         KFunSyncConfig *m_conf;
         QList< Akonadi::Item > m_items;
+        qint64 m_collectionId;
 };
 
 #endif // SOURCEMANAGER_H

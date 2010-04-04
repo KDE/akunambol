@@ -105,6 +105,7 @@ void ContactsSyncer::startSync()
 {
     //TODO check if we did select anything or we should abort
     m_sourceManager->setAkonadiItems(c->itemsForLoadedCollection());
+    m_sourceManager->setCollectionId(c->selectedCollection());
     m_sourceManager->sync();
     emit finishedSync();
 }

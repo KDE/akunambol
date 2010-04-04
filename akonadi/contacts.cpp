@@ -69,11 +69,12 @@ void Contacts::fetchCollections()
 
 void Contacts::loadContactsForCollection(int id)
 {
-    kDebug();
+    m_selectedCollection = id;
     ItemFetchJob *fetch = new ItemFetchJob(Collection(id), this);
     m_contactMonitor->setCollectionMonitored(Collection(id), true);
     fetch->fetchScope().fetchFullPayload();
     connect( fetch, SIGNAL(result(KJob*)), SLOT(fetchContactsDone(KJob*)) );
+    fetch->start();
 //     Q_UNUSED(i)
 //     kDebug() << id;
 }

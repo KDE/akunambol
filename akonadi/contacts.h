@@ -23,6 +23,7 @@ class Contacts : public QObject
         QList<Akonadi::Item> itemsForLoadedCollection();
         
         void loadContactsForCollection(int id);
+        qint64 selectedCollection() { return m_selectedCollection; }
         
     private slots:
         void contactItemAdded(const Akonadi::Item & item);
@@ -39,6 +40,7 @@ class Contacts : public QObject
         Akonadi::Monitor *m_contactMonitor;
         QList<Akonadi::Collection> m_collections;
         QList<Akonadi::Item> m_items;
+        qint64 m_selectedCollection;
 };
 
 #endif
