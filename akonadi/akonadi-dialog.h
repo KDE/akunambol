@@ -17,16 +17,17 @@ namespace Akonadi {
     class Monitor;
 }
 
-class Dialog : public QDialog
+class ContactsSyncer : public QObject
 {
     Q_OBJECT
 
     public:
-        Dialog(SourceManager *s, QWidget *parent = 0);
-        ~Dialog();
+        ContactsSyncer(SourceManager *s, QObject *parent = 0);
+        ~ContactsSyncer();
         
     signals:
         void noCollections();
+        void finishedSync();
         
     private slots:
         void init();

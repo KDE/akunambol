@@ -21,26 +21,22 @@
 
 using namespace Akonadi;
 
-Dialog::Dialog(SourceManager *s, QWidget *parent)
-    : QDialog(parent), ui(new Ui::Dialog)
+ContactsSyncer::ContactsSyncer(SourceManager* s, QObject* parent)
+    : QObject(parent)
 {
-//     ui->setupUi(this);
     m_sourceManager = s;
-    
-    
-    c = new Contacts(this);
+   
+   
+    c = new Contacts;
     connect(c, SIGNAL(ready()), SLOT(init()));
-//     connect(ui->tableWidget, SIGNAL(cellClicked(int, int)), SLOT(loadContactsFor(int)));
-//     connect(ui->syncButton, SIGNAL(clicked()), this, SLOT(startSync()));
 }
 
-Dialog::~Dialog()
+ContactsSyncer::~ContactsSyncer()
 {
-    delete ui;
     delete c;
 }
 
-void Dialog::init()
+void ContactsSyncer::init()
 {
     kDebug();
     if (c->collections().size() == 0) { // Can't sync
@@ -48,7 +44,7 @@ void Dialog::init()
     } else if (c->collections().size() == 1) { // Just one collection, don't show the dialog
         loadContactsFor(c->collections().first().id());
     } else { // Which collection should I use?
-        CollectionDialog dlg( this );
+        CollectionDialog dlg;
         dlg.setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
         dlg.setAccessRightsFilter( Collection::CanCreateItem );
         dlg.setDescription( i18n( "Select an address book for saving:" ) );
@@ -59,7 +55,7 @@ void Dialog::init()
     disconnect(c, SIGNAL(ready()), this, SLOT(init())); // ready has served its purposes
 }
 
-void Dialog::populateTable()
+void ContactsSyncer::populateTable()
 {
     ui->tableWidget->setRowCount(c->collections().count());
     ui->tableWidget->setColumnCount(2);
@@ -77,7 +73,7 @@ void Dialog::populateTable()
     }
 }
 
-void Dialog::displayContacts()
+void ContactsSyncer::displayContacts()
 {
     QTimer::singleShot(0, this, SLOT(startSync()));
 //     ui->contactsTable->setRowCount(c->itemsForCollection(0).count()); //FIXME
@@ -99,18 +95,18 @@ void Dialog::displayContacts()
 //     }
 }
 
-void Dialog::loadContactsFor(int id)
+void ContactsSyncer::loadContactsFor(int id)
 {
     c->loadContactsForCollection(id);
     connect(c, SIGNAL(loadedCollection()), SLOT(displayContacts()));
 }
 
-void Dialog::startSync()
+void ContactsSyncer::startSync()
 {
     //TODO check if we did select anything or we should abort
     m_sourceManager->setAkonadiItems(c->itemsForLoadedCollection());
     m_sourceManager->sync();
-    
+    emit finishedSync();
 }
 
 

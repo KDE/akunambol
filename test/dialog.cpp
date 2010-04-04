@@ -10,7 +10,7 @@
 
 //include
 
-Dialog::Dialog(QWidget *parent)
+ContactsSyncer::Dialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::Dialog)
 {
     ui->setupUi(this);
@@ -18,12 +18,12 @@ Dialog::Dialog(QWidget *parent)
     connect(ui->syncButton, SIGNAL(clicked()), this, SLOT(sync()));
 }
 
-Dialog::~Dialog()
+ContactsSyncer::~Dialog()
 {
     delete ui;
 }
 
-void Dialog::sync()
+void ContactsSyncer::sync()
 {
     DMTClientConfig conf("Funambol/test");
     kDebug() << "perform sync";

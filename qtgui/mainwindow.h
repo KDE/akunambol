@@ -19,6 +19,7 @@ private slots:
     void launchConfigDialog();
     void launchAboutDialog();
     void syncContacts();
+    void finishedSync();
 
 private:
     void init();

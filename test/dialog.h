@@ -10,7 +10,7 @@ namespace Ui
 
 class SourceManager;
 
-class Dialog : public QDialog
+class ContactsSyncer : public QDialog
 {
     Q_OBJECT
 

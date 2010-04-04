@@ -56,8 +56,15 @@ void MainWindow::syncContacts()
     m_sourceManager->setData(m_user, m_password, "http://my.funambol.com/sync"); //FIXME UNHARDCODE!
     
     kDebug();
-    Dialog contactsSyncer(m_sourceManager);
+    ContactsSyncer *contactsSyncer = new ContactsSyncer(m_sourceManager);
+    connect(contactsSyncer, SIGNAL(finishedSync()), this, SLOT(finishedSync()));
 //     w.exec();
+}
+
+void MainWindow::finishedSync()
+{
+    sender()->deleteLater();
+    statusBar()->showMessage(i18n("Finished syncing."));
 }
 
 void MainWindow::launchConfigDialog()
