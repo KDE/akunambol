@@ -37,7 +37,6 @@ ContactsSyncer::~ContactsSyncer()
 
 void ContactsSyncer::init()
 {
-    kDebug();
     if (c->collections().size() == 0) { // Can't sync
         emit noCollections();
     } else if (c->collections().size() == 1) { // Just one collection, don't show the dialog
@@ -53,33 +52,10 @@ void ContactsSyncer::init()
     disconnect(c, SIGNAL(ready()), this, SLOT(init())); // ready has served its purposes
 }
 
-void ContactsSyncer::populateTable()
-{
-    ui->tableWidget->setRowCount(c->collections().count());
-    ui->tableWidget->setColumnCount(2);
-    ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
-    QStringList headers;
-    headers << "ID" << "Name";
-    ui->tableWidget->setHorizontalHeaderLabels(headers);
-    
-    int i = 0;
-    foreach(Collection collection, c->collections()) {
-        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(QString::number(collection.id())));
-        ui->tableWidget->setItem(i, 1, new QTableWidgetItem(collection.name()));
-        i++;
-        kDebug() << "collection added: id" << collection.id();
-    }
-}
-
-void ContactsSyncer::displayContacts()
-{
-    QTimer::singleShot(0, this, SLOT(startSync()));
-}
-
-void ContactsSyncer::loadContactsFor(int id)
+void ContactsSyncer::prepareSyncFor(int id)
 {
     c->loadContactsForCollection(id);
-    connect(c, SIGNAL(loadedCollection()), SLOT(displayContacts()));
+    connect(c, SIGNAL(loadedCollection()), SLOT(startSync()));
 }
 
 void ContactsSyncer::startSync()

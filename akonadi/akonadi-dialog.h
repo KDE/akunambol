@@ -31,8 +31,7 @@ class ContactsSyncer : public QObject
         
     private slots:
         void init();
-        void loadContactsFor(int id);
-        void displayContacts();
+        void prepareSyncFor(int id);
         void startSync();
 
     private:
