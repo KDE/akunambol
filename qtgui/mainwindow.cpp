@@ -38,17 +38,6 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 
 void MainWindow::init()
 {
-//     Akonadi::CollectionView *view = new Akonadi::CollectionView();
-//     setCentralWidget( view );
-    
-//     Akonadi::CollectionModel *model = new Akonadi::CollectionModel( this );
-//     view->setModel( model );
-    
-//     Akonadi::CollectionDialog dlg;
-//     dlg.setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
-//     dlg.setAccessRightsFilter( Collection::CanCreateItem );
-//     dlg.setDescription( i18n( "Select an address book for saving:" ) );
-//     dlg.exec();
     
 }
 
