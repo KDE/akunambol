@@ -53,12 +53,18 @@ void MainWindow::launchAboutDialog()
 
 void MainWindow::syncContacts()
 {
-    m_sourceManager->setData(m_user, m_password, "http://my.funambol.com/sync"); //FIXME UNHARDCODE!
+    m_sourceManager->setData(m_user, m_password, m_syncUrl); //FIXME UNHARDCODE!
     
     kDebug();
     ContactsSyncer *contactsSyncer = new ContactsSyncer(m_sourceManager);
-    connect(contactsSyncer, SIGNAL(finishedSync()), this, SLOT(finishedSync()));
+    connect(contactsSyncer, SIGNAL(startedSync()), SLOT(startedSync()));
+    connect(contactsSyncer, SIGNAL(finishedSync()), SLOT(finishedSync()));
 //     w.exec();
+}
+
+void MainWindow::startedSync()
+{
+    statusBar()->showMessage(i18n("Syncing..."));
 }
 
 void MainWindow::finishedSync()
@@ -86,6 +92,7 @@ void MainWindow::loadConfig()
     // TODO: Read config from disk
     QSettings s("Funambol", "Akunambol");
     m_user = s.value("user").toString();
+    m_syncUrl = s.value("syncUrl").toString();
     m_password = s.value("password").toString(); // TODO decrypt?
 }
 
@@ -94,6 +101,7 @@ void MainWindow::writeConfig()
     QSettings s("Funambol", "Akunambol");
     s.setValue("user", m_user);
     s.setValue("password", m_password); // TODO encrypt?
+    s.setValue("syncUrl", m_syncUrl);
 }
 
 void MainWindow::parseConfigDialog()

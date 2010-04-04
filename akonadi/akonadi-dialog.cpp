@@ -57,11 +57,15 @@ void ContactsSyncer::prepareSyncFor(qint64 id)
 {
     kDebug();
     c->loadContactsForCollection(id);
-    connect(c, SIGNAL(loadedCollection()), SLOT(startSync()));
+    QTimer *t = new QTimer;
+    t->setSingleShot(true);
+    connect(c, SIGNAL(loadedCollection()), t, SLOT(start()));
+    connect(t, SIGNAL(timeout()), SLOT(startSync()));
 }
 
 void ContactsSyncer::startSync()
 {
+    emit startedSync();
     //TODO check if we did select anything or we should abort
     m_sourceManager->setAkonadiItems(c->itemsForLoadedCollection());
     m_sourceManager->setCollectionId(c->selectedCollection());

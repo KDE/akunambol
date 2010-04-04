@@ -28,6 +28,7 @@ class ContactsSyncer : public QObject
     signals:
         void noCollections();
         void finishedSync();
+        void startedSync();
         
     private slots:
         void init();

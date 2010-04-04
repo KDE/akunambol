@@ -19,6 +19,7 @@ private slots:
     void launchConfigDialog();
     void launchAboutDialog();
     void syncContacts();
+    void startedSync();
     void finishedSync();
 
 private:
@@ -36,6 +37,7 @@ private:
 
     QString m_user;
     QString m_password;
+    QString m_syncUrl;
 };
 
 #endif // MAINWINDOW_H

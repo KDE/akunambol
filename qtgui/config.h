@@ -16,8 +16,11 @@ public:
 
     void setUser(const QString &text);
     void setPassword(const QString &text);
+    void setSyncUrl(const QString &text);
+    
     QString user();
     QString password();
+    QString syncUrl();
 
 protected:
     virtual void changeEvent(QEvent *e);
