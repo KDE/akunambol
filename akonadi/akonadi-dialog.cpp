@@ -40,19 +40,20 @@ void ContactsSyncer::init()
     if (c->collections().size() == 0) { // Can't sync
         emit noCollections();
     } else if (c->collections().size() == 1) { // Just one collection, don't show the dialog
-        loadContactsFor(c->collections().first().id());
+        prepareSyncFor(c->collections().first().id());
     } else { // Which collection should I use?
         CollectionDialog dlg;
         dlg.setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
         dlg.setAccessRightsFilter( Collection::CanCreateItem );
         dlg.setDescription( i18n( "Select an address book for saving:" ) );
         dlg.exec();
+        prepareSyncFor(dlg.selectedCollection().id());
     }
     
     disconnect(c, SIGNAL(ready()), this, SLOT(init())); // ready has served its purposes
 }
 
-void ContactsSyncer::prepareSyncFor(int id)
+void ContactsSyncer::prepareSyncFor(qint64 id)
 {
     c->loadContactsForCollection(id);
     connect(c, SIGNAL(loadedCollection()), SLOT(startSync()));

@@ -31,7 +31,7 @@ class ContactsSyncer : public QObject
         
     private slots:
         void init();
-        void prepareSyncFor(int id);
+        void prepareSyncFor(qint64 id);
         void startSync();
 
     private:
