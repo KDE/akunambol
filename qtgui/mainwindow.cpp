@@ -53,6 +53,7 @@ void MainWindow::launchAboutDialog()
 
 void MainWindow::syncContacts()
 {
+    kDebug() << m_user << m_password << m_syncUrl;
     m_sourceManager->setData(m_user, m_password, m_syncUrl); //FIXME UNHARDCODE!
     
     kDebug();
@@ -81,6 +82,7 @@ void MainWindow::launchConfigDialog()
 
     m_c->setUser(m_user);
     m_c->setPassword(m_password);
+    m_c->setSyncUrl(m_syncUrl);
     m_c->exec();
     parseConfigDialog();
 }
@@ -92,7 +94,7 @@ void MainWindow::loadConfig()
     // TODO: Read config from disk
     QSettings s("Funambol", "Akunambol");
     m_user = s.value("user").toString();
-    m_syncUrl = s.value("syncUrl").toString();
+    m_syncUrl = s.value("syncUrl", "http://my.funambol.com/sync").toString();
     m_password = s.value("password").toString(); // TODO decrypt?
 }
 
@@ -101,7 +103,7 @@ void MainWindow::writeConfig()
     QSettings s("Funambol", "Akunambol");
     s.setValue("user", m_user);
     s.setValue("password", m_password); // TODO encrypt?
-    s.setValue("syncUrl", m_syncUrl);
+    s.setValue("syncUrl", m_syncUrl); // Put default
 }
 
 void MainWindow::parseConfigDialog()
@@ -109,6 +111,7 @@ void MainWindow::parseConfigDialog()
     if (m_c->result() == QDialog::Accepted) {
         m_user = m_c->user();
         m_password = m_c->password();
+        m_syncUrl = m_c->syncUrl();
         writeConfig();
     }
 }

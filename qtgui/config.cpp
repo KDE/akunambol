@@ -6,7 +6,6 @@ Config::Config(QWidget *parent) :
     m_ui(new Ui::Config)
 {
     m_ui->setupUi(this);
-    m_ui->syncUrl->setText("http://my.funambol.com/sync"); // Default value (TODO use KConfig)
 }
 
 Config::~Config()
