@@ -55,6 +55,7 @@ void ContactsSyncer::init()
 
 void ContactsSyncer::prepareSyncFor(qint64 id)
 {
+    kDebug();
     c->loadContactsForCollection(id);
     connect(c, SIGNAL(loadedCollection()), SLOT(startSync()));
 }

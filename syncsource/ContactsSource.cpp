@@ -90,6 +90,7 @@ void* ContactsSource::getItemContent(StringBuffer& key, size_t* size)
     QString uid(key);
 //         kDebug() << uid;
     Akonadi::Item iid(uid.toLongLong());
+    kDebug() << "before" << uid;
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(iid);
     job->fetchScope().fetchFullPayload();
     
@@ -97,6 +98,7 @@ void* ContactsSource::getItemContent(StringBuffer& key, size_t* size)
         kDebug() << "Error!!! " << job->errorText();
         kDebug() << "I'm going to crash and can't avoid it... :(";
     }
+    kDebug() << "after";
     
     Akonadi::Item i = job->items().first();
     
