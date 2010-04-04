@@ -68,8 +68,8 @@ void ContactsSource::setAkonadiItems(Akonadi::Item::List items)
     m_items = items;
 }
 
-Enumeration* ContactsSource::getAllItemList() {
-
+Enumeration* ContactsSource::getAllItemList()
+{
     LOG.info("ContactsSource::getAllItemsList");
     ArrayList items;
    
@@ -132,7 +132,8 @@ void* ContactsSource::getItemContent(StringBuffer& key, size_t* size)
     return res;
 }
 
-int ContactsSource::insertItem(SyncItem& item) {
+int ContactsSource::insertItem(SyncItem& item)
+{
     const char* data = (const char*)item.getData();
     LOG.info("ContactsSource: adding new item");
     LOG.debug("ContactsSource: %s", data);
@@ -148,18 +149,20 @@ int ContactsSource::insertItem(SyncItem& item) {
         return STC_COMMAND_FAILED;
     }
     i.setPayload(contact);
+    
     Akonadi::Collection collection(m_collectionId);
     Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( i, collection );
     job->exec();
     
     Akonadi::Item newItem = job->item();
-    kDebug() << "ID now.." << newItem.id();
+//     kDebug() << "ID now.." << newItem.id();
     item.setKey(QString::number(newItem.id()).toLatin1());
     
     return STC_ITEM_ADDED;
 }
 
-int ContactsSource::modifyItem(SyncItem& item) {
+int ContactsSource::modifyItem(SyncItem& item)
+{
     const char *key = item.getKey();
 
     LOG.info("ContactsSource: modifying item: %s", key);
@@ -201,7 +204,8 @@ int ContactsSource::modifyItem(SyncItem& item) {
     }
 }
 
-int ContactsSource::removeItem(SyncItem& item) {
+int ContactsSource::removeItem(SyncItem& item)
+{
     const char *key = item.getKey();
     LOG.info("ContactsSource: removing item: %s", key);
 
@@ -213,13 +217,15 @@ int ContactsSource::removeItem(SyncItem& item) {
     return STC_OK;
 }
 
-int ContactsSource::removeAllItems() {
+int ContactsSource::removeAllItems()
+{
     LOG.info("ContactsSource: remove all items");
     Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(m_items); // Fire and forget
     job->start();
 }
 
-const StringBuffer ContactsSource::unfoldVCard(const char* vcard) {
+const StringBuffer ContactsSource::unfoldVCard(const char* vcard)
+{
     StringBuffer buf(vcard);
     buf.replaceAll("\r\n ", "");
     return buf;
