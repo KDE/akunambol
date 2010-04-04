@@ -83,73 +83,53 @@ Enumeration* ContactsSource::getAllItemList() {
     return new ArrayListEnumeration(items);
 }
 
-void* ContactsSource::getItemContent(StringBuffer& key, size_t* size) {
-
+void* ContactsSource::getItemContent(StringBuffer& key, size_t* size)
+{
     LOG.debug("ContactsSource::getItemContent for %s", key.c_str());
-
-    // Load the contact
-//     foreach(const Akonadi::Item i, m_items) {
-//         QString uid = QString::number(i.id());
-//             StringBuffer k((const char*)uid.toLatin1());
-//             if (key != k) {
-//                 continue;
-//             }
         
-        QString uid(key);
-        kDebug() << uid;
-        Akonadi::Item iid(uid.toLongLong());
-        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(iid);
-        job->fetchScope().fetchFullPayload();
-//         
-//         if (!job->exec()) {
-//             kDebug() << "Error!!! " << job->errorText();
-//         }
-// Akonadi::Item iid(uid.toLongLong());
-// Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(iid);
-// job->fetchScope().fetchFullPayload();
-// bool success = job->exec();
+    QString uid(key);
+//         kDebug() << uid;
+    Akonadi::Item iid(uid.toLongLong());
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(iid);
+    job->fetchScope().fetchFullPayload();
+    
+    if (!job->exec()) {
+        kDebug() << "Error!!! " << job->errorText();
+        kDebug() << "I'm going to crash and can't avoid it... :(";
+    }
+    
+    Akonadi::Item i = job->items().first();
+    
+    if (!i.hasPayload<KABC::Addressee>()) {
+        LOG.info("Invalid item");
+        kDebug() << "INVALID";
+    }
+    
+    KABC::Addressee contact = i.payload<KABC::Addressee>();
 
-// kDebug() << "Job ok?" << success;
-        if (!job->exec()) {
-            kDebug() << "Error!!! " << job->errorText();
-            kDebug() << "I'm going to crash and can't avoid it...";
-//             void *a;
-//             return a;
-        }
+    if (contact.isEmpty()) {
+        LOG.error("Cannot load contact with id: %s", key.c_str());
+        return NULL;
+    }
 
-// kDebug() << "Error:" << job->errorText();
-        Akonadi::Item i = job->items().first();
-        
-        if (!i.hasPayload<KABC::Addressee>()) {
-            LOG.info("Invalid item");
-            kDebug() << "INVALID";
-        }
-        
-        KABC::Addressee contact = i.payload<KABC::Addressee>();
+    // Now convert the item
+    KABC::VCardConverter converter;
+    QByteArray bytes = converter.createVCard(contact, KABC::VCardConverter::v2_1);
+    const char* data = bytes.constData();
+    // Since we have an interoperability issue on vCard with QP encoding and
+    // folding, we perform an "unfold" (note that folding is not required by
+    // vCard)
+    const StringBuffer item = unfoldVCard(data);
+    *size = item.length();
 
-        if (contact.isEmpty()) {
-            LOG.error("Cannot load contact with id: %s", key.c_str());
-            return NULL;
-        }
+    char* res = new char[*size];
+    for (int i=0;i<*size;++i) {
+        res[i] = ((char*)item.c_str())[i];
+    }
 
-        // Now convert the item
-        KABC::VCardConverter converter;
-        QByteArray bytes = converter.createVCard(contact, KABC::VCardConverter::v2_1);
-        const char* data = bytes.constData();
-        // Since we have an interoperability issue on vCard with QP encoding and
-        // folding, we perform an "unfold" (note that folding is not required by
-        // vCard)
-        const StringBuffer item = unfoldVCard(data);
-        *size = item.length();
-
-        char* res = new char[*size];
-        for (int i=0;i<*size;++i) {
-            res[i] = ((char*)item.c_str())[i];
-        }
-
-        LOG.debug("Contact content: %s", res);
-        return res;
-//     }
+    LOG.debug("Contact content: %s", res);
+    
+    return res;
 }
 
 int ContactsSource::insertItem(SyncItem& item) {
@@ -201,7 +181,6 @@ int ContactsSource::modifyItem(SyncItem& item) {
     }
 
     KABC::Addressee contact = i.payload<KABC::Addressee>();
-//     KABC::Addressee contact;
     const char* data = (const char*)item.getData();
     LOG.debug("ContactsSource: %s", data);
 
