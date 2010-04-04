@@ -33,9 +33,8 @@ QList<Akonadi::Collection> Contacts::collections()
     return m_collections;
 }
 
-QList<Akonadi::Item> Contacts::itemsForCollection(int id)
+QList<Akonadi::Item> Contacts::itemsForLoadedCollection()
 {
-    #warning we should actually care of the id of the collection
     return m_items;
 }
       
@@ -139,6 +138,6 @@ void Contacts::fetchContactsDone(KJob* job)
 //         m_items << item; //contactItemAdded( item );
 //     }
     if (!items.isEmpty()) {
-        emit loadedCollection(items.first().id());
+        emit loadedCollection();
     }
 }

@@ -66,6 +66,7 @@ void SourceManager::setAkonadiItems(QList<Akonadi::Item> items)
 
 void SourceManager::sync()
 {
+    kDebug();
     // Create the contact sync source passing its name, the SyncSourceConfig 
     SyncSourceConfig *srcConfig = KFunSyncConfig::getInstance()->getSyncSourceConfig(KFUNSYNC_SOURCE_NAME);
     ContactsSource contactsSource(KFUNSYNC_SOURCE_NAME, srcConfig, NULL);

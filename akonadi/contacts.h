@@ -20,7 +20,7 @@ class Contacts : public QObject
         ~Contacts();
 
         QList<Akonadi::Collection> collections();
-        QList<Akonadi::Item> itemsForCollection(int id);
+        QList<Akonadi::Item> itemsForLoadedCollection();
         
         void loadContactsForCollection(int id);
         
@@ -31,7 +31,7 @@ class Contacts : public QObject
         
     signals:
         void ready();
-        void loadedCollection(int);
+        void loadedCollection();
 
     private:
         void initContacts();

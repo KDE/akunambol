@@ -25,10 +25,13 @@ class Dialog : public QDialog
         Dialog(SourceManager *s, QWidget *parent = 0);
         ~Dialog();
         
-    private Q_SLOTS:
+    signals:
+        void noCollections();
+        
+    private slots:
         void init();
         void loadContactsFor(int id);
-        void displayContacts(int wa);
+        void displayContacts();
         void startSync();
 
     private:

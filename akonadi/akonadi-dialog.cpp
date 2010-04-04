@@ -24,20 +24,14 @@ using namespace Akonadi;
 Dialog::Dialog(SourceManager *s, QWidget *parent)
     : QDialog(parent), ui(new Ui::Dialog)
 {
-    ui->setupUi(this);
+//     ui->setupUi(this);
     m_sourceManager = s;
     
     
-    CollectionDialog dlg( this );
-    dlg.setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
-    //dlg.setAccessRightsFilter( Collection::CanCreateItem );
-    dlg.setDescription( i18n( "Select an address book for saving:" ) );
-    dlg.exec();
-    
     c = new Contacts(this);
     connect(c, SIGNAL(ready()), SLOT(init()));
-    connect(ui->tableWidget, SIGNAL(cellClicked(int, int)), SLOT(loadContactsFor(int)));
-    connect(ui->syncButton, SIGNAL(clicked()), this, SLOT(startSync()));
+//     connect(ui->tableWidget, SIGNAL(cellClicked(int, int)), SLOT(loadContactsFor(int)));
+//     connect(ui->syncButton, SIGNAL(clicked()), this, SLOT(startSync()));
 }
 
 Dialog::~Dialog()
@@ -48,7 +42,20 @@ Dialog::~Dialog()
 
 void Dialog::init()
 {
-    populateTable();
+    kDebug();
+    if (c->collections().size() == 0) { // Can't sync
+        emit noCollections();
+    } else if (c->collections().size() == 1) { // Just one collection, don't show the dialog
+        loadContactsFor(c->collections().first().id());
+    } else { // Which collection should I use?
+        CollectionDialog dlg( this );
+        dlg.setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+        dlg.setAccessRightsFilter( Collection::CanCreateItem );
+        dlg.setDescription( i18n( "Select an address book for saving:" ) );
+        dlg.exec();
+    }
+    
+//     populateTable();
     disconnect(c, SIGNAL(ready()), this, SLOT(init())); // ready has served its purposes
 }
 
@@ -70,37 +77,38 @@ void Dialog::populateTable()
     }
 }
 
-void Dialog::displayContacts(int wa)
+void Dialog::displayContacts()
 {
-    ui->contactsTable->setRowCount(c->itemsForCollection(0).count()); //FIXME
-    ui->contactsTable->setColumnCount(3);
-    ui->contactsTable->horizontalHeader()->setStretchLastSection(true);
-    QStringList headers;
-    headers << "ID" << "Name" << "E-Mail";
-    ui->contactsTable->setHorizontalHeaderLabels(headers);
-//     kDebug() << "waa";
-    int i = 0;
-    foreach(Item item, c->itemsForCollection(0)) {
-        KABC::Addressee a = item.payload<KABC::Addressee>();
-        ui->contactsTable->setItem(i, 0, new QTableWidgetItem(QString::number(item.id())));
-        ui->contactsTable->setItem(i, 1, new QTableWidgetItem(a.realName()));
-        ui->contactsTable->setItem(i, 2, new QTableWidgetItem(a.fullEmail()));
-//         kDebug() << a.formattedName();
-        i++;
-        kDebug() << "items added:" << i;
-    }
+    QTimer::singleShot(0, this, SLOT(startSync()));
+//     ui->contactsTable->setRowCount(c->itemsForCollection(0).count()); //FIXME
+//     ui->contactsTable->setColumnCount(3);
+//     ui->contactsTable->horizontalHeader()->setStretchLastSection(true);
+//     QStringList headers;
+//     headers << "ID" << "Name" << "E-Mail";
+//     ui->contactsTable->setHorizontalHeaderLabels(headers);
+// //     kDebug() << "waa";
+//     int i = 0;
+//     foreach(Item item, c->itemsForCollection(0)) {
+//         KABC::Addressee a = item.payload<KABC::Addressee>();
+//         ui->contactsTable->setItem(i, 0, new QTableWidgetItem(QString::number(item.id())));
+//         ui->contactsTable->setItem(i, 1, new QTableWidgetItem(a.realName()));
+//         ui->contactsTable->setItem(i, 2, new QTableWidgetItem(a.fullEmail()));
+// //         kDebug() << a.formattedName();
+//         i++;
+//         kDebug() << "items added:" << i;
+//     }
 }
 
 void Dialog::loadContactsFor(int id)
 {
-    c->loadContactsForCollection(ui->tableWidget->item(id, 0)->text().toInt());
-    connect(c, SIGNAL(loadedCollection(int)), SLOT(displayContacts(int)));
+    c->loadContactsForCollection(id);
+    connect(c, SIGNAL(loadedCollection()), SLOT(displayContacts()));
 }
 
 void Dialog::startSync()
 {
     //TODO check if we did select anything or we should abort
-    m_sourceManager->setAkonadiItems(c->itemsForCollection(0));
+    m_sourceManager->setAkonadiItems(c->itemsForLoadedCollection());
     m_sourceManager->sync();
     
 }
