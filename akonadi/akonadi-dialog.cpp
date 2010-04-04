@@ -26,7 +26,6 @@ ContactsSyncer::ContactsSyncer(SourceManager* s, QObject* parent)
 {
     m_sourceManager = s;
    
-   
     c = new Contacts;
     connect(c, SIGNAL(ready()), SLOT(init()));
 }
@@ -51,7 +50,6 @@ void ContactsSyncer::init()
         dlg.exec();
     }
     
-//     populateTable();
     disconnect(c, SIGNAL(ready()), this, SLOT(init())); // ready has served its purposes
 }
 
@@ -76,23 +74,6 @@ void ContactsSyncer::populateTable()
 void ContactsSyncer::displayContacts()
 {
     QTimer::singleShot(0, this, SLOT(startSync()));
-//     ui->contactsTable->setRowCount(c->itemsForCollection(0).count()); //FIXME
-//     ui->contactsTable->setColumnCount(3);
-//     ui->contactsTable->horizontalHeader()->setStretchLastSection(true);
-//     QStringList headers;
-//     headers << "ID" << "Name" << "E-Mail";
-//     ui->contactsTable->setHorizontalHeaderLabels(headers);
-// //     kDebug() << "waa";
-//     int i = 0;
-//     foreach(Item item, c->itemsForCollection(0)) {
-//         KABC::Addressee a = item.payload<KABC::Addressee>();
-//         ui->contactsTable->setItem(i, 0, new QTableWidgetItem(QString::number(item.id())));
-//         ui->contactsTable->setItem(i, 1, new QTableWidgetItem(a.realName()));
-//         ui->contactsTable->setItem(i, 2, new QTableWidgetItem(a.fullEmail()));
-// //         kDebug() << a.formattedName();
-//         i++;
-//         kDebug() << "items added:" << i;
-//     }
 }
 
 void ContactsSyncer::loadContactsFor(int id)
