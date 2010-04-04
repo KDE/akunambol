@@ -7,6 +7,10 @@
 
 #include <KDebug>
 
+#include <Akonadi/CollectionDialog>
+#include <Akonadi/CollectionModel>
+#include <Akonadi/CollectionView>
+
 #include "../syncsource/sourcemanager.h"
 #include "../akonadi/akonadi-dialog.h"
 
@@ -28,11 +32,23 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     setIcons();
     loadConfig();
     statusBar()->showMessage(tr("Configuration loaded."));
+    init();
 //    SourceManager s;
 }
 
 void MainWindow::init()
 {
+//     Akonadi::CollectionView *view = new Akonadi::CollectionView();
+//     setCentralWidget( view );
+    
+//     Akonadi::CollectionModel *model = new Akonadi::CollectionModel( this );
+//     view->setModel( model );
+    
+//     Akonadi::CollectionDialog dlg;
+//     dlg.setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+//     dlg.setAccessRightsFilter( Collection::CanCreateItem );
+//     dlg.setDescription( i18n( "Select an address book for saving:" ) );
+//     dlg.exec();
     
 }
 

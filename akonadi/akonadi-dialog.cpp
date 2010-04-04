@@ -8,6 +8,7 @@
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/Monitor>
+#include <Akonadi/CollectionDialog>
 
 #include <kabc/addressee.h>
 #include <kabc/phonenumber.h>
@@ -25,6 +26,13 @@ Dialog::Dialog(SourceManager *s, QWidget *parent)
 {
     ui->setupUi(this);
     m_sourceManager = s;
+    
+    
+    CollectionDialog dlg( this );
+    dlg.setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+    //dlg.setAccessRightsFilter( Collection::CanCreateItem );
+    dlg.setDescription( i18n( "Select an address book for saving:" ) );
+    dlg.exec();
     
     c = new Contacts(this);
     connect(c, SIGNAL(ready()), SLOT(init()));

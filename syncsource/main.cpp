@@ -33,9 +33,9 @@
  * the words "Powered by Funambol".
  */
 
-#include <Qt/qapplication.h>
-#include <kapplication.h>
-#include <kcmdlineargs.h>
+#include <KApplication>
+#include <KCmdLineArgs>
+#include "../config.h"
 
 #include "base/fscapi.h"
 
@@ -97,7 +97,9 @@ bool doSync(KFunSyncOpt& options)
 //------------------------------------------------------------------------ Main
 int main(int argc, char* argv[]) 
 {
-    QApplication app(argc, argv);
+    KCmdLineArgs::init(argc, argv, "Akunambol", "akunambol", VERSION, "SyncML Client for Akonadi using Funambol libraries");
+    
+    KApplication app;
     //KApplication(false);
     //KCmdLineArgs::init( argc, argv, NULL );
 
