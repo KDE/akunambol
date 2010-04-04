@@ -60,7 +60,7 @@ using namespace KABC;
 ContactsSource::ContactsSource ( const char* name, AbstractSyncSourceConfig* sc, KeyValueStore* cache )
         : CacheSyncSource(name, sc, cache)
 {
-
+    m_collectionId = 0;
 }
 
 void ContactsSource::setAkonadiItems(Akonadi::Item::List items)
@@ -196,7 +196,7 @@ int ContactsSource::modifyItem(SyncItem& item)
     }
     
     i.setPayload(contact);
-    Akonadi::ItemModifyJob *job2 = new Akonadi::ItemModifyJob(i); // Fire and forget
+    Akonadi::ItemModifyJob *job2 = new Akonadi::ItemModifyJob(i);
     if (job2->exec()){
         return STC_OK;
     } else {
@@ -212,16 +212,24 @@ int ContactsSource::removeItem(SyncItem& item)
     // Search the contact
     QString uid(key);
     Akonadi::Item i(uid.toLongLong());
-    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(i); // Fire and forget
-    job->start();
-    return STC_OK;
+    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(i);
+    if (job->exec()){
+        return STC_OK;
+    } else {
+        return STC_COMMAND_FAILED;
+    }
 }
 
 int ContactsSource::removeAllItems()
 {
     LOG.info("ContactsSource: remove all items");
-    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(m_items); // Fire and forget
+    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(m_items);
     job->start();
+    if (job->exec()){
+        return STC_OK;
+    } else {
+        return STC_COMMAND_FAILED;
+    }
 }
 
 const StringBuffer ContactsSource::unfoldVCard(const char* vcard)
