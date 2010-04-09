@@ -63,6 +63,7 @@ set(akunambol_SRCS
     qtgui/config.cpp
     qtgui/main.cpp
     qtgui/mainwindow.cpp
+    qtgui/KDELog.cpp
     ${syncsource_SRCS}
     ${akonadi_SRCS}
     )

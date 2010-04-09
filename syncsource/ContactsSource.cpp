@@ -125,7 +125,7 @@ void* ContactsSource::getItemContent(StringBuffer& key, size_t* size)
     *size = item.length();
 
     char* res = new char[*size];
-    for (int i=0;i<*size;++i) {
+    for (int i=0;i<(int)*size;++i) {
         res[i] = ((char*)item.c_str())[i];
     }
 
