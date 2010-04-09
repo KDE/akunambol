@@ -1,6 +1,7 @@
 
 // Funambol includes
 #include "base/adapter/PlatformAdapter.h"
+#include "base/Log.h"
 
 // Qt/KDE
 #include <KApplication>
@@ -11,6 +12,7 @@
 #include "../config.h"
 #include "mainwindow.h"
 #include "../syncsource/KFunSyncConfig.h"
+#include "KDELog.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,6 +21,10 @@ int main(int argc, char *argv[])
     KApplication app;
     
     PlatformAdapter::init("akunambol");
+    // Init the logger
+    KDELog *kdeLogger = new KDELog;
+    Log::setLogger(kdeLogger);
+    LOG.setLevel(LOG_LEVEL_DEBUG);
     
     MainWindow w;
     w.show();
