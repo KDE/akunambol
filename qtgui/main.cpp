@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     
     KApplication app;
     
-    PlatformAdapter::init("akunambol");
+    PlatformAdapter::init("Funambol/Akunambol");
     // Init the logger
     KDELog *KDELogger = new KDELog;
     Log::setLogger(KDELogger);
