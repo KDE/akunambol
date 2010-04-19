@@ -1,0 +1,81 @@
+20:50:34 GMT [DEBUG] local timezone: CEST = GMT +0200
+20:50:34 GMT [DEBUG] local time: Sun Apr 18 22:50:34 2010
+[DEBUG] 
+20:50:34 GMT [DEBUG] world time: Sun Apr 18 20:50:34 2010
+[DEBUG] 
+20:50:34 GMT [INFO] DMTClientConfig(root): deprecated method, use PlatformAdapter::init(root) instead.
+20:50:34 GMT [ERROR] PlatformAdapter::init(): already initialized.
+21:06:08 GMT [DEBUG] local timezone: CEST = GMT +0200
+21:06:08 GMT [DEBUG] local time: Sun Apr 18 23:06:08 2010
+[DEBUG] 
+21:06:08 GMT [DEBUG] world time: Sun Apr 18 21:06:08 2010
+[DEBUG] 
+21:06:08 GMT [INFO] DMTClientConfig(root): deprecated method, use PlatformAdapter::init(root) instead.
+21:06:08 GMT [ERROR] PlatformAdapter::init(): already initialized.
+21:06:08 GMT [DEBUG] Synchronization URL: http://knuckles.homelinux.org:8080/funambol/ds
+21:06:08 GMT [INFO] Preparing synchronization of contact...
+21:06:08 GMT [INFO] ContactsSource::getAllItemsList
+21:06:08 GMT [INFO] Found contact: 241
+21:06:08 GMT [INFO] Found contact: 242
+21:06:08 GMT [INFO] Found contact: 243
+21:06:08 GMT [INFO] Found contact: 244
+21:06:08 GMT [INFO] Found contact: 245
+21:06:08 GMT [INFO] Found contact: 246
+21:06:08 GMT [INFO] Found contact: 247
+21:06:08 GMT [INFO] Found contact: 248
+21:06:08 GMT [INFO] Found contact: 249
+21:06:08 GMT [INFO] Found contact: 250
+21:06:08 GMT [INFO] Found contact: 251
+21:06:08 GMT [INFO] Found contact: 252
+21:06:08 GMT [INFO] Found contact: 253
+21:06:08 GMT [INFO] Found contact: 254
+21:06:08 GMT [INFO] Found contact: 255
+21:06:08 GMT [INFO] Found contact: 256
+21:06:08 GMT [INFO] Found contact: 257
+21:06:08 GMT [INFO] Found contact: 258
+21:06:08 GMT [INFO] Found contact: 259
+21:06:08 GMT [INFO] Found contact: 260
+21:06:08 GMT [INFO] Found contact: 261
+21:06:08 GMT [INFO] Found contact: 262
+21:06:08 GMT [INFO] Found contact: 263
+21:06:08 GMT [INFO] Found contact: 264
+21:06:08 GMT [INFO] Found contact: 265
+21:06:08 GMT [INFO] Found contact: 266
+21:06:08 GMT [INFO] Found contact: 267
+21:06:08 GMT [INFO] Found contact: 268
+21:06:08 GMT [INFO] Found contact: 269
+21:06:08 GMT [INFO] Found contact: 270
+21:06:08 GMT [INFO] Found contact: 271
+21:06:08 GMT [INFO] Found contact: 272
+21:06:08 GMT [INFO] Found contact: 273
+21:06:08 GMT [INFO] Found contact: 274
+21:06:08 GMT [INFO] Found contact: 275
+21:06:08 GMT [INFO] Found contact: 276
+21:06:08 GMT [INFO] Found contact: 277
+21:06:08 GMT [INFO] Found contact: 278
+21:06:08 GMT [INFO] Found contact: 279
+21:06:08 GMT [INFO] Found contact: 280
+21:06:08 GMT [INFO] Found contact: 281
+21:06:08 GMT [INFO] Found contact: 282
+21:06:08 GMT [INFO] Found contact: 283
+21:06:08 GMT [INFO] Found contact: 284
+21:06:08 GMT [INFO] Found contact: 285
+21:06:08 GMT [INFO] Found contact: 286
+21:06:08 GMT [INFO] Found contact: 287
+21:06:08 GMT [INFO] Found contact: 288
+21:06:08 GMT [INFO] Found contact: 289
+21:06:08 GMT [INFO] Found contact: 290
+21:06:08 GMT [INFO] Found contact: 291
+21:06:08 GMT [INFO] Found contact: 292
+21:06:08 GMT [INFO] Found contact: 293
+21:06:08 GMT [INFO] Found contact: 294
+21:06:08 GMT [INFO] Found contact: 295
+21:06:08 GMT [INFO] Found contact: 296
+21:06:08 GMT [INFO] Found contact: 297
+21:06:08 GMT [INFO] Found contact: 298
+21:06:08 GMT [INFO] Found contact: 299
+21:06:08 GMT [INFO] Found contact: 300
+21:06:08 GMT [INFO] Found contact: 301
+21:06:08 GMT [INFO] Found contact: 302
+21:06:08 GMT [INFO] Found contact: 303
+21:06:09 GMT [INFO] Sync successfully completed.
