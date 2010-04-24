@@ -24,6 +24,7 @@
 #include <KLocalizedString>
 #include <KGlobalSettings>
 #include <KConfigGroup>
+#include <KDebug>
 
 SyncServer::SyncServer() {
 }
@@ -55,6 +56,38 @@ QString SyncServer::password() const {
     return m_password;
 }
 
+void SyncServer::setAutoSyncEnabled(bool enable) {
+    m_autoSyncEnabled = enable;
+}
+
+bool SyncServer::autoSyncEnabled() {
+    return m_autoSyncEnabled;
+}
+
+void SyncServer::setAutoSyncDay(int day) {
+    m_autoSyncDay = day;
+}
+
+int SyncServer::autoSyncDay() {
+    return m_autoSyncDay;
+}
+
+void SyncServer::setAutoSyncMinute(int minute) {
+    m_autoSyncMinute = minute;
+}
+
+int SyncServer::autoSyncMinute() {
+    return m_autoSyncMinute;
+}
+
+void SyncServer::setAutoSyncTime(const QTime& time) {
+    m_autoSyncTime = time;
+}
+
+QTime SyncServer::autoSyncTime() {
+    return m_autoSyncTime;
+}
+
 void SyncServer::syncing() {
     m_lastSyncState = Running;
 }
@@ -72,6 +105,56 @@ SyncServer::SyncState SyncServer::lastSyncState() {
     return m_lastSyncState;
 }
 
+QDateTime SyncServer::nextSyncTime() {
+    QDateTime nextSync = QDateTime::currentDateTime();
+    if(m_autoSyncEnabled){
+        switch(m_autoSyncRecurrance){
+            case Hourly:
+                if(m_lastSyncTime.time().minute() < m_autoSyncMinute){
+                    nextSync = m_lastSyncTime.addSecs((m_autoSyncMinute - m_lastSyncTime.time().minute()) * 60);
+                } else {
+                    nextSync = m_lastSyncTime.addSecs((60 - m_lastSyncTime.time().minute() + m_autoSyncMinute) * 60);
+                }
+                nextSync = nextSync.addSecs(-nextSync.time().second()); // Set to seconds to 0
+                break;
+            case Daily:
+                if(m_lastSyncTime.time() > m_autoSyncTime){
+                    nextSync = m_lastSyncTime.addDays(1);
+                }
+                nextSync.setTime(m_autoSyncTime);
+                break;
+            case Weekly:
+                if(m_lastSyncTime.date().dayOfWeek() <= m_autoSyncDay && m_lastSyncTime.time() < m_autoSyncTime){
+                    nextSync = m_lastSyncTime.addDays(m_autoSyncDay - m_lastSyncTime.date().dayOfWeek());
+                } else {
+                    nextSync = m_lastSyncTime.addDays(7 - m_lastSyncTime.date().dayOfWeek() + m_autoSyncDay);
+                }
+                nextSync.setTime(m_autoSyncTime);
+                break;
+            case Monthly:
+                if(m_lastSyncTime.date().day() <= m_autoSyncDay && m_lastSyncTime.time() < m_autoSyncTime){
+                    nextSync = m_lastSyncTime.addDays(m_autoSyncDay - m_lastSyncTime.date().day());
+                } else {
+                    nextSync = m_lastSyncTime.addDays(QDate::currentDate().daysInMonth() - m_lastSyncTime.date().day() + m_autoSyncDay);
+                }
+                nextSync.setTime(m_autoSyncTime);
+                break;
+        }
+        if(nextSync < QDateTime::currentDateTime()){
+            return QDateTime::currentDateTime();
+        }
+    }
+    return nextSync;
+}
+
+void SyncServer::setAutoSyncRecurrance(SyncServer::SyncRecurrance recurrance) {
+    m_autoSyncRecurrance = recurrance;
+}
+
+SyncServer::SyncRecurrance SyncServer::autoSyncRecurrance() {
+    return m_autoSyncRecurrance;
+}
+
 void SyncServer::load(KConfigGroup config, const QString &syncUrl) {
     KConfigGroup serverGroup(&config, syncUrl);
     setSyncUrl(syncUrl);
@@ -86,7 +169,22 @@ void SyncServer::load(KConfigGroup config, const QString &syncUrl) {
     } else {
         m_lastSyncState = Never;
     }
-
+    
+    m_autoSyncEnabled = serverGroup.readEntry("AutoSyncEnabled", false);
+    QString recurrance = serverGroup.readEntry("AutoSyncRecurrance", "Daily");
+    if(recurrance == "Hourly"){
+        m_autoSyncRecurrance = Hourly;
+    } else if(recurrance == "Daily") {
+        m_autoSyncRecurrance = Daily;
+    } else if(recurrance == "Weekly") {
+        m_autoSyncRecurrance = Weekly;
+    } else if(recurrance == "Monthly") {
+        m_autoSyncRecurrance = Monthly;
+    }
+    
+    m_autoSyncMinute = serverGroup.readEntry("AutoSyncMinute", 0);
+    m_autoSyncDay = serverGroup.readEntry("AutoSyncDay", 0);
+    m_autoSyncTime = QTime::fromString(serverGroup.readEntry("AutoSyncTime"));
 }
 
 void SyncServer::save(KConfigGroup config) {
@@ -103,6 +201,29 @@ void SyncServer::save(KConfigGroup config) {
             break;
         default:
             serverGroup.writeEntry("LastSyncState", "Never");
+    }
+    
+    serverGroup.writeEntry("AutoSyncEnabled", m_autoSyncEnabled);
+    
+    if(m_autoSyncEnabled){
+        switch(m_autoSyncRecurrance){
+            case Hourly:
+                serverGroup.writeEntry("AutoSyncRecurrance", "Hourly");
+                break;
+            case Daily:
+                serverGroup.writeEntry("AutoSyncRecurrance", "Daily");
+                break;
+            case Weekly:
+                serverGroup.writeEntry("AutoSyncRecurrance", "Weekly");
+                break;
+            case Monthly:
+                serverGroup.writeEntry("AutoSyncRecurrance", "Monthly");
+                break;
+        }
+
+        serverGroup.writeEntry("AutoSyncMinute", m_autoSyncMinute);
+        serverGroup.writeEntry("AutoSyncDay", m_autoSyncDay);
+        serverGroup.writeEntry("AutoSyncTime", m_autoSyncTime.toString());
     }
 }
 
@@ -160,11 +281,26 @@ void SyncServerDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
         default:
             lastSyncState = '-';
     }
+        
     paintRect.adjust(fm.width(lastSyncStateLabel + ' '), 0, 0, 0);
     painter->drawText(paintRect, lastSyncState);
     
+ 
+    // Reset paintRect for next line
+    paintRect = option.rect;
+    paintRect.adjust(spacing, spacing + fm.height() * 2, 0, 0);
+    
+    if(syncServer->autoSyncEnabled()){
+        QString nextSyncTimeLabel(i18n("Next scheduled sync:"));
+        painter->drawText(paintRect, nextSyncTimeLabel);
+        
+        QString nextSyncTime = syncServer->nextSyncTime().toString();
+        paintRect.adjust(fm.width(nextSyncTimeLabel + ' '), 0, 0, 0);
+        painter->drawText(paintRect, nextSyncTime);
+    }
+
 }
 
 QSize SyncServerDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
-         return QStyledItemDelegate::sizeHint(option, index) * 3;
+    return QStyledItemDelegate::sizeHint(option, index) * 4;
 }

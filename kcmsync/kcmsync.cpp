@@ -18,14 +18,16 @@
 #include "kcmsync.h"
 #include "syncserver.h"
 #include "syncjob.h"
-
-#include <qtgui/config.h>
+#include "serverproperties.h"
 
 #include <QtGui/QHBoxLayout>
 
 #include <kdebug.h>
 #include <kgenericfactory.h>
 #include <kaboutdata.h>
+#include <QtDBus/QDBusMessage>
+#include <QtDBus/QDBusConnection>
+#include <qdbusreply.h>
 
 K_PLUGIN_FACTORY( KCMSyncFactory, registerPlugin<KCMSync>();)
 K_EXPORT_PLUGIN( KCMSyncFactory( "kcm_sync" ) )
@@ -56,6 +58,9 @@ KCMSync::KCMSync(QWidget *parent, const QVariantList &args) :
     
     connect(ui.lwServerList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), SLOT(updateButtons()));
     updateButtons();
+    
+    QDBusConnection::sessionBus().connect("org.kde.kded", "/modules/akunambolsync", "org.kde.akunambolsync", "syncStarted",  this, SLOT(autosyncStarted(const QString &)));
+    QDBusConnection::sessionBus().connect("org.kde.kded", "/modules/akunambolsync", "org.kde.akunambolsync", "syncCompleted",  this, SLOT(autosyncCompleted(const QString &, bool)));
 
 }
 
@@ -81,6 +86,7 @@ void KCMSync::load() {
 }
 
 void KCMSync::save() {
+    bool autosyncsconfigured = false;
     KConfig config("akunambolrc");
     config.deleteGroup("Servers");
     KConfigGroup serverConfig(&config, "Servers");
@@ -88,7 +94,47 @@ void KCMSync::save() {
         SyncServer *syncServer = qVariantValue<SyncServer*>(ui.lwServerList->item(i)->data(Qt::UserRole));
         config.deleteGroup(syncServer->syncUrl());
         syncServer->save(serverConfig);
+        if(syncServer->autoSyncEnabled()){
+            autosyncsconfigured = true;
+        }
     }
+    
+    serverConfig.sync(); // Sync config to disk because kded module reloads it
+    
+    // check if there are any autosyncs configured. If yes, start the kded module, if no, stop it
+    if(autosyncsconfigured){
+        kDebug() << "autosyncs conigured... loading daemon...";
+        QDBusMessage m = QDBusMessage::createMethodCall("org.kde.kded", "/kded", "org.kde.kded", "loadModule");
+        m << "akunambolsync";
+        QDBusReply<bool> reply = QDBusConnection::sessionBus().call(m);
+        if(!reply.isValid() || !reply.value()){
+            kDebug() << "Could not load kded module. kded running?";
+        } else {
+
+            m = QDBusMessage::createMethodCall("org.kde.kded", "/kded", "org.kde.kded", "setModuleAutoloading");
+            m << "akunambolsync" << true;
+            QDBusConnection::sessionBus().call(m);
+            
+            m = QDBusMessage::createMethodCall("org.kde.kded", "/modules/akunambolsync", "org.kde.akunambolsync", "reloadConfiguration");
+            QDBusConnection::sessionBus().call(m);
+            
+            QDBusConnection::sessionBus().connect("org.kde.kded", "/modules/akunambolsync", "org.kde.akunambolsync", "syncStarted",  this, SLOT(autosyncStarted(const QString &)));
+            QDBusConnection::sessionBus().connect("org.kde.kded", "/modules/akunambolsync", "org.kde.akunambolsync", "syncCompleted",  this, SLOT(autosyncCompleted(const QString &, bool)));
+        }
+    } else {
+        kDebug() << "no autosyncs conigured... unloading daemon...";
+        QDBusMessage m = QDBusMessage::createMethodCall("org.kde.kded", "/kded", "org.kde.kded", "unloadModule");
+        m << "akunambolsync";
+        QDBusReply<bool> reply = QDBusConnection::sessionBus().call(m);
+        if(!reply.isValid() || !reply.value()){
+            kDebug() << "Could not unload kded module... nothing to worry about...";
+        }
+
+        m = QDBusMessage::createMethodCall("org.kde.kded", "/kded", "org.kde.kded", "setModuleAutoloading");
+        m << "akunambolsync" << false;
+        QDBusConnection::sessionBus().call(m);          
+    }
+    
 }
 
 void KCMSync::updateButtons() {
@@ -104,21 +150,19 @@ void KCMSync::updateButtons() {
 }
 
 void KCMSync::addServer() {
-    QPointer<Config> addServerDialog = new Config(this);
-    addServerDialog->setSyncUrl("http://my.funambol.com/funambol/ds");
+    SyncServer *syncServer = new SyncServer();
 
-    KConfig config("akunambolrc");
-    KConfigGroup serverGroup(&config, "Servers");
-    if(addServerDialog->exec()){
-        SyncServer *syncServer = new SyncServer();
-        syncServer->setSyncUrl(addServerDialog->syncUrl());
-        syncServer->setUsername(addServerDialog->user());
-        syncServer->setPassword(addServerDialog->password());
+    QPointer<ServerProperties> addServerDialog = new ServerProperties(syncServer, this);
+    //addServerDialog->setSyncUrl("http://my.funambol.com/funambol/ds");
+
+    if(addServerDialog->exec() == KDialog::Ok){
         
         QListWidgetItem *item = new QListWidgetItem();
         item->setData(Qt::UserRole, qVariantFromValue(syncServer));
         ui.lwServerList->addItem(item);
         emit changed();
+    } else {
+        delete syncServer;
     }
 
     delete addServerDialog;
@@ -132,20 +176,15 @@ void KCMSync::removeServer() {
 
 void KCMSync::editServer() {
     SyncServer *syncServer = qVariantValue<SyncServer*>(ui.lwServerList->currentItem()->data(Qt::UserRole));
-    QPointer<Config> editServerDialog = new Config(this);
-    editServerDialog->setSyncUrl(syncServer->syncUrl());
-    editServerDialog->setUser(syncServer->username());
-    editServerDialog->setPassword(syncServer->password());
+    QPointer<ServerProperties> editServerDialog = new ServerProperties(syncServer, this);
     
-    if(editServerDialog->exec()){
-        syncServer->setSyncUrl(editServerDialog->syncUrl());
-        syncServer->setUsername(editServerDialog->user());
-        syncServer->setPassword(editServerDialog->password());
+    if(editServerDialog->exec() == KDialog::Accepted){
         emit changed();
     }
 }
 
 void KCMSync::syncNow() {
+    ui.pbSyncNow->setEnabled(false);
     SyncServer *syncServer = qVariantValue<SyncServer*>(ui.lwServerList->currentItem()->data(Qt::UserRole));
 
     SyncJob *syncJob = new SyncJob(syncServer);
@@ -159,8 +198,35 @@ void KCMSync::syncStarted(SyncServer* syncServer) {
 }
 
 void KCMSync::syncFinished(SyncServer* syncServer) {
+    ui.pbSyncNow->setEnabled(true);
     ui.pbSyncstate->setVisible(false);
     syncServer->save(KConfigGroup(&KConfig("akunambolrc"), "Servers"));
 }
+
+void KCMSync::autosyncStarted(const QString& syncUrl) {
+    kDebug() << "received autosync started event for server" << syncUrl;
+    ui.pbSyncstate->setVisible(true);
+    ui.pbSyncNow->setEnabled(false);
+    
+    for(int i = 0; i < ui.lwServerList->count(); i++){
+        SyncServer *syncServer = qVariantValue<SyncServer*>(ui.lwServerList->item(i)->data(Qt::UserRole));
+        if(syncServer->syncUrl() == syncUrl){
+            syncServer->syncing();
+        }
+    }    
+}
+
+void KCMSync::autosyncCompleted(const QString& syncUrl, bool success) {
+    kDebug() << "received autosync completed event for server" << syncUrl << "with success" << success;
+    ui.pbSyncstate->setVisible(false);
+    ui.pbSyncNow->setEnabled(true);
+    for(int i = 0; i < ui.lwServerList->count(); i++){
+        SyncServer *syncServer = qVariantValue<SyncServer*>(ui.lwServerList->item(i)->data(Qt::UserRole));
+        if(syncServer->syncUrl() == syncUrl){
+            syncServer->synced(success);
+        }
+    }
+}
+
 
 #include "kcmsync.moc"

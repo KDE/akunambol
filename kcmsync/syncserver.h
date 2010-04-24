@@ -30,7 +30,8 @@ class SyncServer
 
     public:
     
-        enum SyncState {Never, Successful, Failed, Running};
+        enum SyncState {Never = 0, Successful, Failed, Running};
+        enum SyncRecurrance {Hourly = 0, Daily, Weekly, Monthly};
       
         SyncServer();
         ~SyncServer();
@@ -43,11 +44,27 @@ class SyncServer
         
         void setPassword(const QString &password);
         QString password() const;
-
+        
+        void setAutoSyncEnabled(bool enable);
+        bool autoSyncEnabled();
+        
+        void setAutoSyncRecurrance(SyncRecurrance recurrance);
+        SyncRecurrance autoSyncRecurrance();
+        
+        void setAutoSyncDay(int day);
+        int autoSyncDay();
+        
+        void setAutoSyncMinute(int minute);
+        int autoSyncMinute();
+        
+        void setAutoSyncTime(const QTime &time);
+        QTime autoSyncTime();
+        
         void syncing();
         void synced(bool successful);
         QDateTime lastSyncTime();
         SyncState lastSyncState();
+        QDateTime nextSyncTime();
         
         void load(KConfigGroup config, const QString &syncUrl);
         void save(KConfigGroup config);
@@ -58,6 +75,12 @@ class SyncServer
         QString m_password;
         QDateTime m_lastSyncTime;
         SyncState m_lastSyncState;
+        
+        bool m_autoSyncEnabled;
+        SyncRecurrance m_autoSyncRecurrance;
+        int m_autoSyncDay;
+        int m_autoSyncMinute;
+        QTime m_autoSyncTime;
         
         KConfigGroup m_config;
     

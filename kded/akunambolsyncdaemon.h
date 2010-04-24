@@ -15,39 +15,45 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
+#ifndef AKUNAMBOLSYNCDAEMON_H
+#define AKUNAMBOLSYNCDAEMON_H
 
-#ifndef KCMSYNC_H
-#define KCMSYNC_H
+#include <kcmsync/syncserver.h>
 
-#include "ui_kcmsync.h"
-#include "syncserver.h"
+#include <KDEDModule>
 
-#include <kcmodule.h>
+#include <QtCore/QVariantList>
+#include <QtCore/QTimer>
 
-class KCMSync: public KCModule
+class AkunambolSyncDaemon : public KDEDModule
 {
-    Q_OBJECT
+Q_OBJECT
+Q_CLASSINFO("D-Bus Interface", "org.kde.akunambolsync")
 
-private:
-    Ui::KCMSync ui;
-    
-public:
-    virtual void load();
-    virtual void save();
-    explicit KCMSync(QWidget *parent = 0, const QVariantList &args = QVariantList());
-    ~KCMSync();
-    
-private slots:
-    void updateButtons();
-    void addServer();
-    void removeServer();
-    void editServer();
-    void syncNow();
-    void syncStarted(SyncServer *syncServer);
-    void syncFinished(SyncServer *syncServer);
-    void autosyncStarted(const QString &syncUrl);
-    void autosyncCompleted(const QString &syncUrl, bool success);
+    public:
+        AkunambolSyncDaemon(QObject * parent, const QVariantList&);
+        virtual ~AkunambolSyncDaemon();
 
+        void load();
+        
+    public slots:
+        void reloadConfiguration();   
+
+    private:
+        QList<SyncServer*> m_serverList;
+        SyncServer *m_nextSyncServer;
+        QTimer m_syncTimer;
+        
+    private slots:
+        void scheduleNextSync();
+        void runSync();
+        void syncStarted(SyncServer *);
+        void syncFinished(SyncServer *);
+        
+    signals:
+        void syncStarted(const QString &syncUrl);
+        void syncCompleted(const QString &syncUrl, bool success);
+        
 };
 
-#endif
+#endif // AKUNAMBOLSYNCDAEMON_H
