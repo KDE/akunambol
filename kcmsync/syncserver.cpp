@@ -263,7 +263,7 @@ void SyncServerDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
     
     QFont font = painter->font();
     QFontMetrics fm(font);
-    int spacing = option.rect.height() / 6;
+    int spacing = option.rect.height() / 8;
     QRect paintRect = option.rect;
     paintRect.adjust(spacing, spacing, 0, 0);
     

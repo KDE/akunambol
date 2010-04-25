@@ -190,16 +190,19 @@ void KCMSync::syncNow() {
     SyncJob *syncJob = new SyncJob(syncServer);
     connect(syncJob, SIGNAL(syncStarted(SyncServer*)), SLOT(syncStarted(SyncServer*)));
     connect(syncJob, SIGNAL(syncFinished(SyncServer*)), SLOT(syncFinished(SyncServer*)));
+    ui.lwServerList->update(ui.lwServerList->currentIndex());
 }
 
 void KCMSync::syncStarted(SyncServer* syncServer) {
     ui.pbSyncstate->setVisible(true);
+    ui.lwServerList->update(ui.lwServerList->currentIndex());
     ui.lwServerList->currentItem()->setData(Qt::UserRole, qVariantFromValue(syncServer));
 }
 
 void KCMSync::syncFinished(SyncServer* syncServer) {
     ui.pbSyncNow->setEnabled(true);
     ui.pbSyncstate->setVisible(false);
+    ui.lwServerList->update(ui.lwServerList->currentIndex());
     syncServer->save(KConfigGroup(&KConfig("akunambolrc"), "Servers"));
 }
 
@@ -213,7 +216,8 @@ void KCMSync::autosyncStarted(const QString& syncUrl) {
         if(syncServer->syncUrl() == syncUrl){
             syncServer->syncing();
         }
-    }    
+    }
+    ui.lwServerList->update(ui.lwServerList->currentIndex());
 }
 
 void KCMSync::autosyncCompleted(const QString& syncUrl, bool success) {
@@ -226,6 +230,7 @@ void KCMSync::autosyncCompleted(const QString& syncUrl, bool success) {
             syncServer->synced(success);
         }
     }
+    ui.lwServerList->update(ui.lwServerList->currentIndex());
 }
 
 
