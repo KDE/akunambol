@@ -27,9 +27,21 @@
 #include <KDebug>
 
 SyncServer::SyncServer() {
+    m_wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0, KWallet::Wallet::Synchronous);
+    if(m_wallet){
+        if(!m_wallet->hasFolder("Akunambolsync")){
+            if(m_wallet->createFolder("Akunambolsync")){
+                m_wallet->setFolder("Akunambolsync");
+            } else {
+                delete m_wallet;
+                m_wallet = 0;
+            }
+        }
+    }
 }
 
 SyncServer::~SyncServer() {
+    delete m_wallet;
 }
 
 void SyncServer::setSyncUrl(const QString &url) {
@@ -156,10 +168,16 @@ SyncServer::SyncRecurrance SyncServer::autoSyncRecurrance() {
 }
 
 void SyncServer::load(KConfigGroup config, const QString &syncUrl) {
+    kDebug() << "loading config";
     KConfigGroup serverGroup(&config, syncUrl);
     setSyncUrl(syncUrl);
     setUsername(serverGroup.readEntry("username"));
-    setPassword(serverGroup.readEntry("password"));
+
+    if(m_wallet){
+        m_wallet->readPassword(syncUrl, m_password);
+    } else {
+        setPassword(serverGroup.readEntry("password"));
+    }
     m_lastSyncTime = QDateTime::fromString(serverGroup.readEntry("LastSyncTime"));
     QString state = serverGroup.readEntry("LastSyncState");
     if(state == "Successful"){
@@ -190,7 +208,11 @@ void SyncServer::load(KConfigGroup config, const QString &syncUrl) {
 void SyncServer::save(KConfigGroup config) {
     KConfigGroup serverGroup(&config, m_syncUrl);
     serverGroup.writeEntry("username", m_username);
-    serverGroup.writeEntry("password", m_password);
+    if(m_wallet){
+        m_wallet->writePassword(m_syncUrl, m_password);
+    } else {
+        serverGroup.writeEntry("password", m_password);
+    }
     serverGroup.writeEntry("LastSyncTime", m_lastSyncTime.toString());
     switch(m_lastSyncState){
         case Successful:

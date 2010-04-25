@@ -24,6 +24,7 @@
 #include <QtCore/QMetaType>
 
 #include <KConfigGroup>
+#include <kwallet.h>
 
 class SyncServer
 {
@@ -83,6 +84,7 @@ class SyncServer
         QTime m_autoSyncTime;
         
         KConfigGroup m_config;
+        KWallet::Wallet *m_wallet;
     
 };
 
