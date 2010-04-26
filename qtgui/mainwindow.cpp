@@ -11,7 +11,10 @@
 #include <Akonadi/CollectionModel>
 #include <Akonadi/CollectionView>
 
+#include "spds/AccessConfig.h"
+
 #include "../syncsource/sourcemanager.h"
+#include "../syncsource/KFunSyncConfig.h"
 #include "../akonadi/akonadi-dialog.h"
 
 #include "config.h"
@@ -21,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)
 {
     m_c = 0;
-    m_sourceManager = 0;
+    m_sourceManager = new SourceManager;
     ui.setupUi(this);
     connect(ui.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui.actionConfigure_Akunambol, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
@@ -89,21 +92,24 @@ void MainWindow::launchConfigDialog()
 
 void MainWindow::loadConfig()
 {
-    m_sourceManager = new SourceManager;
-    
-    // TODO: Read config from disk
-    QSettings s("Funambol", "Akunambol");
-    m_user = s.value("user").toString();
-    m_syncUrl = s.value("syncUrl", "http://my.funambol.com/sync").toString();
-    m_password = s.value("password").toString(); // TODO decrypt?
+    // The configuration is stored into the DMTClientConfig
+    KFunSyncConfig *config = m_sourceManager->config();
+    config->read();
+
+    AccessConfig &ac = config->getAccessConfig();
+    m_user = ac.getUsername();
+    m_password = ac.getPassword();
+    m_syncUrl = ac.getSyncURL();
 }
 
 void MainWindow::writeConfig()
 {
-    QSettings s("Funambol", "Akunambol");
-    s.setValue("user", m_user);
-    s.setValue("password", m_password); // TODO encrypt?
-    s.setValue("syncUrl", m_syncUrl); // Put default
+    KFunSyncConfig *config = m_sourceManager->config();
+    AccessConfig &ac = config->getAccessConfig();
+    ac.setUsername(m_user.toLatin1());
+    ac.setPassword(m_password.toLatin1());
+    ac.setSyncURL(m_syncUrl.toLatin1());
+    config->save();
 }
 
 void MainWindow::parseConfigDialog()
