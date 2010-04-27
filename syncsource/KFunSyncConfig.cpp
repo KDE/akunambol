@@ -62,6 +62,10 @@ KFunSyncConfig::KFunSyncConfig(): DMTClientConfig(KFUNSYNC_APPLICATION_URI) {
 
 }
 
+KFunSyncConfig::~KFunSyncConfig() {
+    instance = NULL;
+}
+
 
 /**
  * Singleton implementation: get the unique instance of the config.

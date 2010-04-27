@@ -79,6 +79,8 @@ public:
      * Singleton implementation: release the unique instance of the config.
      */
     static void dispose();
+    
+    ~KFunSyncConfig();
 
     // Overloaded methods from DMTClientConfig
     virtual bool read();
