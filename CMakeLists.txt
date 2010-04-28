@@ -119,7 +119,7 @@ qt4_add_dbus_adaptor(kded_akunambolsync_SRCS kded/org.kde.akunambolsync.xml kded
 
 kde4_add_plugin(kded_akunambolsync ${kded_akunambolsync_SRCS})
 
-target_link_libraries(kded_akunambolsync ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS})
+target_link_libraries(kded_akunambolsync ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} ${KDE4_SOLID_LIBS})
 
 install(TARGETS kded_akunambolsync DESTINATION ${PLUGIN_INSTALL_DIR})
 

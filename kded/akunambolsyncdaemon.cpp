@@ -45,6 +45,14 @@ AkunambolSyncDaemon::AkunambolSyncDaemon(QObject* parent, const QVariantList& ):
     // Start with autosync in 5 minutes to let the system finish booting up before syncing.
 //    QTimer::singleShot(300000, this, SLOT(scheduleNextSync()));
     scheduleNextSync();
+    
+    /* When the computer goes to suspend, m_syncTimer sleeps too
+       which causes a delay for the next autosync.
+       This is a temporary workaround because Solid doesn't have a
+       signal for notifying us on wakeup. However, syncing without
+       network connection doesn't make sense and on wakeup networks
+       are reconnected. So this should work for now. */
+    connect(Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)), SLOT(networkStatusChanged(Solid::Networking::Status)));
 }
 
 AkunambolSyncDaemon::~AkunambolSyncDaemon() {
@@ -115,8 +123,6 @@ void AkunambolSyncDaemon::runSync() {
     } else {
         kDebug() << "No next sync server set!!!";
     }
-    kDebug() << "Rescheduling...";
-    scheduleNextSync();
 }
 
 void AkunambolSyncDaemon::syncStarted(SyncServer* server) {
@@ -130,5 +136,13 @@ void AkunambolSyncDaemon::syncFinished(SyncServer* server) {
     KConfig config(configFile, KConfig::NoGlobals);
     KConfigGroup serverConfig(&config, "Servers");
     server->save(serverConfig);
+    kDebug() << "Rescheduling next sync...";
+    scheduleNextSync();
 }
 
+void AkunambolSyncDaemon::networkStatusChanged(Solid::Networking::Status status) {
+    if(status == Solid::Networking::Connected){
+        kDebug() << "Network now connected";
+        scheduleNextSync();
+    }
+}

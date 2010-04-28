@@ -21,6 +21,7 @@
 #include <kcmsync/syncserver.h>
 
 #include <KDEDModule>
+#include <Solid/Networking>
 
 #include <QtCore/QVariantList>
 #include <QtCore/QTimer>
@@ -49,6 +50,7 @@ Q_CLASSINFO("D-Bus Interface", "org.kde.akunambolsync")
         void runSync();
         void syncStarted(SyncServer *);
         void syncFinished(SyncServer *);
+        void networkStatusChanged(Solid::Networking::Status status);
         
     signals:
         void syncStarted(const QString &syncUrl);
