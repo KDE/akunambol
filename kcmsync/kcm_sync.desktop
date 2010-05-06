@@ -1,0 +1,17 @@
+[Desktop Entry]
+Icon=funambol_logo
+Exec=kcmshell4 kcm_sync
+
+Type=Service
+X-KDE-ServiceTypes=KCModule
+X-KDE-Library=kcm_sync
+X-KDE-FactoryName=kcm_sync
+X-KDE-ParentApp=kcontrol
+X-KDE-System-Settings-Parent-Category=computer-administration
+Categories=Qt;KDE;X-KDE-settings-network;
+
+X-KDE-Keywords=KCMSync,akonadi,funambol,sync
+
+Name=Akunambol sync
+
+Comment=Configure your sync servers

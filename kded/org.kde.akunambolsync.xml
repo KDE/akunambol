@@ -1,0 +1,14 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.kde.akunambolsync">
+    <method name="reloadConfiguration"/>
+    <signal name="syncStarted">
+      <arg name="syncUrl" type="s" />
+    </signal>
+    <signal name="syncCompleted">
+      <arg name="syncUrl" type="s" />
+      <arg name="success" type="b" />
+    </signal>    
+  </interface>
+</node>
+

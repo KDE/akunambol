@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Akunambol Sync Daemon
+Type=Service
+X-KDE-ServiceTypes=KDEDModule
+X-KDE-ModuleType=Library
+X-KDE-Library=akunambolsync
+X-KDE-DBus-ModuleName=akunambolsync
+X-KDE-Kded-autoload=true
+X-KDE-Kded-load-on-demand=true
+OnlyShowIn=KDE;
