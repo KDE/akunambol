@@ -60,20 +60,19 @@ int main(int argc, char *argv[])
 
     // Set directories vars (overriding env settings)
     QString dName = KStandardDirs::locateLocal("appdata", "");
-    const char* s = dName.toLatin1();
-    StringBuffer dir(s);
+    StringBuffer dirm= dName.toLatin1();
 
     StringMap env;
+    // Stuff needed by funambol
     env.put("CONFIG_FOLDER", dir.c_str());
     env.put("HOME_FOLDER", dir.c_str());
-    //setenv("XDG_CONFIG_HOME", dir.c_str(), 1);
-    //setenv("HOME", dir.c_str(), 1);
-
+    
     PlatformAdapter::init("Funambol/Akunambol", env, true);
+    
     // Init the logger
     KDELog *KDELogger = new KDELog;
     Log::setLogger(KDELogger);
-    LOG.setLevel(LOG_LEVEL_DEBUG);
+    LOG.setLevel(LOG_LEVEL_INFO);
     
     MainWindow w;
     w.show();
