@@ -57,6 +57,7 @@
 #include <Akonadi/ItemFetchJob>
 
 using namespace KABC;
+using namespace Funambol;
 
 ContactsSource::ContactsSource ( const char* name, AbstractSyncSourceConfig* sc, KeyValueStore* cache )
         : CacheSyncSource(name, sc, cache)

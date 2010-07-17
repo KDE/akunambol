@@ -66,10 +66,10 @@ int main(int argc, char *argv[])
     StringMap env;
     env.put("CONFIG_FOLDER", dir.c_str());
     env.put("HOME_FOLDER", dir.c_str());
-    setenv("XDG_CONFIG_HOME", dir.c_str(), 1);
-    setenv("HOME", dir.c_str(), 1);
+    //setenv("XDG_CONFIG_HOME", dir.c_str(), 1);
+    //setenv("HOME", dir.c_str(), 1);
 
-    PlatformAdapter::init("Funambol/Akunambol", env);
+    PlatformAdapter::init("Funambol/Akunambol", env, true);
     // Init the logger
     KDELog *KDELogger = new KDELog;
     Log::setLogger(KDELogger);

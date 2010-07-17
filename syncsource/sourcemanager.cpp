@@ -17,7 +17,7 @@
 
 #include "../config.h"
 
-USE_FUNAMBOL_NAMESPACE
+//using namespace Funambol;
 
 // Stolen from Funambol's fsync example.
 static StringBuffer generateDeviceID()

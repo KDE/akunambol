@@ -40,6 +40,8 @@
 #include "base/posixlog.h"
 #include "base/util/StringBuffer.h"
 
+using namespace Funambol;
+
 /**
  * This is a logger for KDE. Messages are always written to the standard KDE
  * stream (kError, kDebug). If not disabled, messages are always written into a

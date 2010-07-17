@@ -42,6 +42,8 @@
 
 #include "qtgui/KDELog.h"
 
+using namespace Funambol;
+
 KDELog::KDELog() : logToFile(true),
                    logFileInitialized(false)
 {

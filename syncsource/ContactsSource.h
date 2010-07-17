@@ -46,6 +46,8 @@
 #include <Akonadi/Item>
 #include <QObject>
 
+using namespace Funambol;
+
 class ContactsSource : public CacheSyncSource
 {
     public:
