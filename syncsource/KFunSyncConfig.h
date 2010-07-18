@@ -41,11 +41,12 @@
 #include "base/util/StringBuffer.h"
 #include "client/DMTClientConfig.h"
 
-USE_NAMESPACE
+//#include "config.h"
+
+using namespace Funambol;
 
 // This is relative to the config root specific for each platform.
 // E.g. HKCU/Software on Windows or $HOME/.config on Unix
-#define AKUNAMBOL_APPLICATION_URI         "Funambol/Akunambol"
 
 // Log settings
 #define KFUNSYNC_LOG_TITLE          "Funambol FileSync Log"
@@ -58,7 +59,7 @@ USE_NAMESPACE
 
 // Device info: stored in the client config and sent to the DS server.
 #define KFUNSYNC_DEVICE_ID         "aku"
-#define KFUNSYNC_SW_VERSION        "0.1"
+#define KFUNSYNC_SW_VERSION        "VERSION"
 #define KFUNSYNC_USER_AGENT        "Akunambol " KFUNSYNC_SW_VERSION
 
 /**

@@ -52,7 +52,7 @@
 #include "../syncsource/KFunSyncConfig.h"
 #include "../akonadi/akonadi-dialog.h"
 
-#include "config.h"
+#include "configdialog.h"
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)

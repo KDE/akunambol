@@ -60,7 +60,7 @@ set(akunambol_LINK_LIBS
 # target_link_libraries(akonadi-test ${akunambol_LINK_LIBS})
 
 set(akunambol_SRCS
-    qtgui/config.cpp
+    qtgui/configdialog.cpp
     qtgui/main.cpp
     qtgui/mainwindow.cpp
     qtgui/KDELog.cpp
@@ -73,7 +73,7 @@ set_source_files_properties(${akunambol_SRCS} PROPRIETIES COMPILE_FLAGS -fexcept
 
 set(akunambol_RCCS qtgui/resource.qrc)
 
-kde4_add_ui_files(akunambol_SRCS qtgui/config.ui qtgui/mainwindow.ui)
+kde4_add_ui_files(akunambol_SRCS qtgui/configdialog.ui qtgui/mainwindow.ui)
 
 Qt4_add_resources(akunambol_SRCS ${akunambol_RCCS})
 
