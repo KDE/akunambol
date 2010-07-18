@@ -53,14 +53,14 @@
 #include "KDELog.h"
 
 int main(int argc, char *argv[])
-{
+{    
     KCmdLineArgs::init(argc, argv, "akunambol", "", ki18n("Akunambol"), VERSION, ki18n("SyncML Client for Akonadi using Funambol libraries"));
     
     KApplication app;
 
     // Set directories vars (overriding env settings)
     QString dName = KStandardDirs::locateLocal("appdata", "");
-    StringBuffer dirm= dName.toLatin1();
+    StringBuffer dir = (const char *)(dName.toLatin1());
 
     StringMap env;
     // Stuff needed by funambol

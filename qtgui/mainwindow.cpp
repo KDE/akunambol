@@ -153,6 +153,7 @@ void MainWindow::parseConfigDialog()
         m_user = m_c->user();
         m_password = m_c->password();
         m_syncUrl = m_c->syncUrl();
+//         m_logLevel = 
         writeConfig();
     }
 }

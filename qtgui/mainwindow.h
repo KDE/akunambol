@@ -40,6 +40,7 @@
 
 #include <QtGui/QMainWindow>
 #include "ui_mainwindow.h"
+#include <base/Log.h>
 
 class Config;
 class SourceManager;
@@ -75,6 +76,7 @@ private:
     QString m_user;
     QString m_password;
     QString m_syncUrl;
+    Funambol::LogLevel m_logLevel;
 };
 
 #endif // MAINWINDOW_H
