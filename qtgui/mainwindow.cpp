@@ -92,13 +92,11 @@ void MainWindow::launchAboutDialog()
 void MainWindow::syncContacts()
 {
     kDebug() << m_user << m_password << m_syncUrl;
-    m_sourceManager->setData(m_user, m_password, m_syncUrl); //FIXME UNHARDCODE!
+    m_sourceManager->setData(m_user, m_password, m_syncUrl);
     
-    kDebug();
     ContactsSyncer *contactsSyncer = new ContactsSyncer(m_sourceManager);
     connect(contactsSyncer, SIGNAL(startedSync()), SLOT(startedSync()));
     connect(contactsSyncer, SIGNAL(finishedSync()), SLOT(finishedSync()));
-//     w.exec();
 }
 
 void MainWindow::startedSync()
