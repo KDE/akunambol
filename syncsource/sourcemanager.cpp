@@ -30,7 +30,6 @@ static StringBuffer generateDeviceID()
 SourceManager::SourceManager(QObject *parent)
     : QObject(parent)
 {
-    PlatformAdapter::init(KFUNSYNC_APPLICATION_URI);
 //     m_conf = new DMTClientConfig;
     initConfig();
 }

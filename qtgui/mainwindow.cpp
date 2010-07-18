@@ -38,8 +38,8 @@
 
 #include <QStyle>
 #include <QSettings>
-#include <QMessageBox>
 
+#include <KMessageBox>
 #include <KDebug>
 
 #include <Akonadi/CollectionDialog>
@@ -86,7 +86,7 @@ void MainWindow::setIcons()
 
 void MainWindow::launchAboutDialog()
 {
-    QMessageBox::about(this, tr("About Akunambol"), tr("this release will eat your babies :)"));
+    KMessageBox::about(this, tr("this release will eat your babies :)"), tr("About Akunambol"));
 }
 
 void MainWindow::syncContacts()
