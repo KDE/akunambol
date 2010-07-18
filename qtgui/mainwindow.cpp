@@ -121,9 +121,12 @@ void MainWindow::launchConfigDialog()
     m_c->setUser(m_user);
     m_c->setPassword(m_password);
     m_c->setSyncUrl(m_syncUrl);
+    m_c->setLogLevel(m_logLevel);
     m_c->exec();
     parseConfigDialog();
 }
+
+// TODO: make these methods use KConfig instead?
 
 void MainWindow::loadConfig()
 {
@@ -135,6 +138,7 @@ void MainWindow::loadConfig()
     m_user = ac.getUsername();
     m_password = ac.getPassword();
     m_syncUrl = ac.getSyncURL();
+    m_logLevel = config->getClientConfig().getLogLevel();
 }
 
 void MainWindow::writeConfig()
@@ -144,6 +148,7 @@ void MainWindow::writeConfig()
     ac.setUsername(m_user.toLatin1());
     ac.setPassword(m_password.toLatin1());
     ac.setSyncURL(m_syncUrl.toLatin1());
+    config->getClientConfig().setLogLevel(m_logLevel);
     config->save();
 }
 
@@ -153,7 +158,8 @@ void MainWindow::parseConfigDialog()
         m_user = m_c->user();
         m_password = m_c->password();
         m_syncUrl = m_c->syncUrl();
-//         m_logLevel = 
+        m_logLevel = m_c->logLevel();
+        LOG.setLevel(m_logLevel);
         writeConfig();
     }
 }

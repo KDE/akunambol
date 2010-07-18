@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>372</width>
-    <height>154</height>
+    <height>231</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -72,6 +72,24 @@
       </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="logLevel">
+        <property name="currentIndex">
+         <number>1</number>
+        </property>
+        <item>
+         <property name="text">
+          <string>Minimal</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Normal</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Full</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>
@@ -79,15 +97,15 @@
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
-      <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="standardButtons">
-        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-      </property>
-      <property name="centerButtons">
-        <bool>false</bool>
-      </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+     <property name="centerButtons">
+      <bool>false</bool>
+     </property>
     </widget>
    </item>
   </layout>
