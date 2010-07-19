@@ -25,6 +25,7 @@ set(syncsource_SRCS
     syncsource/KFunSyncConfig.cpp
     syncsource/ContactsSource.cpp
     syncsource/sourcemanager.cpp
+    syncsource/statuslistener.cpp
     )
 
 set(akonadi_extractor_SRCS
