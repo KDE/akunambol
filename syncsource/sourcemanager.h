@@ -7,7 +7,7 @@ namespace Akonadi {
     class Item;
 }
 
-class KFunSyncConfig;
+class SyncConfig;
 class QString;
 
 class SourceManager : public QObject
@@ -17,7 +17,7 @@ class SourceManager : public QObject
         SourceManager(QObject *parent = 0);
         ~SourceManager();
 
-        KFunSyncConfig* config();
+        SyncConfig* config();
         void setData(QString username, QString password, QString url);
 	void setAkonadiItems(QList<Akonadi::Item> items);
         void setCollectionId(qint64 id) { m_collectionId = id; }
@@ -28,7 +28,7 @@ class SourceManager : public QObject
     private:
         void initConfig();
 
-        KFunSyncConfig *m_conf;
+        SyncConfig *m_conf;
         QList< Akonadi::Item > m_items;
         qint64 m_collectionId;
 };

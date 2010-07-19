@@ -43,7 +43,7 @@
 
 #include "KFunSyncConfig.h"
 
-KFunSyncConfig *KFunSyncConfig::instance = NULL;
+SyncConfig *KFunSyncConfig::instance = NULL;
 
 /**
  * Generate a unique device id
@@ -59,11 +59,11 @@ static StringBuffer generateDeviceID() {
 /**
  * Default constructor
  */
-KFunSyncConfig::KFunSyncConfig() : DMTClientConfig() {
+SyncConfig::SyncConfig() : DMTClientConfig() {
 
 }
 
-KFunSyncConfig::~KFunSyncConfig() {
+SyncConfig::~SyncConfig() {
     instance = NULL;
 }
 
@@ -73,9 +73,9 @@ KFunSyncConfig::~KFunSyncConfig() {
  *
  * @return  the singleton object
  */
-KFunSyncConfig *KFunSyncConfig::getInstance() {
+SyncConfig *SyncConfig::getInstance() {
     if (!instance) {
-        instance = new KFunSyncConfig();
+        instance = new SyncConfig();
     }
     return instance;
 }
@@ -83,7 +83,7 @@ KFunSyncConfig *KFunSyncConfig::getInstance() {
 /**
  * Singleton implementation: release the unique instance of the config.
  */
-void KFunSyncConfig::dispose() {
+void SyncConfig::dispose() {
     delete instance;
 }
 
@@ -93,7 +93,7 @@ void KFunSyncConfig::dispose() {
  * - read it from the storage, or create a default one
  * - handle backward compatibility
  */
-void KFunSyncConfig::init() {
+void SyncConfig::init() {
     // Read the configuration
     if (!read()) {
         // Config not found, generate a default one
@@ -116,7 +116,7 @@ void KFunSyncConfig::init() {
  *
  * @return  true for success
  */
-bool KFunSyncConfig::read() {
+bool SyncConfig::read() {
 
     if (!DMTClientConfig::read()) {
         return false; // error in the common config read.
@@ -151,7 +151,7 @@ bool KFunSyncConfig::read() {
  *
  * @return  true for success
  */
-bool KFunSyncConfig::save() {
+bool SyncConfig::save() {
 
     if ( !DMTClientConfig::save() ) {
         return false; // error in the common config save.
@@ -185,7 +185,7 @@ bool KFunSyncConfig::save() {
 /**
  * Method to create a default config.
 */
-void KFunSyncConfig::createConfig() {
+void SyncConfig::createConfig() {
 
     AccessConfig* ac = DefaultConfigFactory::getAccessConfig();
     ac->setMaxMsgSize(60000);

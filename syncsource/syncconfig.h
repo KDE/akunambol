@@ -68,21 +68,21 @@ using namespace Funambol;
  * It implements the Singleton pattern to be available from any point of
  * the application.
  */
-class KFunSyncConfig : public DMTClientConfig {
+class SyncConfig : public DMTClientConfig {
 
 public:
 
     /**
      * Singleton implementation: get the unique instance of the config.
      */
-    static KFunSyncConfig *getInstance();
+    static SyncConfig *getInstance();
 
     /**
      * Singleton implementation: release the unique instance of the config.
      */
     static void dispose();
     
-    ~KFunSyncConfig();
+    ~SyncConfig();
 
     // Overloaded methods from DMTClientConfig
     virtual bool read();
@@ -98,14 +98,14 @@ private:
     //------------------------------------------------------------------
 
     /** Singleton implementation: the unique FSyncConfig instance */
-    static KFunSyncConfig *instance;
+    static SyncConfig *instance;
 
     /**
      * Default constructor: uses the macros KFUNSYNC_APPLICATION_URI and
      * KFUNSYNC_DEFAULT_PATH to initialize the config.
      * By default also reads the config from the store.
      */
-    KFunSyncConfig();
+    SyncConfig();
 
     /**
      * Generates a default config.

@@ -52,7 +52,7 @@ SourceManager::~SourceManager()
     delete m_conf;
 }
 
-KFunSyncConfig* SourceManager::config()
+SyncConfig* SourceManager::config()
 {
     return m_conf;
 }
@@ -67,7 +67,7 @@ void SourceManager::setData(QString username, QString password, QString url)
 
 void SourceManager::initConfig()
 {
-    m_conf = KFunSyncConfig::getInstance();
+    m_conf = SyncConfig::getInstance();
     // Initialize it (read from file or create the default one
     m_conf->init();
 }
@@ -81,7 +81,7 @@ void SourceManager::sync()
 {
     kDebug();
     // Create the contact sync source passing its name, the SyncSourceConfig 
-    SyncSourceConfig *srcConfig = KFunSyncConfig::getInstance()->getSyncSourceConfig(KFUNSYNC_SOURCE_NAME);
+    SyncSourceConfig *srcConfig = SyncConfig::getInstance()->getSyncSourceConfig(KFUNSYNC_SOURCE_NAME);
     ContactsSource contactsSource(KFUNSYNC_SOURCE_NAME, srcConfig, NULL);
     contactsSource.setAkonadiItems(m_items);
     contactsSource.setCollectionId(m_collectionId);
@@ -99,12 +99,12 @@ void SourceManager::sync()
     SyncClient client;
     
     // SYNC!
-    if (client.sync(*KFunSyncConfig::getInstance(), ssArray)) {
+    if (client.sync(*SyncConfig::getInstance(), ssArray)) {
         LOG.error("Error during sync.\n");
     }
     
     // Save the anchors
-    KFunSyncConfig::getInstance()->save();
+    SyncConfig::getInstance()->save();
 }
 
 #include "sourcemanager.moc"

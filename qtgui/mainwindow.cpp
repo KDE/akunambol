@@ -136,7 +136,7 @@ void MainWindow::launchConfigDialog()
 void MainWindow::loadConfig()
 {
     // The configuration is stored into the DMTClientConfig
-    KFunSyncConfig *config = m_sourceManager->config();
+    SyncConfig *config = m_sourceManager->config();
     config->read();
 
     AccessConfig &ac = config->getAccessConfig();
@@ -148,7 +148,7 @@ void MainWindow::loadConfig()
 
 void MainWindow::writeConfig()
 {
-    KFunSyncConfig *config = m_sourceManager->config();
+    SyncConfig *config = m_sourceManager->config();
     AccessConfig &ac = config->getAccessConfig();
     ac.setUsername(m_user.toLatin1());
     ac.setPassword(m_password.toLatin1());
