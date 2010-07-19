@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 //    resize(minimumSizeHint()); // This looks like a sensible default
     setIcons();
     loadConfig();
-    statusBar()->showMessage(tr("Configuration loaded."));
+    statusBar()->showMessage(i18n("Configuration loaded."));
     init();
 //    SourceManager s;
 }
