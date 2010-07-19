@@ -35,9 +35,9 @@
  */
 
 
-#include "akonadi-dialog.h"
+#include "contactssyncer.h"
 #include "ui_akonadi-dialog.h"
-#include "contacts.h"
+#include "../akonadi/contacts.h"
 
 #include <QtGui>
 

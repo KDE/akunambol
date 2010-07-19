@@ -41,9 +41,9 @@
 
 #include <KDebug>
 
-#include "KFunSyncConfig.h"
+#include "syncconfig.h"
 
-SyncConfig *KFunSyncConfig::instance = NULL;
+SyncConfig *SyncConfig::instance = NULL;
 
 /**
  * Generate a unique device id

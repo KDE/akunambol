@@ -27,7 +27,7 @@
 #include <spds/DefaultConfigFactory.h>
 #include <client/SyncClient.h>
 
-#include "KFunSyncConfig.h"
+#include "syncconfig.h"
 #include "ContactsSource.h"
 
 #include "../config.h"

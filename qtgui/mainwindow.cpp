@@ -51,8 +51,8 @@
 
 #include "../syncsource/sourcemanager.h"
 #include "../syncsource/statuslistener.h"
-#include "../syncsource/KFunSyncConfig.h"
-#include "../akonadi/akonadi-dialog.h"
+#include "../syncsource/syncconfig.h"
+#include "../syncsource/contactssyncer.h"
 
 #include "configdialog.h"
 #include "mainwindow.h"
@@ -102,8 +102,6 @@ void MainWindow::syncContacts()
     m_sourceManager->setData(m_user, m_password, m_syncUrl);
     
     ContactsSyncer *contactsSyncer = new ContactsSyncer(m_sourceManager);
-    connect(contactsSyncer, SIGNAL(startedSync()), SLOT(startedSync()));
-    connect(contactsSyncer, SIGNAL(finishedSync()), SLOT(finishedSync()));
 }
 
 void MainWindow::setNewStatus(QString status)

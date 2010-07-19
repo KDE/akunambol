@@ -25,25 +25,13 @@ set(syncsource_SRCS
     syncsource/ContactsSource.cpp
     syncsource/sourcemanager.cpp
     syncsource/statuslistener.cpp
+    syncsource/contactssyncer.cpp
+    akonadi/contacts.cpp
     )
 
 set(akonadi_extractor_SRCS
     akonadi/akonadiwalker.cpp
 )
-
-## Akonadi retreiver test application
-
-set(akonadi_SRCS
-#     akonadi/main.cpp
-    akonadi/akonadi-dialog.cpp
-    akonadi/contacts.cpp
-    ${akonadi_extractor_SRCS}
-    )
-
-
-kde4_add_ui_files(akonadi_SRCS akonadi/akonadi-dialog.ui)
-
-# kde4_add_executable(akonadi-test ${akonadi_SRCS})
 
 
 set(akunambol_LINK_LIBS

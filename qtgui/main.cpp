@@ -49,7 +49,7 @@
 // Akunambol
 #include "../config.h"
 #include "mainwindow.h"
-#include "../syncsource/KFunSyncConfig.h"
+#include "../syncsource/syncconfig.h"
 #include "KDELog.h"
 
 int main(int argc, char *argv[])
