@@ -16,36 +16,44 @@
 */
 
 #include "statuslistener.h"
+#include <KLocalizedString>
+
 using namespace Funambol;
 
 void StatusListener::syncBegin(SyncEvent& event)
 {
     Funambol::SyncListener::syncBegin(event);
+    emit newStatus(i18n("Beginning syncronization..."));
 }
 
 void StatusListener::sendInitialization(SyncEvent& event)
 {
     Funambol::SyncListener::sendInitialization(event);
+    emit newStatus(i18n("Connecting..."));
 }
 
 void StatusListener::syncEnd(SyncEvent& event)
 {
     Funambol::SyncListener::syncEnd(event);
+    emit newStatus(i18n("Syncronization finished."));
 }
 
 void StatusListener::sendFinalization(SyncEvent& event)
 {
     Funambol::SyncListener::sendFinalization(event);
+    emit newStatus(i18n("Finalizing..."));
 }
 
 void StatusListener::sendModifications(SyncEvent& event)
 {
     Funambol::SyncListener::sendModifications(event);
+    emit newStatus(i18n("Sending the modifications"));
 }
 
 void StatusListener::syncError(SyncEvent& event)
 {
     Funambol::SyncListener::syncError(event);
+    emit error(i18n("Syncronization error. The problem is:\n%1", event.getMessage()));
 }
 
 #include "statuslistener.moc"

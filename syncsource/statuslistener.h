@@ -23,8 +23,6 @@
 #include <event/SyncItemListener.h>
 #include <event/SyncListener.h>
 
-// using namespace Funambol;
-
 #warning remove
 #include <cstdio>
 #include <QObject>
@@ -42,6 +40,9 @@ class StatusListener : public QObject, public Funambol::SyncListener
         void sendModifications(Funambol::SyncEvent& event);
         void sendFinalization(Funambol::SyncEvent& event);
         void syncError(Funambol::SyncEvent& event);
+    signals:
+        void newStatus(QString);
+        void error(QString);
 };
 
 /**

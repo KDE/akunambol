@@ -47,8 +47,10 @@
 #include <Akonadi/CollectionView>
 
 #include "spds/AccessConfig.h"
+#include "event/ManageListener.h"
 
 #include "../syncsource/sourcemanager.h"
+#include "../syncsource/statuslistener.h"
 #include "../syncsource/KFunSyncConfig.h"
 #include "../akonadi/akonadi-dialog.h"
 
@@ -76,7 +78,12 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 
 void MainWindow::init()
 {
-    
+    ManageListener& lman = ManageListener::getInstance();
+    StatusListener *listener = new StatusListener; // No parent since Funambol already takes care of destroying the object
+    LOG.debug("Set listeners.");
+    lman.setSyncListener(listener);
+    connect(listener, SIGNAL(newStatus(QString)), this, SLOT(setNewStatus(QString)));
+    connect(listener, SIGNAL(error(QString)), this, SLOT(reportError(QString)));
 }
 
 void MainWindow::setIcons()
@@ -99,15 +106,15 @@ void MainWindow::syncContacts()
     connect(contactsSyncer, SIGNAL(finishedSync()), SLOT(finishedSync()));
 }
 
-void MainWindow::startedSync()
+void MainWindow::setNewStatus(QString status)
 {
-    statusBar()->showMessage(i18n("Syncing..."));
+    statusBar()->showMessage(status);
 }
 
-void MainWindow::finishedSync()
+void MainWindow::reportError(QString error)
 {
-    sender()->deleteLater();
-    statusBar()->showMessage(i18n("Finished syncing."));
+    KMessageBox::error(this, error);
+    statusBar()->showMessage(i18n("Syncronization failed."));
 }
 
 void MainWindow::launchConfigDialog()

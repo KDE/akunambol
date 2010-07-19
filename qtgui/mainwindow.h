@@ -57,8 +57,6 @@ private slots:
     void launchConfigDialog();
     void launchAboutDialog();
     void syncContacts();
-    void startedSync();
-    void finishedSync();
 
 private:
     void init();
@@ -77,6 +75,9 @@ private:
     QString m_password;
     QString m_syncUrl;
     Funambol::LogLevel m_logLevel;
+public slots:
+    void setNewStatus(QString);
+    void reportError(QString);
 };
 
 #endif // MAINWINDOW_H
