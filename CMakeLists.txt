@@ -29,11 +29,6 @@ set(syncsource_SRCS
     akonadi/contacts.cpp
     )
 
-set(akonadi_extractor_SRCS
-    akonadi/akonadiwalker.cpp
-)
-
-
 set(akunambol_LINK_LIBS
     ${KDE4_KDEUI_LIBS}
     ${Kdepimlibs_LIBS}
