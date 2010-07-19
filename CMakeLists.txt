@@ -21,8 +21,7 @@ include(CheckIncludeFiles)
 include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Akonadi_INCLUDES} ${Funambol_INCLUDE_DIR})
 
 set(syncsource_SRCS
-	#    syncsource/akonadisource.cpp
-    syncsource/KFunSyncConfig.cpp
+    syncsource/syncconfig.cpp
     syncsource/ContactsSource.cpp
     syncsource/sourcemanager.cpp
     syncsource/statuslistener.cpp
