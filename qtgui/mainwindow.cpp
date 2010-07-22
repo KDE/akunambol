@@ -100,8 +100,6 @@ void MainWindow::syncContacts()
 {
     kDebug() << m_user << m_password << m_syncUrl;
     m_sourceManager->setData(m_user, m_password, m_syncUrl);
-    
-    ContactsSyncer *contactsSyncer = new ContactsSyncer(m_sourceManager);
 }
 
 void MainWindow::setNewStatus(QString status)

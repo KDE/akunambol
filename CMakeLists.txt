@@ -5,7 +5,7 @@ project(akunabmol)
 
 add_subdirectory(plugins)
 
-# change to a better, non-conflicting file
+# TODO: change to a better, non-conflicting file
 set(VERSION 0.1)
 configure_file(${CMAKE_SOURCE_DIR}/config.h.cmake ${CMAKE_SOURCE_DIR}/config.h)
 
@@ -27,18 +27,18 @@ include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Akonadi_INCLUDES} ${Funamb
 
 ######### libakunambol
 
-set(libakunambol_SRCS
+set(akunambolprivate_SRCS
     library/syncsource.cpp
     library/syncconfig.cpp
     )
 
 # kde4_add_ui_files(kcmsync_SRCS kcmsync/kcmsync.ui kcmsync/serverproperties.ui)
 
-kde4_add_library(akunambollib SHARED ${libakunambol_SRCS})
+kde4_add_library(akunambolprivate SHARED ${akunambolprivate_SRCS})
 
-target_link_libraries(akunambollib ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${libakunambol_LINK_LIBS} ${akunambol_LINK_LIBS})
+target_link_libraries(akunambolprivate ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambolprivate_LINK_LIBS} ${akunambol_LINK_LIBS})
 
-install(TARGETS akunambollib DESTINATION ${LIBRARY_OUTPUT_PATH})
+install(TARGETS akunambolprivate DESTINATION ${LIBRARY_OUTPUT_PATH})
 
 # install( FILES kcmsync/kcm_sync.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
 ###############
@@ -47,7 +47,6 @@ set(syncsource_SRCS
     syncsource/ContactsSource.cpp
     syncsource/sourcemanager.cpp
     syncsource/statuslistener.cpp
-    syncsource/contactssyncer.cpp
     akonadi/contacts.cpp
     )
 
@@ -70,7 +69,6 @@ set(akunambol_SRCS
     qtgui/mainwindow.cpp
     qtgui/KDELog.cpp
     ${syncsource_SRCS}
-    ${akonadi_SRCS}
     )
 
 
@@ -84,7 +82,7 @@ Qt4_add_resources(akunambol_SRCS ${akunambol_RCCS})
 
 kde4_add_executable(akunambol ${akunambol_SRCS})
 
-target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} ${libakunambol_LINK_LIBS})
+target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} ${akunambolprivate_LINK_LIBS})
 
 install(TARGETS akunambol DESTINATION ${BIN_INSTALL_DIR} )
 
