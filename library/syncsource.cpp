@@ -25,7 +25,7 @@ class SyncSource::SyncSourcePrivate {
         SyncConfig *config;
 };
 
-SyncSource::SyncSource(QObject* parent)
+SyncSource::SyncSource(QObject* parent, const QVariantList& args)
     : QObject(parent)
 {
     d = new SyncSourcePrivate(this);

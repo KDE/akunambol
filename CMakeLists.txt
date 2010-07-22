@@ -1,9 +1,10 @@
 project(akunabmol)
 
+
+# change to a better, non-conflicting file
 set(VERSION 0.1)
 configure_file(${CMAKE_SOURCE_DIR}/config.h.cmake ${CMAKE_SOURCE_DIR}/config.h)
 
-#set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 # Search KDE packages
 find_package(KDE4 REQUIRED)
@@ -20,9 +21,24 @@ include(CheckIncludeFiles)
 
 include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Akonadi_INCLUDES} ${Funambol_INCLUDE_DIR})
 
-set(syncsource_SRCS
+######### libakunambol
+
+set(libakunambol_SRCS
     library/syncsource.cpp
     library/syncconfig.cpp
+    )
+
+# kde4_add_ui_files(kcmsync_SRCS kcmsync/kcmsync.ui kcmsync/serverproperties.ui)
+
+kde4_add_library(akunambollib SHARED ${libakunambol_SRCS})
+
+target_link_libraries(akunambollib ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${libakunambol_LINK_LIBS} ${akunambol_LINK_LIBS})
+
+install(TARGETS akunambollib DESTINATION ${LIBRARY_OUTPUT_PATH})
+
+# install( FILES kcmsync/kcm_sync.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
+###############
+set(syncsource_SRCS
     syncsource/syncconfig.cpp
     syncsource/ContactsSource.cpp
     syncsource/sourcemanager.cpp
@@ -64,7 +80,7 @@ Qt4_add_resources(akunambol_SRCS ${akunambol_RCCS})
 
 kde4_add_executable(akunambol ${akunambol_SRCS})
 
-target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS})
+target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} ${libakunambol_LINK_LIBS})
 
 install(TARGETS akunambol DESTINATION ${BIN_INSTALL_DIR} )
 

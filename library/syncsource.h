@@ -20,15 +20,24 @@
 
 #include <QtCore/QObject>
 #include <kdemacros.h>
+#include <KGenericFactory>
 
 class SyncConfig;
+
+#define K_EXPORT_AKUNAMBOL_SYNCSOURCE(libname, classname) \
+K_PLUGIN_FACTORY(factory, registerPlugin<classname>();) \
+K_EXPORT_PLUGIN(factory("akunambol_syncsource_" #libname)) \
+K_EXPORT_PLUGIN_VERSION(VERSION)
+
+#warning fix version
+
 
 class KDE_EXPORT SyncSource : public QObject
 {
     Q_OBJECT
     
     public:
-        SyncSource(QObject* parent = 0);
+        explicit SyncSource(QObject* parent = 0, const QVariantList &args = QVariantList());
         virtual ~SyncSource();
         
         void setConfig(SyncConfig *c);
