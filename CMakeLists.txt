@@ -1,5 +1,9 @@
+
+cmake_minimum_required(VERSION 2.8)
+
 project(akunabmol)
 
+add_subdirectory(plugins)
 
 # change to a better, non-conflicting file
 set(VERSION 0.1)
