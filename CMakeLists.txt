@@ -109,19 +109,3 @@ install(TARGETS kded_akunambolsync DESTINATION ${PLUGIN_INSTALL_DIR})
 install( FILES kded/akunambolsync.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kded)
 
 
-## Funambol SDK test application
-
-set(test_SRCS
-	#    test/main.cpp
-	#    test/dialog.cpp
-    ${syncsource_SRCS}
-    )
-
-#kde4_add_ui_files(test_SRCS test/dialog.ui)
-
-#kde4_add_executable(test-source ${test_SRCS})
-
-#target_link_libraries(test-source ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY})
-
-
-
