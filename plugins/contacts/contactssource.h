@@ -25,8 +25,9 @@ class ContactsSource : public SyncSource
 {
     Q_OBJECT
     public:
-        ContactsSource(QObject* parent = 0, const QVariantList& args = QVariantList()) {};
-        virtual ~ContactsSource() {};
+        ContactsSource(QObject* parent = 0, const QVariantList& args = QVariantList()) : SyncSource(parent, args){};
+        ~ContactsSource() {};
+        void doSync() {};
     
 };
 

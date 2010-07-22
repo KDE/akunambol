@@ -26,14 +26,13 @@ class SyncConfig;
 
 #warning fix version
 
-
 class SyncSource : public QObject
 {
     Q_OBJECT
     
     public:
-        explicit SyncSource(QObject* parent = 0, const QVariantList &args = QVariantList());
-        virtual ~SyncSource();
+        SyncSource(QObject* parent = 0, const QVariantList &args = QVariantList());
+        ~SyncSource();
         
         void setConfig(SyncConfig *c);
         
@@ -41,12 +40,12 @@ class SyncSource : public QObject
          * Reimplement this function.
          * Use the signals to notify the UI.
          */
-        void doSync();
+        void doSync() {};
         
-    signals:
-        void newStatus(QString);
-        void error(QString);
-        void success();
+//     signals:
+//         void newStatus(QString);
+//         void error(QString);
+//         void success();
         
     private:
         class SyncSourcePrivate;
