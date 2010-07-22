@@ -52,7 +52,7 @@
 #include "../syncsource/sourcemanager.h"
 #include "../syncsource/statuslistener.h"
 #include "../syncsource/syncconfig.h"
-#include "../syncsource/contactssyncer.h"
+// #include "../syncsource/contactssyncer.h"
 
 #include "configdialog.h"
 #include "mainwindow.h"

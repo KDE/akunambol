@@ -17,7 +17,7 @@
 
 #include "syncjob.h"
 
-#include <syncsource/contactssyncer.h>
+// #include <syncsource/contactssyncer.h>
 
 SyncJob::SyncJob(SyncServer* syncServer): m_syncServer(syncServer) {
     m_sourceManager = new SourceManager;
