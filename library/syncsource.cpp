@@ -19,6 +19,28 @@ Copyright (C) 2010 Riccardo Iaconelli <riccardo@kde.org>
 #include "syncconfig.h"
 
 class SyncSource::SyncSourcePrivate {
-    
-    
+    public:
+        SyncSourcePrivate(SyncSource *q) : q(q), config(0) {}
+        SyncSource *q;
+        SyncConfig *config;
+};
+
+SyncSource::SyncSource(QObject* parent)
+    : QObject(parent)
+{
+    d = new SyncSourcePrivate(this);
 }
+
+void SyncSource::setConfig(SyncConfig* c)
+{
+    d->config = c;
+}
+
+SyncSource::~SyncSource()
+{
+    delete d;
+}
+
+
+
+
