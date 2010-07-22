@@ -21,8 +21,32 @@
 #include <QtCore/QObject>
 #include <kdemacros.h>
 
+class SyncConfig;
+
 class KDE_EXPORT SyncSource : public QObject
 {
+    Q_OBJECT
+    
+    public:
+        SyncSource(QObject* parent = 0);
+        virtual ~SyncSource();
+        
+        void setConfig(SyncConfig *c);
+        
+        /*
+         * Reimplement this function.
+         * Use the signals to notify the UI.
+         */
+        void doSync();
+        
+    signals:
+        void newStatus(QString);
+        void error(QString);
+        void success();
+        
+    private:
+        class SyncSourcePrivate;
+        SyncSourcePrivate *d;
 };
 
 #endif // SYNCSOURCE_H
