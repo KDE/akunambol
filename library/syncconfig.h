@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2010 Riccardo Iaconelli <riccardo@kde.org>
+    Copyright (C) <year>  <name of author>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as
@@ -15,10 +15,11 @@ Copyright (C) 2010 Riccardo Iaconelli <riccardo@kde.org>
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "syncsource.h"
-#include "syncconfig.h"
+#ifndef SYNCCONFIG_H
+#define SYNCCONFIG_H
 
-class SyncSource::SyncSourcePrivate {
-    
-    
-}
+class SyncConfig
+{
+};
+
+#endif // SYNCCONFIG_H
