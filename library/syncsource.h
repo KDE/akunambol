@@ -24,15 +24,10 @@
 
 class SyncConfig;
 
-#define K_EXPORT_AKUNAMBOL_SYNCSOURCE(libname, classname) \
-K_PLUGIN_FACTORY(factory, registerPlugin<classname>();) \
-K_EXPORT_PLUGIN(factory("akunambol_syncsource_" #libname)) \
-K_EXPORT_PLUGIN_VERSION(VERSION)
-
 #warning fix version
 
 
-class KDE_EXPORT SyncSource : public QObject
+class SyncSource : public QObject
 {
     Q_OBJECT
     
@@ -57,5 +52,12 @@ class KDE_EXPORT SyncSource : public QObject
         class SyncSourcePrivate;
         SyncSourcePrivate *d;
 };
+
+
+#define EXPORT_AKUNAMBOL_SYNCSOURCE(libname, classname) \
+K_PLUGIN_FACTORY(SyncSourceFactory, registerPlugin<classname>();) \
+K_EXPORT_PLUGIN(SyncSourceFactory("akunambol_syncsource_" #libname)) \
+K_EXPORT_PLUGIN_VERSION(0.1)
+
 
 #endif // SYNCSOURCE_H

@@ -15,14 +15,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONTACTSSOURCE2_H
-#define CONTACTSSOURCE2_H
+#ifndef CONTACTSSOURCE_H
+#define CONTACTSSOURCE_H
 
 #include <QObject>
+#include <syncsource.h>
 
-
-class ContactsSource2 : public QObject
+class ContactsSource : public SyncSource
 {
+    Q_OBJECT
+    public:
+        ContactsSource(QObject* parent = 0, const QVariantList& args = QVariantList()) {};
+        virtual ~ContactsSource() {};
+    
 };
+
+EXPORT_AKUNAMBOL_SYNCSOURCE(contacts, ContactsSource)
 
 #endif // CONTACTSSOURCE2_H

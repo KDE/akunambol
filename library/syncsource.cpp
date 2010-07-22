@@ -29,6 +29,7 @@ SyncSource::SyncSource(QObject* parent, const QVariantList& args)
     : QObject(parent)
 {
     d = new SyncSourcePrivate(this);
+    Q_UNUSED(args);
 }
 
 void SyncSource::setConfig(SyncConfig* c)
