@@ -18,8 +18,24 @@
 #ifndef SYNCCONFIG_H
 #define SYNCCONFIG_H
 
-class SyncConfig
+#include <QString>
+
+class SyncConfig2
 {
+    // enum loglevel
+    public:
+        SyncConfig2();
+        
+        void setUsername(QString user);
+        void setPassword(QString password);
+        void setSyncUrl(QString url);
+        
+        QString user() { return m_user; };
+        QString password() { return m_password; };
+        QString syncUrl() { return m_url; };
+        
+    private:
+        QString m_user, m_password, m_url;
 };
 
 #endif // SYNCCONFIG_H

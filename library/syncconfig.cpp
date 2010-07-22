@@ -16,4 +16,25 @@
 */
 
 #include "syncconfig.h"
+#include <QString>
 
+
+SyncConfig2::SyncConfig2()
+{
+    m_url = m_password = m_user = QString();
+}
+
+void SyncConfig2::setUsername(QString user)
+{
+    m_user = user;
+}
+
+void SyncConfig2::setPassword(QString password)
+{
+    m_password = password;
+}
+
+void SyncConfig2::setSyncUrl(QString url)
+{
+    m_url = url;
+}

@@ -22,6 +22,7 @@ include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Akonadi_INCLUDES} ${Funamb
 
 set(syncsource_SRCS
     library/syncsource.cpp
+    library/syncconfig.cpp
     syncsource/syncconfig.cpp
     syncsource/ContactsSource.cpp
     syncsource/sourcemanager.cpp
