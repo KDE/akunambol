@@ -19,9 +19,9 @@
 #define SYNCSOURCE_H
 
 #include <QtCore/QObject>
+#include <kdemacros.h>
 
-
-class SyncSource : public QObject
+class KDE_EXPORT SyncSource : public QObject
 {
 };
 

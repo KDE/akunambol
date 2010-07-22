@@ -15,5 +15,5 @@ Copyright (C) 2010 Riccardo Iaconelli <riccardo@kde.org>
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "../library/syncsource.h"
+#include "syncsource.h"
 
