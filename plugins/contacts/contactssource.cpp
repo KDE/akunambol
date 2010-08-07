@@ -18,3 +18,5 @@
 #include "contactssource.h"
 #include <syncsource.h>
 
+
+EXPORT_AKUNAMBOL_SYNCSOURCE(contacts, ContactsSource)

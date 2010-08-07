@@ -26,7 +26,7 @@ class SyncConfig;
 
 #warning fix version
 
-class SyncSource : public QObject
+class KDE_EXPORT SyncSource : public QObject
 {
     Q_OBJECT
     

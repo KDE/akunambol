@@ -31,6 +31,5 @@ class ContactsSource : public SyncSource
     
 };
 
-EXPORT_AKUNAMBOL_SYNCSOURCE(contacts, ContactsSource)
 
 #endif // CONTACTSSOURCE2_H
