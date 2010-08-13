@@ -46,9 +46,11 @@
 #include <Akonadi/Item>
 #include <QObject>
 
+#include <syncsource/akonadisource.h>
+
 using namespace Funambol;
 
-class ContactsSource : public CacheSyncSource
+class ContactsSource : public AkonadiSource
 {
     public:
 
@@ -66,20 +68,6 @@ class ContactsSource : public CacheSyncSource
          */
         void* getItemContent(StringBuffer& key, size_t* size);
 
-
-        /**
-         * Returns an Enumeration containing the StringBuffer keys of all items.
-         *
-         * It is used both for the full sync, where all items are sent to the server,
-         * and for the fast sync to calculate the modification since the last
-         * successful sync.
-         *
-         * @return a newly allocated Enumeration that is free'd by the CacheSyncSource
-         *         CacheSyncSource.
-         *         Return NULL in case of error, an empty Enumeration
-         *         if there are no items.
-         */
-        Enumeration* getAllItemList();
 
         /**
          * Called by the sync engine to add an item that the server has sent.
@@ -102,28 +90,9 @@ class ContactsSource : public CacheSyncSource
          */
         int modifyItem(SyncItem& item);
 
-        /**
-         * Called by the sync engine to update an item that the source already
-         * should have. The item's key is the local key of that item, no data is
-         * provided.
-         *
-         * @param item  the item as sent by the server
-         * @return      SyncML status code
-         */
-        int removeItem(SyncItem& item);
-
-        int removeAllItems();
-
-        void setAkonadiItems(Akonadi::Item::List items);
-
-        void setCollectionId(qint64 id) { m_collectionId = id; }
     private:
 
         const StringBuffer unfoldVCard(const char*);
-        QList< Akonadi::Item > m_items;
-        qint64 m_collectionId;
-
-
 };
 
 #endif
