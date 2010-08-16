@@ -69,6 +69,24 @@ EventsSource::EventsSource ( const char* name, AbstractSyncSourceConfig* sc, Key
     m_collectionId = 0;
 }
 
+Akonadi::Item::List EventsSource::getItems() {
+    LOG.debug("EventsSource: getting items for collection: %lld", m_collectionId);
+
+    Akonadi::Item::List m_items = AkonadiSource::getItems();
+    Akonadi::Item::List filtered;
+    // We must filter events/todo
+    foreach(Akonadi::Item i, m_items) {
+        if (i.hasPayload<IncidencePtr>()) {
+            IncidencePtr ptrEvent = i.payload<IncidencePtr>();
+            KCal::Event *event = dynamic_cast<KCal::Event *>(ptrEvent.get());
+            if (event != NULL) {
+                filtered.append(i);
+            }
+        }
+    }
+    return filtered;
+}
+
 void* EventsSource::getItemContent(StringBuffer& key, size_t* size)
 {
     LOG.debug("Getting item content");

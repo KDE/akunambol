@@ -24,9 +24,9 @@ SyncJob::SyncJob(SyncServer* syncServer): m_syncServer(syncServer) {
 
     m_sourceManager->setData(syncServer->username(), syncServer->password(), syncServer->syncUrl());
     
-    ContactsSyncer *contactsSyncer = new ContactsSyncer(m_sourceManager);
-    connect(contactsSyncer, SIGNAL(startedSync()), SLOT(startedSync()));
-    connect(contactsSyncer, SIGNAL(finishedSync()), SLOT(finishedSync()));
+    //ContactsSyncer *contactsSyncer = new ContactsSyncer(m_sourceManager);
+    //connect(contactsSyncer, SIGNAL(startedSync()), SLOT(startedSync()));
+    //connect(contactsSyncer, SIGNAL(finishedSync()), SLOT(finishedSync()));
 
 }
 

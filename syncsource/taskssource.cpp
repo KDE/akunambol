@@ -69,9 +69,27 @@ TasksSource::TasksSource ( const char* name, AbstractSyncSourceConfig* sc, KeyVa
     m_collectionId = 0;
 }
 
+Akonadi::Item::List TasksSource::getItems() {
+    LOG.debug("TasksSource: getting items for collection: %lld", m_collectionId);
+
+    Akonadi::Item::List m_items = AkonadiSource::getItems();
+    Akonadi::Item::List filtered;
+    // We must filter events/todo
+    foreach(Akonadi::Item i, m_items) {
+        if (i.hasPayload<IncidencePtr>()) {
+            IncidencePtr ptrEvent = i.payload<IncidencePtr>();
+            KCal::Todo *todo = dynamic_cast<KCal::Todo *>(ptrEvent.get());
+            if (todo != NULL) {
+                filtered.append(i);
+            }
+        }
+    }
+    return filtered;
+}
+
 void* TasksSource::getItemContent(StringBuffer& key, size_t* size)
 {
-    LOG.debug("TasksSource: getting item content");
+    LOG.debug("TasksSource: getting item content %s", key.c_str());
 
     QString uid(key);
     Akonadi::Item i = fetchItem(uid);
@@ -83,6 +101,8 @@ void* TasksSource::getItemContent(StringBuffer& key, size_t* size)
 
     IncidencePtr ptrTodo = i.payload<IncidencePtr>();
     KCal::Todo *todo = dynamic_cast<KCal::Todo *>(ptrTodo.get());
+
+    LOG.debug("TasksSource: todo = %p", todo);
 
     //KCal::CalendarLocal eventCal(calendar->timeZoneId());
     KCal::CalendarLocal todoCal("GMT");

@@ -36,10 +36,13 @@
 
 // #include <QtGui>
 
+#include <QList>
 #include <QStyle>
 #include <QSettings>
+#include <QMessageBox>
+#include <QSpacerItem>
+#include <QProgressDialog>
 
-#include <KMessageBox>
 #include <KDebug>
 
 #include <Akonadi/CollectionDialog>
@@ -47,43 +50,50 @@
 #include <Akonadi/CollectionView>
 
 #include "spds/AccessConfig.h"
-#include "event/ManageListener.h"
+#include "spds/SyncReport.h"
 
-#include "../syncsource/sourcemanager.h"
-#include "../syncsource/statuslistener.h"
-#include "../syncsource/syncconfig.h"
-#include "../syncsource/contactssyncer.h"
+#include "syncsource/sourcemanager.h"
+#include "client/appsyncsource.h"
+#include "client/appsyncsourcemanager.h"
+#include "syncsource/KFunSyncConfig.h"
 
-#include "configdialog.h"
+#include "sourcepushbutton.h"
+#include "config.h"
+#include "settings.h"
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)
 {
-    m_c = 0;
+    m_s = 0;
+    m_syncDialog = 0;
     m_sourceManager = new SourceManager;
     ui.setupUi(this);
     connect(ui.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui.actionConfigure_Akunambol, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
     connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(launchAboutDialog()));
-    connect(ui.contactsButton, SIGNAL(clicked()), this, SLOT(syncContacts()));
+
+    // Create a button for each existing source
+    QVBoxLayout *verticalLayout = ui.verticalLayout;
+    AppSyncSourceManager *manager = AppSyncSourceManager::getInstance();
+    QList<AppSyncSource*> sources = manager->getRegisteredSources();
+    foreach (AppSyncSource* source, sources) {
+        LOG.debug("Creating a button for source: %s", source->getName());
+
+        // Add the push button
+        SourcePushButton* sourceButton = source->getPushButton();
+        verticalLayout->addWidget(sourceButton);
+        connect(sourceButton, SIGNAL(clicked(AppSyncSource*)), this, SLOT(sync(AppSyncSource*)));
+        // Add a spacer
+        QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalLayout->addItem(verticalSpacer);
+    }
+
     
-//    resize(minimumSizeHint()); // This looks like a sensible default
+    //    resize(minimumSizeHint()); // This looks like a sensible default
     setIcons();
     loadConfig();
-    statusBar()->showMessage(i18n("Configuration loaded."));
-    init();
-//    SourceManager s;
-}
-
-void MainWindow::init()
-{
-    ManageListener& lman = ManageListener::getInstance();
-    StatusListener *listener = new StatusListener; // No parent since Funambol already takes care of destroying the object
-    LOG.debug("Set listeners.");
-    lman.setSyncListener(listener);
-    connect(listener, SIGNAL(newStatus(QString)), this, SLOT(setNewStatus(QString)));
-    connect(listener, SIGNAL(error(QString)), this, SLOT(reportError(QString)));
+    statusBar()->showMessage(tr("Configuration loaded."));
 }
 
 void MainWindow::setIcons()
@@ -93,76 +103,179 @@ void MainWindow::setIcons()
 
 void MainWindow::launchAboutDialog()
 {
-    KMessageBox::about(this, tr("this release will eat your babies :)"), tr("About Akunambol"));
+    QMessageBox::about(this, tr("About Akunambol"), tr("this release will eat your babies :)"));
 }
 
-void MainWindow::syncContacts()
+void MainWindow::sync(AppSyncSource* appSource)
 {
-    kDebug() << m_user << m_password << m_syncUrl;
+    // Reapply the configuration
     m_sourceManager->setData(m_user, m_password, m_syncUrl);
     
-    ContactsSyncer *contactsSyncer = new ContactsSyncer(m_sourceManager);
+    SourceManager *syncer = new SourceManager(this);
+
+    connect(this, SIGNAL(fireSync(AppSyncSource*)), syncer, SLOT(sync(AppSyncSource*)));
+    connect(syncer, SIGNAL(sourceStarted(AppSyncSource*)), this, SLOT(startedSync(AppSyncSource*)));
+    connect(syncer, SIGNAL(sourceEnded(AppSyncSource*, SyncReport*)), this, SLOT(finishedSync(AppSyncSource*, SyncReport*)));
+    connect(syncer, SIGNAL(addReceived(const char*)), this, SLOT(addReceived(const char*)));
+    connect(syncer, SIGNAL(delReceived(const char*)), this, SLOT(delReceived(const char*)));
+    connect(syncer, SIGNAL(updReceived(const char*)), this, SLOT(updReceived(const char*)));
+    connect(syncer, SIGNAL(addSent(const char*)), this, SLOT(addSent(const char*)));
+    connect(syncer, SIGNAL(delSent(const char*)), this, SLOT(delSent(const char*)));
+    connect(syncer, SIGNAL(updSent(const char*)), this, SLOT(updSent(const char*)));
+    connect(syncer, SIGNAL(totalServerItems(int)), this, SLOT(totalServerItems(int)));
+    connect(syncer, SIGNAL(totalClientItems(int)), this, SLOT(totalClientItems(int)));
+    emit fireSync(appSource);
+
+    numSent = 0;
+    numReceived = 0;
+    numServerItems = -1;
+    numClientItems = -1;
+
+    m_syncDialog = new QProgressDialog();
+    m_syncDialog->setLabelText(i18n("Connecting.."));
+    m_syncDialog->setWindowModality(Qt::WindowModal);
+    m_syncDialog->setMinimum(0);
+    m_syncDialog->setMaximum(0);
+    // FIXME TODO: enable the cancel button to interrupt the sync
+    m_syncDialog->setCancelButton(0);
+    m_syncDialog->exec();
+
 }
 
-void MainWindow::setNewStatus(QString status)
+void MainWindow::startedSync(AppSyncSource* /*appSource*/)
 {
-    statusBar()->showMessage(status);
+
+    // show a modal progress dialog during syncs (the sync process must run in a
+    // different thread)
+    //m_syncDialog = new QProgressDialog();
+    //m_syncDialog->setLabelText(i18n("Connecting.."));
+    //m_syncDialog->setWindowModality(Qt::WindowModal);
+    //m_syncDialog->setMinimum(0);
+    //m_syncDialog->setMaximum(0);
+    //m_syncDialog->exec();
+
+    //statusBar()->showMessage(i18n("Syncing..."));
 }
 
-void MainWindow::reportError(QString error)
+void MainWindow::finishedSync(AppSyncSource* /* appSource */, SyncReport* /* report */)
 {
-    KMessageBox::error(this, error);
-    statusBar()->showMessage(i18n("Syncronization failed."));
+    if (m_syncDialog) {
+        m_syncDialog->cancel();
+        delete m_syncDialog;
+        m_syncDialog = NULL;
+    }
+    sender()->deleteLater();
+    statusBar()->showMessage(i18n("Finished syncing."));
+}
+
+void MainWindow::addReceived(const char* key) {
+    changeReceived(key);
+}
+
+void MainWindow::delReceived(const char* key) {
+    changeReceived(key);
+}
+
+void MainWindow::updReceived(const char* key) {
+    changeReceived(key);
+}
+
+void MainWindow::changeReceived(const char* /* key */) {
+    if (m_syncDialog) {
+        //QString msg = "Receiving " + (++numReceived); 
+        QString msg = i18n("Receiving ");
+        ++numReceived;
+        char num[16];
+        sprintf(num, "%d", numReceived);
+        msg.append(num);
+
+        if (numServerItems > 0) {
+            sprintf(num, "/%d", numServerItems);
+            msg.append(num);
+        }
+
+        m_syncDialog->setLabelText(msg);
+    }
+}
+
+void MainWindow::addSent(const char* key) {
+    changeSent(key);
+}
+
+void MainWindow::delSent(const char* key) {
+    changeSent(key);
+}
+
+void MainWindow::updSent(const char* key) {
+    changeSent(key);
+}
+
+void MainWindow::changeSent(const char* /* key */) {
+    if (m_syncDialog) {
+        QString msg = i18n("Sending ");
+        ++numSent;
+        char num[16];
+        sprintf(num, "%d", numSent);
+        msg.append(num); 
+
+        if (numClientItems > 0) {
+            sprintf(num, "/%d", numClientItems);
+            msg.append(num);
+        }
+
+        m_syncDialog->setLabelText(msg);
+    }
+}
+
+void MainWindow::totalServerItems(int n) {
+    numServerItems = n;
+}
+
+void MainWindow::totalClientItems(int n) {
+    numClientItems = n;
 }
 
 void MainWindow::launchConfigDialog()
 {
-    if (!m_c) {
-        m_c = new Config(this);
+    if (!m_s) {
+        m_s = new Settings(this);
     }
 
-    m_c->setUser(m_user);
-    m_c->setPassword(m_password);
-    m_c->setSyncUrl(m_syncUrl);
-    m_c->setLogLevel(m_logLevel);
-    m_c->exec();
+    m_s->setUser(m_user);
+    m_s->setPassword(m_password);
+    m_s->setSyncUrl(m_syncUrl);
+    m_s->exec();
     parseConfigDialog();
 }
-
-// TODO: make these methods use KConfig instead?
 
 void MainWindow::loadConfig()
 {
     // The configuration is stored into the DMTClientConfig
-    SyncConfig *config = m_sourceManager->config();
+    KFunSyncConfig *config = KFunSyncConfig::getInstance();
     config->read();
 
     AccessConfig &ac = config->getAccessConfig();
     m_user = ac.getUsername();
     m_password = ac.getPassword();
     m_syncUrl = ac.getSyncURL();
-    m_logLevel = config->getClientConfig().getLogLevel();
 }
 
 void MainWindow::writeConfig()
 {
-    SyncConfig *config = m_sourceManager->config();
+    KFunSyncConfig *config = KFunSyncConfig::getInstance();
     AccessConfig &ac = config->getAccessConfig();
     ac.setUsername(m_user.toLatin1());
     ac.setPassword(m_password.toLatin1());
     ac.setSyncURL(m_syncUrl.toLatin1());
-    config->getClientConfig().setLogLevel(m_logLevel);
     config->save();
 }
 
 void MainWindow::parseConfigDialog()
 {
-    if (m_c->result() == QDialog::Accepted) {
-        m_user = m_c->user();
-        m_password = m_c->password();
-        m_syncUrl = m_c->syncUrl();
-        m_logLevel = m_c->logLevel();
-        LOG.setLevel(m_logLevel);
+    if (m_s->result() == QDialog::Accepted) {
+        m_user = m_s->user();
+        m_password = m_s->password();
+        m_syncUrl = m_s->syncUrl();
         writeConfig();
     }
 }

@@ -39,43 +39,122 @@
 #include "base/adapter/PlatformAdapter.h"
 #include "base/util/StringMap.h"
 #include "base/Log.h"
+#include "spds/SyncSource.h"
+#include "spds/SyncSourceReport.h"
 
 // Qt/KDE
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KLocalizedString>
 #include <KStandardDirs>
+#include <QLabel>
 
 // Akunambol
 #include "../config.h"
 #include "mainwindow.h"
-#include "../syncsource/syncconfig.h"
+#include "standardsourcesettings.h"
 #include "KDELog.h"
 
+#include "syncsource/KFunSyncConfig.h"
+#include "syncsource/contactssource.h"
+#include "syncsource/eventssource.h"
+#include "syncsource/taskssource.h"
+
+#include "client/appsyncsourcemanager.h"
+#include "client/appsyncsource.h"
+#include "client/appsyncsourceconfig.h"
+
+#include "qtgui/sourcepushbutton.h"
+
+
+void setupSources() {
+
+    AppSyncSourceManager *manager = AppSyncSourceManager::getInstance();
+
+    // Register all the sources
+    // Contacts
+    SyncSourceConfig *srcConfig = KFunSyncConfig::getInstance()->getSyncSourceConfig(KFUNSYNC_SOURCE_NAME);
+    ContactsSource *cSource = new ContactsSource(KFUNSYNC_SOURCE_NAME, srcConfig, NULL);
+    SyncSourceReport* report = new SyncSourceReport(KFUNSYNC_SOURCE_NAME);
+    cSource->setReport(report);
+
+    AppSyncSourceConfig* cConfig  = new AppSyncSourceConfig("Contacts");
+    AppSyncSource* contactsSource = new AppSyncSource("Contacts", cSource);
+    contactsSource->setConfig(cConfig);
+    contactsSource->setAkonadiMimeType("text/directory");
+    StandardSourceSettings *cSettings = new StandardSourceSettings(contactsSource);
+    contactsSource->setSettingsTab(cSettings);
+    SourcePushButton* cButton = new SourcePushButton(contactsSource, contactsSource->getName());
+    contactsSource->setPushButton(cButton);
+    manager->registerSource(contactsSource);
+
+    // Events
+    srcConfig = KFunSyncConfig::getInstance()->getSyncSourceConfig(KFUNSYNC_CAL_SOURCE_NAME);
+    EventsSource *eSource = new EventsSource(KFUNSYNC_CAL_SOURCE_NAME, srcConfig, NULL);
+    report = new SyncSourceReport(KFUNSYNC_CAL_SOURCE_NAME);
+    eSource->setReport(report);
+
+    AppSyncSourceConfig* eConfig  = new AppSyncSourceConfig("Events");
+    AppSyncSource* eventsSource = new AppSyncSource("Events", eSource);
+    eventsSource->setConfig(eConfig);
+    eventsSource->setAkonadiMimeType("text/calendar");
+    StandardSourceSettings *eSettings = new StandardSourceSettings(eventsSource);
+    eventsSource->setSettingsTab(eSettings);
+    SourcePushButton* eButton = new SourcePushButton(eventsSource, eventsSource->getName());
+    eventsSource->setPushButton(eButton);
+    manager->registerSource(eventsSource);
+
+    // Tasks
+    srcConfig = KFunSyncConfig::getInstance()->getSyncSourceConfig(KFUNSYNC_TASK_SOURCE_NAME);
+    TasksSource *tSource = new TasksSource(KFUNSYNC_TASK_SOURCE_NAME, srcConfig, NULL);
+    report = new SyncSourceReport(KFUNSYNC_TASK_SOURCE_NAME);
+    tSource->setReport(report);
+
+    AppSyncSourceConfig* tConfig  = new AppSyncSourceConfig("Tasks");
+    AppSyncSource* tasksSource = new AppSyncSource("Tasks", tSource);
+    tasksSource->setConfig(tConfig);
+    tasksSource->setAkonadiMimeType("text/calendar");
+    StandardSourceSettings *tSettings = new StandardSourceSettings(tasksSource);
+    tasksSource->setSettingsTab(tSettings);
+    SourcePushButton* tButton = new SourcePushButton(tasksSource, tasksSource->getName());
+    tasksSource->setPushButton(tButton);
+    manager->registerSource(tasksSource);
+
+}
+
 int main(int argc, char *argv[])
-{    
-    KCmdLineArgs::init(argc, argv, "akunambol", "", ki18n("Akunambol"), VERSION, ki18n("SyncML Client for Akonadi using Funambol libraries"));
+{
+    KCmdLineArgs::init(argc, argv, "akunambol", "", ki18n("Akunambol"),
+                       VERSION, ki18n("SyncML Client for Akonadi using Funambol libraries"));
     
     KApplication app;
 
     // Set directories vars (overriding env settings)
     QString dName = KStandardDirs::locateLocal("appdata", "");
-    StringBuffer dir = (const char *)(dName.toLatin1());
+    const char* s = dName.toLatin1();
+    StringBuffer dir(s);
 
     StringMap env;
-    // Stuff needed by funambol
     env.put("CONFIG_FOLDER", dir.c_str());
     env.put("HOME_FOLDER", dir.c_str());
-    
     PlatformAdapter::init("Funambol/Akunambol", env, true);
-    
     // Init the logger
     KDELog *KDELogger = new KDELog;
     Log::setLogger(KDELogger);
-    LOG.setLevel(LOG_LEVEL_INFO);
+    LOG.setLevel(LOG_LEVEL_DEBUG);
+
+    // Init the configuration
+    KFunSyncConfig::getInstance()->init();
+    KFunSyncConfig::getInstance()->read();
+
+    // Setup sources
+    setupSources();
     
+    // Fire the UI
     MainWindow w;
     w.show();
     
     return app.exec();
 }
+
+

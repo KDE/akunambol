@@ -57,6 +57,8 @@ class EventsSource : public AkonadiSource
 
         virtual ~EventsSource() {}
 
+        Akonadi::Item::List getItems();
+
         /**
          * Get the content of an item given the key. It is used to populate
          * the SyncItem before the engine uses it in the usual flow of the sync.

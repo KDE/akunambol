@@ -38,11 +38,16 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QProgressDialog>
 #include <QtGui/QMainWindow>
 #include "ui_mainwindow.h"
-#include <base/Log.h>
+
+#include <spds/SyncReport.h>
+
+#include<client/appsyncsource.h>
 
 class Config;
+class Settings;
 class SourceManager;
 
 class MainWindow : public QMainWindow
@@ -56,28 +61,48 @@ public:
 private slots:
     void launchConfigDialog();
     void launchAboutDialog();
-    void syncContacts();
+    void sync(AppSyncSource* source);
+    void startedSync(AppSyncSource* source);
+    void finishedSync(AppSyncSource* source, SyncReport* report);
+
+    void addReceived(const char* key);
+    void delReceived(const char* key);
+    void updReceived(const char* key);
+    void addSent(const char* key);
+    void delSent(const char* key);
+    void updSent(const char* key);
+
+    void totalServerItems(int n);
+    void totalClientItems(int n);
+
+signals:
+    void fireSync(AppSyncSource* appSource);
 
 private:
-    void init();
-    
     void parseConfigDialog();
     void loadConfig();
     void setIcons();
     void writeConfig();
+    void changeSent(const char* key);
+    void changeReceived(const char* key);
+
+private:
     
     Ui::MainWindowClass ui;
 
-    Config *m_c;
+    Settings *m_s;
     SourceManager *m_sourceManager;
 
     QString m_user;
     QString m_password;
     QString m_syncUrl;
-    Funambol::LogLevel m_logLevel;
-public slots:
-    void setNewStatus(QString);
-    void reportError(QString);
+    QProgressDialog *m_syncDialog;
+
+    int numSent;
+    int numReceived;
+
+    int numServerItems;
+    int numClientItems;
 };
 
 #endif // MAINWINDOW_H
