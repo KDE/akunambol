@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include <spds/SyncReport.h>
+#include <client/SyncClient.h>
 
 #include <client/appsyncsource.h>
 
@@ -35,7 +36,7 @@ class SourceManager : public QObject
     public slots:
         void sync(AppSyncSource* appSource);
 
-        void emitSourceEnded(AppSyncSource* appSource, SyncReport* report);
+        void emitSourceEnded(AppSyncSource* appSource, SyncReport *report);
 
     signals:
         void sourceStarted(AppSyncSource* source);
@@ -68,6 +69,7 @@ class SourceManager : public QObject
         AkunambolListener *syncListener;
         AkunambolItemListener *itemListener;
         AkunambolSourceListener *sourceListener;
+        SyncClient *client;
 };
 
 #endif // SOURCEMANAGER_H

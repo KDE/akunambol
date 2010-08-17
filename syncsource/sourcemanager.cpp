@@ -30,7 +30,9 @@ class SyncThread : public QThread {
 
     public:
 
-        SyncThread(AppSyncSource* a) : appSource(a)
+        SyncThread(SourceManager* m, SyncClient* c, AppSyncSource* a) : manager(m),
+                                                                        client(c),
+                                                                        appSource(a)
         {
         }
 
@@ -51,16 +53,18 @@ class SyncThread : public QThread {
             }
 
             SyncSource* ssArray[] = { source, NULL } ;
-            SyncClient client;
-            if (client.sync(*KFunSyncConfig::getInstance(), ssArray)) {
+            if (client->sync(*KFunSyncConfig::getInstance(), ssArray)) {
                 LOG.error("Error during sync.\n");
             }
 
             // Save the anchors
             KFunSyncConfig::getInstance()->save();
+            manager->emitSourceEnded(appSource, client->getSyncReport());
         }
 
     private:
+        SourceManager* manager;
+        SyncClient*    client;
         AppSyncSource* appSource;
 };
 
@@ -77,6 +81,7 @@ SourceManager::SourceManager(QObject *parent)
     : QObject(parent)
 {
     setListeners();
+    client = new SyncClient();
 }
 
 SourceManager::~SourceManager()
@@ -139,7 +144,7 @@ void SourceManager::sync(AppSyncSource* appSource) {
     //emit sourceStarted(appSource);
     // Run the synchronization in a separate thread
     // TODO: how do we release this object?
-    SyncThread *st = new SyncThread(appSource);
+    SyncThread *st = new SyncThread(this, client, appSource);
     st->start();
 }
 
@@ -200,8 +205,8 @@ class AkunambolListener : public SyncListener {
         }
 
         void syncEnd (SyncEvent& /*event*/) {
-            manager->emitSourceEnded(source, NULL);
         }
+
         void sendInitialization (SyncEvent& /*event*/) {
             printf("\nConnecting to the server");
         }
@@ -299,8 +304,8 @@ class AkunambolSourceListener : public SyncSourceListener
         void syncSourceEnd (SyncSourceEvent& /*event*/) {
             //printf("End sync of files\n");
         }
-        void syncSourceSyncModeRequested (SyncSourceEvent& ev) {
-            SyncMode mode = (SyncMode)ev.getSyncMode();
+        void syncSourceSyncModeRequested (SyncSourceEvent& /* ev */) {
+            //SyncMode mode = (SyncMode)ev.getSyncMode();
             //printf("\nPerforming a %s sync.\n", syncModeKeyword(mode));
         }
         void syncSourceTotalClientItems (SyncSourceEvent& ev) {
@@ -346,7 +351,6 @@ void SourceManager::setListeners() {
 }
 
 void SourceManager::unsetListeners() {
-    ManageListener& lman = ManageListener::getInstance();
     LOG.debug("Unset listeners.");
     ManageListener::releaseAllListeners();
 }

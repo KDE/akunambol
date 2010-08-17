@@ -49,6 +49,7 @@
 #include <Akonadi/CollectionModel>
 #include <Akonadi/CollectionView>
 
+#include "base/util/StringBuffer.h"
 #include "spds/AccessConfig.h"
 #include "spds/SyncReport.h"
 
@@ -157,7 +158,7 @@ void MainWindow::startedSync(AppSyncSource* /*appSource*/)
     //statusBar()->showMessage(i18n("Syncing..."));
 }
 
-void MainWindow::finishedSync(AppSyncSource* /* appSource */, SyncReport* /* report */)
+void MainWindow::finishedSync(AppSyncSource* /* appSource */, SyncReport* report)
 {
     if (m_syncDialog) {
         m_syncDialog->cancel();
@@ -165,7 +166,18 @@ void MainWindow::finishedSync(AppSyncSource* /* appSource */, SyncReport* /* rep
         m_syncDialog = NULL;
     }
     sender()->deleteLater();
-    statusBar()->showMessage(i18n("Finished syncing."));
+
+    // Log a report of the sync
+    StringBuffer r;
+    report->toString(r, false);
+    LOG.info(r.c_str());
+
+    if (report->getLastErrorCode() == 0) {
+        statusBar()->showMessage(i18n("Last sync successfull"));
+    } else {
+        //const char* errorMsg = report->getLastErrorMsg();
+        statusBar()->showMessage(i18n("Last sync failed"));
+    }
 }
 
 void MainWindow::addReceived(const char* key) {
