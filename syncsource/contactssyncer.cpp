@@ -36,7 +36,6 @@
 
 
 #include "contactssyncer.h"
-#include "ui_akonadi-dialog.h"
 #include "../akonadi/contacts.h"
 
 #include <QtGui>
@@ -55,6 +54,7 @@
 #include "../syncsource/sourcemanager.h"
 
 #include <KDebug>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 
