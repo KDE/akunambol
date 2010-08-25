@@ -27,7 +27,29 @@ void SyncSourceLoader::loadAllSyncSources()
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
     
     services = trader->query("Akunambol/SyncSource");
-    foreach (KService::Ptr service, services) {
-	kDebug() << "SyncSource found:" << service->name();
+    KService::List::const_iterator iter;
+    for(iter = services.begin(); iter < services.end(); ++iter)
+    {
+      QString error;
+      KService::Ptr service = *iter;
+ 
+      KPluginFactory *factory = KPluginLoader(service->library()).factory();
+
+      if (!factory)
+      {
+	  //KMessageBox::error(0, i18n("<html><p>KPluginFactory could not load the plugin:<br/><i>%1</i></p></html>",
+	    //                         service->library()));
+	  kError(5001) << "KPluginFactory could not load the plugin:" << service->library();
+	  continue;
+      }
+
+      SyncSource *plugin = factory->create<SyncSource>(this);
+
+      if (plugin) {
+	  kDebug() << "Load plugin:" << service->name();
+	  emit syncSourceLoaded(plugin);
+      } else {
+	  kDebug() << error;
+      }
     }
 }
