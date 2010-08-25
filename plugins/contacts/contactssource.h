@@ -27,7 +27,7 @@ class ContactsSource : public SyncSource
     public:
         ContactsSource(QObject* parent = 0, const QVariantList& args = QVariantList()) : SyncSource(parent, args){};
         ~ContactsSource() {};
-        void doSync() {};
+        void doSync();
     
 };
 

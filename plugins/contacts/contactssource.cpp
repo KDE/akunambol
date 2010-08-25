@@ -17,6 +17,13 @@
 
 #include "contactssource.h"
 #include <syncsource.h>
+#include <KDebug>
+
+void ContactsSource::doSync()
+{
+    kDebug() << "sync";
+}
+
 
 
 EXPORT_AKUNAMBOL_SYNCSOURCE(contacts, ContactsSource)
