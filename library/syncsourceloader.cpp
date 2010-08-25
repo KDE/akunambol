@@ -17,3 +17,17 @@
 
 #include "syncsourceloader.h"
 
+#include <KDebug>
+#include <KService>
+#include <KServiceTypeTrader>
+
+void SyncSourceLoader::loadAllSyncSources()
+{
+    KService::List services;
+    KServiceTypeTrader* trader = KServiceTypeTrader::self();
+    
+    services = trader->query("Akunambol/SyncSource");
+    foreach (KService::Ptr service, services) {
+	kDebug() << "read write part" << service->name();
+    }
+}
