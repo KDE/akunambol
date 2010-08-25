@@ -28,6 +28,6 @@ void SyncSourceLoader::loadAllSyncSources()
     
     services = trader->query("Akunambol/SyncSource");
     foreach (KService::Ptr service, services) {
-	kDebug() << "read write part" << service->name();
+	kDebug() << "SyncSource found:" << service->name();
     }
 }
