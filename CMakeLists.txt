@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 2.8)
 
 project(akunabmol)
 
-add_subdirectory(plugins)
 
 # TODO: change to a better, non-conflicting file
 set(VERSION 0.1)
@@ -117,6 +116,8 @@ set(kded_akunambolsync_SRCS
     ${akonadi_SRCS}
     )
 
+######### PLUGINS ########################
+add_subdirectory(plugins)
 
 qt4_add_dbus_adaptor(kded_akunambolsync_SRCS kded/org.kde.akunambolsync.xml kded/akunambolsyncdaemon.h AkunambolSyncDaemon)
 
@@ -127,5 +128,7 @@ target_link_libraries(kded_akunambolsync ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} 
 install(TARGETS kded_akunambolsync DESTINATION ${PLUGIN_INSTALL_DIR})
 
 install( FILES kded/akunambolsync.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kded)
+
+
 
 
