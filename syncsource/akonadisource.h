@@ -79,6 +79,9 @@ class AkonadiSource : public CacheSyncSource
         int removeAllItems();
 
         void setCollectionId(qint64 id) { m_collectionId = id; }
+
+        virtual StringBuffer getItemSignature(StringBuffer& key);
+
     protected:
         Akonadi::Item fetchItem(QString uid);
 

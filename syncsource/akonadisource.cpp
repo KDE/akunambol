@@ -34,6 +34,8 @@
  * the words "Powered by Funambol".
  */
 
+#include <QDateTime>
+
 #include <Akonadi/ItemDeleteJob>
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemModifyJob>
@@ -149,21 +151,20 @@ Akonadi::Item::List AkonadiSource::getItems() {
     }
 }
 
-/*
-void AkonadiSource::fetchDone(KJob* job)
-{
-    LOG.debug("fetchDone");
-    if ( job->error() ) {
-        return;
+StringBuffer AkonadiSource::getItemSignature(StringBuffer& key) {
+    Akonadi::Item item = fetchItem(key.c_str());
+    // Get the item timestamp
+    QDateTime ts = item.modificationTime();
+    if (!ts.isValid()) {
+        // if no modification date is available, always return the same 0-time stamp
+        // to avoid that 2 calls deliver different times which would be treated as changed entry
+        ts.setTime_t(0);
     }
-    ItemFetchJob *j = static_cast<ItemFetchJob*>( job );
-    m_items = j->items();
-    Item::List items = m_items;
-    if (!items.isEmpty()) {
-        emit loadedCollection();
-    }
+    const QString fp = ts.toString();
+    StringBuffer res(fp.toLatin1());
+
+    LOG.info("******************** FP is %s ***********", res.c_str());
+
+    return res;
 }
-*/
-
-
 
