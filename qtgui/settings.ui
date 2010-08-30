@@ -63,6 +63,32 @@
             <item row="2" column="1">
              <widget class="QLineEdit" name="syncUrl"/>
             </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Log level</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QComboBox" name="logLevel">
+              <item>
+               <property name="text">
+                <string>None</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Info</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Debug</string>
+               </property>
+              </item>
+             </widget>
+            </item>
            </layout>
           </widget>
          </item>

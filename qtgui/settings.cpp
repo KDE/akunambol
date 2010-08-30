@@ -34,18 +34,18 @@
  * the words "Powered by Funambol".
  */
 
-#include<QList>
-#include<QWidget>
-#include<QTabWidget>
+#include <QList>
+#include <QWidget>
+#include <QTabWidget>
 
-#include<base/Log.h>
+#include <base/Log.h>
 
 #include "settings.h"
 #include "ui_settings.h"
 
-#include<client/appsyncsourcemanager.h>
-#include<client/appsyncsource.h>
-#include<qtgui/standardsourcesettings.h>
+#include <client/appsyncsourcemanager.h>
+#include <client/appsyncsource.h>
+#include <qtgui/standardsourcesettings.h>
 
 Settings::Settings(QWidget *parent) :
     QDialog(parent),
@@ -93,6 +93,17 @@ void Settings::setSyncUrl(const QString& text)
     m_ui->syncUrl->setText(text);
 }
 
+void Settings::setLogLevel(Funambol::LogLevel level)
+{
+    if (level == LOG_LEVEL_NONE) {
+        m_ui->logLevel->setCurrentIndex(0);
+    } else if (level == LOG_LEVEL_INFO) {
+        m_ui->logLevel->setCurrentIndex(1);
+    } else if (level == LOG_LEVEL_DEBUG) {
+        m_ui->logLevel->setCurrentIndex(2);
+    }
+}
+
 QString Settings::user()
 {
     return m_ui->user->text();
@@ -120,6 +131,20 @@ void Settings::accept()
             settings->save();
         }
     }
+}
+
+Funambol::LogLevel Settings::logLevel()
+{
+    if (m_ui->logLevel->currentIndex() == 0) {
+        return LOG_LEVEL_NONE;
+    } else if (m_ui->logLevel->currentIndex() == 1) {
+        return LOG_LEVEL_INFO;
+    } else if (m_ui->logLevel->currentIndex() == 2) {
+        return LOG_LEVEL_DEBUG;
+    }
+    // we should never get here.
+    Q_ASSERT("ouch! we can't find a log level");
+    return LOG_LEVEL_DEBUG;
 }
 
 void Settings::changeEvent(QEvent *e)

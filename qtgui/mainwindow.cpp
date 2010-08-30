@@ -173,7 +173,7 @@ void MainWindow::finishedSync(AppSyncSource* /* appSource */, SyncReport* report
     LOG.info(r.c_str());
 
     if (report->getLastErrorCode() == 0) {
-        statusBar()->showMessage(i18n("Last sync successfull"));
+        statusBar()->showMessage(i18n("Last sync successful"));
     } else {
         //const char* errorMsg = report->getLastErrorMsg();
         statusBar()->showMessage(i18n("Last sync failed"));
@@ -256,9 +256,12 @@ void MainWindow::launchConfigDialog()
     m_s->setUser(m_user);
     m_s->setPassword(m_password);
     m_s->setSyncUrl(m_syncUrl);
+    m_s->setLogLevel(m_logLevel);
     m_s->exec();
     parseConfigDialog();
 }
+
+// TODO: make these methods use KConfig instead?
 
 void MainWindow::loadConfig()
 {
@@ -270,6 +273,7 @@ void MainWindow::loadConfig()
     m_user = ac.getUsername();
     m_password = ac.getPassword();
     m_syncUrl = ac.getSyncURL();
+    m_logLevel = config->getClientConfig().getLogLevel();
 }
 
 void MainWindow::writeConfig()
@@ -279,6 +283,7 @@ void MainWindow::writeConfig()
     ac.setUsername(m_user.toLatin1());
     ac.setPassword(m_password.toLatin1());
     ac.setSyncURL(m_syncUrl.toLatin1());
+    config->getClientConfig().setLogLevel(m_logLevel);
     config->save();
 }
 
@@ -288,7 +293,8 @@ void MainWindow::parseConfigDialog()
         m_user = m_s->user();
         m_password = m_s->password();
         m_syncUrl = m_s->syncUrl();
-//         m_logLevel = 
+        m_logLevel = m_s->logLevel();
+        LOG.setLevel(m_logLevel);
         writeConfig();
     }
 }

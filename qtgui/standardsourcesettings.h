@@ -45,6 +45,7 @@
 #include <client/appsyncsource.h>
 
 using namespace Funambol;
+#include <base/Log.h>
 
 namespace Ui {
     class StandardSourceSettings;
@@ -59,6 +60,15 @@ public:
 
     void load();
     void save();
+    void setUser(const QString &text);
+    void setPassword(const QString &text);
+    void setSyncUrl(const QString &text);
+    void setLogLevel(Funambol::LogLevel level);
+    
+    QString user();
+    QString password();
+    QString syncUrl();
+    Funambol::LogLevel logLevel();
 
 protected:
     virtual void changeEvent(QEvent *e);
