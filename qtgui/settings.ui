@@ -6,36 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>767</width>
-    <height>462</height>
+    <width>360</width>
+    <height>206</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
-  <widget class="QWidget" name="verticalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>10</y>
-     <width>731</width>
-     <height>431</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QTabWidget" name="tabs">
-      <widget class="QWidget" name="accountTab">
-       <attribute name="title">
-        <string>Account</string>
-       </attribute>
-        <layout class="QVBoxLayout" name="accountTabVerticalLayout">
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QTabWidget" name="tabs">
+       <widget class="QWidget" name="accountTab">
+        <attribute name="title">
+         <string>Account</string>
+        </attribute>
+        <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QGroupBox" name="groupBox">
            <property name="title">
             <string>Login information</string>
            </property>
-           <layout class="QGridLayout" name="gridLayout">
+           <layout class="QFormLayout" name="formLayout">
             <item row="0" column="0">
              <widget class="QLabel" name="label">
               <property name="text">
@@ -60,9 +53,6 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
-             <widget class="QLineEdit" name="syncUrl"/>
-            </item>
             <item row="2" column="0">
              <widget class="QLabel" name="label_3">
               <property name="text">
@@ -70,25 +60,29 @@
               </property>
              </widget>
             </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="syncUrl"/>
+            </item>
            </layout>
           </widget>
          </item>
         </layout>
+       </widget>
       </widget>
-     </widget>
-    </item>
-    <item>
-     <widget class="QDialogButtonBox" name="buttonBox">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="standardButtons">
-       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
+     </item>
+     <item>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections>

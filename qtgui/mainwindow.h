@@ -41,6 +41,7 @@
 #include <QProgressDialog>
 #include <QtGui/QMainWindow>
 #include "ui_mainwindow.h"
+#include <base/Log.h>
 
 #include <spds/SyncReport.h>
 
@@ -103,6 +104,7 @@ private:
 
     int numServerItems;
     int numClientItems;
+    Funambol::LogLevel m_logLevel;
 };
 
 #endif // MAINWINDOW_H

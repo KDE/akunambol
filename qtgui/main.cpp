@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
 
     // Set directories vars (overriding env settings)
     QString dName = KStandardDirs::locateLocal("appdata", "");
-    StringBuffer dirm= dName.toLatin1();
+    StringBuffer dir = (const char *)(dName.toLatin1());
 
     StringMap env;
     // Stuff needed by funambol
