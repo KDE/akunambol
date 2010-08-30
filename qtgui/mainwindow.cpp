@@ -39,7 +39,7 @@
 #include <QList>
 #include <QStyle>
 #include <QSettings>
-#include <QMessageBox>
+#include <KMessageBox>
 #include <QSpacerItem>
 #include <QProgressDialog>
 
@@ -104,7 +104,7 @@ void MainWindow::setIcons()
 
 void MainWindow::launchAboutDialog()
 {
-    QMessageBox::about(this, tr("About Akunambol"), tr("this release will eat your babies :)"));
+    KMessageBox::about(this, tr("About Akunambol"), tr("this release will eat your babies :)"));
 }
 
 void MainWindow::sync(AppSyncSource* appSource)
