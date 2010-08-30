@@ -34,75 +34,31 @@
  * the words "Powered by Funambol".
  */
 
+#ifndef APPSYNCSOURCEMANAGER_H
+#define APPSYNCSOURCEMANAGER_H
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include <QList>
 
-#include <QProgressDialog>
-#include <QtGui/QMainWindow>
-#include "ui_mainwindow.h"
+#include <client/appsyncsource.h>
 
-#include <spds/SyncReport.h>
+using namespace Funambol;
 
-#include<client/appsyncsource.h>
-
-class Config;
-class Settings;
-class SourceManager;
-
-class MainWindow : public QMainWindow
+class AppSyncSourceManager
 {
-    Q_OBJECT
+    private:
+        AppSyncSourceManager();
 
-public:
-    MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
-    ~MainWindow();
+    public:
+        static AppSyncSourceManager* getInstance();
 
-private slots:
-    void launchConfigDialog();
-    void launchAboutDialog();
-    void sync(AppSyncSource* source);
-    void startedSync(AppSyncSource* source);
-    void finishedSync(AppSyncSource* source, SyncReport* report);
+        void  registerSource(AppSyncSource* source);
+        QList<AppSyncSource*> getRegisteredSources() const;
 
-    void addReceived(const char* key);
-    void delReceived(const char* key);
-    void updReceived(const char* key);
-    void addSent(const char* key);
-    void delSent(const char* key);
-    void updSent(const char* key);
+    private:
+        static AppSyncSourceManager* instance;
+        QList<AppSyncSource*> registeredSources;
 
-    void totalServerItems(int n);
-    void totalClientItems(int n);
-
-signals:
-    void fireSync(AppSyncSource* appSource);
-
-private:
-    void parseConfigDialog();
-    void loadConfig();
-    void setIcons();
-    void writeConfig();
-    void changeSent(const char* key);
-    void changeReceived(const char* key);
-
-private:
-    
-    Ui::MainWindowClass ui;
-
-    Settings *m_s;
-    SourceManager *m_sourceManager;
-
-    QString m_user;
-    QString m_password;
-    QString m_syncUrl;
-    QProgressDialog *m_syncDialog;
-
-    int numSent;
-    int numReceived;
-
-    int numServerItems;
-    int numClientItems;
 };
 
-#endif // MAINWINDOW_H
+#endif
+

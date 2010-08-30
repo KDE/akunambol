@@ -35,74 +35,40 @@
  */
 
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef STANDARDSOURCESETTINGS_H
+#define STANDARDSOURCESETTINGS_H
 
-#include <QProgressDialog>
-#include <QtGui/QMainWindow>
-#include "ui_mainwindow.h"
+#include <QList>
+#include <QtGui/QFrame>
+#include <base/util/StringBuffer.h>
 
-#include <spds/SyncReport.h>
+#include <client/appsyncsource.h>
 
-#include<client/appsyncsource.h>
+using namespace Funambol;
 
-class Config;
-class Settings;
-class SourceManager;
+namespace Ui {
+    class StandardSourceSettings;
+}
 
-class MainWindow : public QMainWindow
-{
+class StandardSourceSettings : public QFrame {
     Q_OBJECT
-
+    Q_DISABLE_COPY(StandardSourceSettings)
 public:
-    MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
-    ~MainWindow();
+    explicit StandardSourceSettings(AppSyncSource* s, QWidget *parent = 0);
+    virtual ~StandardSourceSettings();
 
-private slots:
-    void launchConfigDialog();
-    void launchAboutDialog();
-    void sync(AppSyncSource* source);
-    void startedSync(AppSyncSource* source);
-    void finishedSync(AppSyncSource* source, SyncReport* report);
+    void load();
+    void save();
 
-    void addReceived(const char* key);
-    void delReceived(const char* key);
-    void updReceived(const char* key);
-    void addSent(const char* key);
-    void delSent(const char* key);
-    void updSent(const char* key);
+protected:
+    virtual void changeEvent(QEvent *e);
+    void populateCollections();
 
-    void totalServerItems(int n);
-    void totalClientItems(int n);
+protected:
+    Ui::StandardSourceSettings *m_ui;
+    AppSyncSource* source;
+    QList<qint64> idList;
 
-signals:
-    void fireSync(AppSyncSource* appSource);
-
-private:
-    void parseConfigDialog();
-    void loadConfig();
-    void setIcons();
-    void writeConfig();
-    void changeSent(const char* key);
-    void changeReceived(const char* key);
-
-private:
-    
-    Ui::MainWindowClass ui;
-
-    Settings *m_s;
-    SourceManager *m_sourceManager;
-
-    QString m_user;
-    QString m_password;
-    QString m_syncUrl;
-    QProgressDialog *m_syncDialog;
-
-    int numSent;
-    int numReceived;
-
-    int numServerItems;
-    int numClientItems;
 };
 
-#endif // MAINWINDOW_H
+#endif // STANDARDSOURCESETTINGS_H

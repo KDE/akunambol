@@ -34,75 +34,62 @@
  * the words "Powered by Funambol".
  */
 
+#ifndef TASKSSOURCE_H
+#define TASKSSOURCE_H
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#undef UTC
+#include <client/CacheSyncSource.h>
+#include <spds/SyncItem.h>
+#include <base/util/Enumeration.h>
+#include <Akonadi/Item>
+#include <QObject>
 
-#include <QProgressDialog>
-#include <QtGui/QMainWindow>
-#include "ui_mainwindow.h"
+#include <syncsource/akonadisource.h>
 
-#include <spds/SyncReport.h>
+using namespace Funambol;
 
-#include<client/appsyncsource.h>
-
-class Config;
-class Settings;
-class SourceManager;
-
-class MainWindow : public QMainWindow
+class TasksSource : public AkonadiSource
 {
-    Q_OBJECT
+    public:
 
-public:
-    MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
-    ~MainWindow();
 
-private slots:
-    void launchConfigDialog();
-    void launchAboutDialog();
-    void sync(AppSyncSource* source);
-    void startedSync(AppSyncSource* source);
-    void finishedSync(AppSyncSource* source, SyncReport* report);
+        TasksSource(const WCHAR* name, AbstractSyncSourceConfig *sc, KeyValueStore* cache);
 
-    void addReceived(const char* key);
-    void delReceived(const char* key);
-    void updReceived(const char* key);
-    void addSent(const char* key);
-    void delSent(const char* key);
-    void updSent(const char* key);
+        virtual ~TasksSource() {}
 
-    void totalServerItems(int n);
-    void totalClientItems(int n);
+        Akonadi::Item::List getItems();
 
-signals:
-    void fireSync(AppSyncSource* appSource);
+        /**
+         * Get the content of an item given the key. It is used to populate
+         * the SyncItem before the engine uses it in the usual flow of the sync.
+         *
+         * @param key      the local key of the item
+         * @param size     OUT: the size of the content
+         */
+        void* getItemContent(StringBuffer& key, size_t* size);
 
-private:
-    void parseConfigDialog();
-    void loadConfig();
-    void setIcons();
-    void writeConfig();
-    void changeSent(const char* key);
-    void changeReceived(const char* key);
 
-private:
-    
-    Ui::MainWindowClass ui;
+        /**
+         * Called by the sync engine to add an item that the server has sent.
+         * The sync source is expected to add it to its database, then set the
+         * key to the local key assigned to the new item. Alternatively
+         * the sync source can match the new item against one of the existing
+         * items and return that key.
+         *
+         * @param item  the item as sent by the server
+         * @return      SyncML status code
+         */
+        int insertItem(SyncItem& item);
 
-    Settings *m_s;
-    SourceManager *m_sourceManager;
-
-    QString m_user;
-    QString m_password;
-    QString m_syncUrl;
-    QProgressDialog *m_syncDialog;
-
-    int numSent;
-    int numReceived;
-
-    int numServerItems;
-    int numClientItems;
+        /**
+         * Called by the sync engine to update an item that the source already
+         * should have. The item's key is the local key of that item.
+         *
+         * @param item  the item as sent by the server
+         * @return      SyncML status code
+         */
+        int modifyItem(SyncItem& item);
 };
 
-#endif // MAINWINDOW_H
+#endif
+

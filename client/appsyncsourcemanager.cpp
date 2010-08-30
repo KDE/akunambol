@@ -34,75 +34,32 @@
  * the words "Powered by Funambol".
  */
 
+#include<QList>
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include <base/Log.h>
 
-#include <QProgressDialog>
-#include <QtGui/QMainWindow>
-#include "ui_mainwindow.h"
-
-#include <spds/SyncReport.h>
-
+#include<client/appsyncsourcemanager.h>
 #include<client/appsyncsource.h>
 
-class Config;
-class Settings;
-class SourceManager;
+AppSyncSourceManager* AppSyncSourceManager::instance = NULL;
 
-class MainWindow : public QMainWindow
+AppSyncSourceManager::AppSyncSourceManager() : registeredSources()
 {
-    Q_OBJECT
+}
 
-public:
-    MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
-    ~MainWindow();
+AppSyncSourceManager* AppSyncSourceManager::getInstance() {
+    if (instance == NULL) {
+        instance = new AppSyncSourceManager();
+    }
+    return instance;
+}
 
-private slots:
-    void launchConfigDialog();
-    void launchAboutDialog();
-    void sync(AppSyncSource* source);
-    void startedSync(AppSyncSource* source);
-    void finishedSync(AppSyncSource* source, SyncReport* report);
+void  AppSyncSourceManager::registerSource(AppSyncSource* source) {
+    registeredSources.append(source);
+}
 
-    void addReceived(const char* key);
-    void delReceived(const char* key);
-    void updReceived(const char* key);
-    void addSent(const char* key);
-    void delSent(const char* key);
-    void updSent(const char* key);
+QList<AppSyncSource*> AppSyncSourceManager::getRegisteredSources() const {
+    return registeredSources;
+}
 
-    void totalServerItems(int n);
-    void totalClientItems(int n);
 
-signals:
-    void fireSync(AppSyncSource* appSource);
-
-private:
-    void parseConfigDialog();
-    void loadConfig();
-    void setIcons();
-    void writeConfig();
-    void changeSent(const char* key);
-    void changeReceived(const char* key);
-
-private:
-    
-    Ui::MainWindowClass ui;
-
-    Settings *m_s;
-    SourceManager *m_sourceManager;
-
-    QString m_user;
-    QString m_password;
-    QString m_syncUrl;
-    QProgressDialog *m_syncDialog;
-
-    int numSent;
-    int numReceived;
-
-    int numServerItems;
-    int numClientItems;
-};
-
-#endif // MAINWINDOW_H

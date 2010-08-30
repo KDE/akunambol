@@ -34,75 +34,49 @@
  * the words "Powered by Funambol".
  */
 
+#include<QList>
+#include<QStringList>
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include <Akonadi/Collection>
+#include <Akonadi/CollectionFetchJob>
 
-#include <QProgressDialog>
-#include <QtGui/QMainWindow>
-#include "ui_mainwindow.h"
+#include <base/Log.h>
+#include <base/util/StringBuffer.h>
 
-#include <spds/SyncReport.h>
+#include <client/collectionsfetcher.h>
 
-#include<client/appsyncsource.h>
+using namespace Akonadi;
+using namespace Funambol;
 
-class Config;
-class Settings;
-class SourceManager;
-
-class MainWindow : public QMainWindow
+CollectionsFetcher::CollectionsFetcher(const char* mimeType) :
+   collectionMimeType(mimeType)
 {
-    Q_OBJECT
+}
 
-public:
-    MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
-    ~MainWindow();
+CollectionsFetcher::~CollectionsFetcher()
+{
+}
 
-private slots:
-    void launchConfigDialog();
-    void launchAboutDialog();
-    void sync(AppSyncSource* source);
-    void startedSync(AppSyncSource* source);
-    void finishedSync(AppSyncSource* source, SyncReport* report);
+QList<Collection> CollectionsFetcher::fetch()
+{ 
+    LOG.debug("Fetching collections for: %s", collectionMimeType.c_str());
+    Collection filteredCollection(Collection::root());
+    filteredCollection.setContentMimeTypes(QStringList() << collectionMimeType.c_str());
 
-    void addReceived(const char* key);
-    void delReceived(const char* key);
-    void updReceived(const char* key);
-    void addSent(const char* key);
-    void delSent(const char* key);
-    void updSent(const char* key);
+    QList<Collection> res;
 
-    void totalServerItems(int n);
-    void totalClientItems(int n);
+    CollectionFetchJob* job = new CollectionFetchJob( filteredCollection, CollectionFetchJob::Recursive);
+    if (!job->exec() ) {
+        const char* err = job->errorString().toLatin1();
+        LOG.error("Job Error: %s", err);
+    } else {
+        CollectionFetchJob* cjob = static_cast<CollectionFetchJob*>( job );
+        foreach( const Collection &collection, cjob->collections() ) {
+            if (collection.contentMimeTypes().contains(collectionMimeType.c_str())) {
+                res.append(collection);
+            }
+        }
+    }
+    return res;
+}
 
-signals:
-    void fireSync(AppSyncSource* appSource);
-
-private:
-    void parseConfigDialog();
-    void loadConfig();
-    void setIcons();
-    void writeConfig();
-    void changeSent(const char* key);
-    void changeReceived(const char* key);
-
-private:
-    
-    Ui::MainWindowClass ui;
-
-    Settings *m_s;
-    SourceManager *m_sourceManager;
-
-    QString m_user;
-    QString m_password;
-    QString m_syncUrl;
-    QProgressDialog *m_syncDialog;
-
-    int numSent;
-    int numReceived;
-
-    int numServerItems;
-    int numClientItems;
-};
-
-#endif // MAINWINDOW_H

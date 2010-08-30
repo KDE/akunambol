@@ -34,75 +34,60 @@
  * the words "Powered by Funambol".
  */
 
+#include <QWidget>
+#include <base/Log.h>
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include <base/util/StringBuffer.h>
+#include <base/Log.h>
 
-#include <QProgressDialog>
-#include <QtGui/QMainWindow>
-#include "ui_mainwindow.h"
+#include <syncsource/akonadisource.h>
+#include <client/appsyncsource.h>
+#include <qtgui/sourcepushbutton.h>
 
-#include <spds/SyncReport.h>
-
-#include<client/appsyncsource.h>
-
-class Config;
-class Settings;
-class SourceManager;
-
-class MainWindow : public QMainWindow
+AppSyncSource::AppSyncSource(const char* n, AkonadiSource* s) : name(n),
+                                                                source(s),
+                                                                settingsTab(NULL),
+                                                                button(NULL)
 {
-    Q_OBJECT
+}
 
-public:
-    MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
-    ~MainWindow();
+const char* AppSyncSource::getName() {
+    return name.c_str();
+}
 
-private slots:
-    void launchConfigDialog();
-    void launchAboutDialog();
-    void sync(AppSyncSource* source);
-    void startedSync(AppSyncSource* source);
-    void finishedSync(AppSyncSource* source, SyncReport* report);
+AkonadiSource* AppSyncSource::getSyncSource() {
+    return source;
+}
 
-    void addReceived(const char* key);
-    void delReceived(const char* key);
-    void updReceived(const char* key);
-    void addSent(const char* key);
-    void delSent(const char* key);
-    void updSent(const char* key);
+QWidget* AppSyncSource::getSettingsTab() {
+    return settingsTab;
+}
 
-    void totalServerItems(int n);
-    void totalClientItems(int n);
+void AppSyncSource::setSettingsTab(QWidget* tab) {
+    settingsTab = tab;
+}
 
-signals:
-    void fireSync(AppSyncSource* appSource);
+AppSyncSourceConfig* AppSyncSource::getConfig() {
+    return config;
+}
 
-private:
-    void parseConfigDialog();
-    void loadConfig();
-    void setIcons();
-    void writeConfig();
-    void changeSent(const char* key);
-    void changeReceived(const char* key);
+void AppSyncSource::setConfig(AppSyncSourceConfig* c) {
+    config = c;
+}
 
-private:
-    
-    Ui::MainWindowClass ui;
+const char* AppSyncSource::getAkonadiMimeType() {
+    return akonadiMimeType.c_str();
+}
 
-    Settings *m_s;
-    SourceManager *m_sourceManager;
+void AppSyncSource::setAkonadiMimeType(const char* mimeType) {
+    akonadiMimeType.assign(mimeType);
+}
 
-    QString m_user;
-    QString m_password;
-    QString m_syncUrl;
-    QProgressDialog *m_syncDialog;
+SourcePushButton* AppSyncSource::getPushButton() {
+    return button;
+}
 
-    int numSent;
-    int numReceived;
+void AppSyncSource::setPushButton(SourcePushButton* b) {
+    button = b;
+}
 
-    int numServerItems;
-    int numClientItems;
-};
-
-#endif // MAINWINDOW_H

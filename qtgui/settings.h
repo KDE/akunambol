@@ -35,74 +35,37 @@
  */
 
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
-#include <QProgressDialog>
-#include <QtGui/QMainWindow>
-#include "ui_mainwindow.h"
+#include <QtGui/QDialog>
 
-#include <spds/SyncReport.h>
+namespace Ui {
+    class Settings;
+}
 
-#include<client/appsyncsource.h>
-
-class Config;
-class Settings;
-class SourceManager;
-
-class MainWindow : public QMainWindow
-{
+class Settings : public QDialog {
     Q_OBJECT
-
+    Q_DISABLE_COPY(Settings)
 public:
-    MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
-    ~MainWindow();
+    explicit Settings(QWidget *parent = 0);
+    virtual ~Settings();
 
-private slots:
-    void launchConfigDialog();
-    void launchAboutDialog();
-    void sync(AppSyncSource* source);
-    void startedSync(AppSyncSource* source);
-    void finishedSync(AppSyncSource* source, SyncReport* report);
-
-    void addReceived(const char* key);
-    void delReceived(const char* key);
-    void updReceived(const char* key);
-    void addSent(const char* key);
-    void delSent(const char* key);
-    void updSent(const char* key);
-
-    void totalServerItems(int n);
-    void totalClientItems(int n);
-
-signals:
-    void fireSync(AppSyncSource* appSource);
-
-private:
-    void parseConfigDialog();
-    void loadConfig();
-    void setIcons();
-    void writeConfig();
-    void changeSent(const char* key);
-    void changeReceived(const char* key);
-
-private:
+    void setUser(const QString &text);
+    void setPassword(const QString &text);
+    void setSyncUrl(const QString &text);
     
-    Ui::MainWindowClass ui;
+    QString user();
+    QString password();
+    QString syncUrl();
 
-    Settings *m_s;
-    SourceManager *m_sourceManager;
+    void accept();
 
-    QString m_user;
-    QString m_password;
-    QString m_syncUrl;
-    QProgressDialog *m_syncDialog;
+protected:
+    virtual void changeEvent(QEvent *e);
 
-    int numSent;
-    int numReceived;
-
-    int numServerItems;
-    int numClientItems;
+private:
+    Ui::Settings *m_ui;
 };
 
-#endif // MAINWINDOW_H
+#endif // SETTINGS_H

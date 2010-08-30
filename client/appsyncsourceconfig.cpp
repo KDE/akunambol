@@ -34,75 +34,64 @@
  * the words "Powered by Funambol".
  */
 
+#include<QWidget>
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include <base/util/StringBuffer.h>
+#include <base/Log.h>
+#include <base/adapter/PlatformAdapter.h>
+#include <spdm/DeviceManagementNode.h>
 
-#include <QProgressDialog>
-#include <QtGui/QMainWindow>
-#include "ui_mainwindow.h"
+#include <syncsource/akonadisource.h>
+#include <client/appsyncsourceconfig.h>
 
-#include <spds/SyncReport.h>
+using namespace Funambol;
 
-#include<client/appsyncsource.h>
-
-class Config;
-class Settings;
-class SourceManager;
-
-class MainWindow : public QMainWindow
+AppSyncSourceConfig::AppSyncSourceConfig(const char* srcName) : 
+    remoteUri(""),
+    collectionId(-1),
+    sourceName(srcName)
 {
-    Q_OBJECT
+}
 
-public:
-    MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
-    ~MainWindow();
+void AppSyncSourceConfig::setCollectionId(qint64 id)
+{
+    collectionId = id;
+}
 
-private slots:
-    void launchConfigDialog();
-    void launchAboutDialog();
-    void sync(AppSyncSource* source);
-    void startedSync(AppSyncSource* source);
-    void finishedSync(AppSyncSource* source, SyncReport* report);
+qint64 AppSyncSourceConfig::getCollectionId()
+{
+    return collectionId;
+}
 
-    void addReceived(const char* key);
-    void delReceived(const char* key);
-    void updReceived(const char* key);
-    void addSent(const char* key);
-    void delSent(const char* key);
-    void updSent(const char* key);
+void AppSyncSourceConfig::setRemoteUri(const char* uri)
+{
+    remoteUri.assign(uri);
+}
 
-    void totalServerItems(int n);
-    void totalClientItems(int n);
+const char* AppSyncSourceConfig::getRemoteUri() const {
+    return remoteUri.c_str();
+}
 
-signals:
-    void fireSync(AppSyncSource* appSource);
+bool AppSyncSourceConfig::save() {
+    DeviceManagementNode* node = new DeviceManagementNode("Funambol/Akunambol/appsourceconfig", sourceName.c_str());
+    StringBuffer id;
+    id.append(collectionId);
+    node->setPropertyValue("collection-id", id.c_str());
+    node->setPropertyValue("remote-uri", remoteUri.c_str());
+    delete node;
 
-private:
-    void parseConfigDialog();
-    void loadConfig();
-    void setIcons();
-    void writeConfig();
-    void changeSent(const char* key);
-    void changeReceived(const char* key);
+    return true;
+}
 
-private:
-    
-    Ui::MainWindowClass ui;
+bool AppSyncSourceConfig::load() {
+    DeviceManagementNode* node = new DeviceManagementNode("Funambol/Akunambol/appsourceconfig", sourceName.c_str());
+    const char* remoteUriStr = node->readPropertyValue("remote-uri");
+    if (remoteUriStr != NULL) {
+        remoteUri.assign(remoteUriStr);
+    }
+    const char* idStr = node->readPropertyValue("collection-id");
+    collectionId = (qint64) strtol(idStr, NULL, 0);
 
-    Settings *m_s;
-    SourceManager *m_sourceManager;
+    return true;
+}
 
-    QString m_user;
-    QString m_password;
-    QString m_syncUrl;
-    QProgressDialog *m_syncDialog;
-
-    int numSent;
-    int numReceived;
-
-    int numServerItems;
-    int numClientItems;
-};
-
-#endif // MAINWINDOW_H

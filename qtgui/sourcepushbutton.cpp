@@ -34,75 +34,20 @@
  * the words "Powered by Funambol".
  */
 
+#include<QPushButton>
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
-#include <QProgressDialog>
-#include <QtGui/QMainWindow>
-#include "ui_mainwindow.h"
-
-#include <spds/SyncReport.h>
+#include <base/Log.h>
 
 #include<client/appsyncsource.h>
+#include<qtgui/sourcepushbutton.h>
 
-class Config;
-class Settings;
-class SourceManager;
-
-class MainWindow : public QMainWindow
+SourcePushButton::SourcePushButton(AppSyncSource* s, const char* text) : QPushButton(text),
+                                                                         source(s)
 {
-    Q_OBJECT
+    connect(this, SIGNAL(clicked()), SLOT(clickedSlot()));
+}
 
-public:
-    MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
-    ~MainWindow();
+void SourcePushButton::clickedSlot() {
+    emit clicked(source);
+}
 
-private slots:
-    void launchConfigDialog();
-    void launchAboutDialog();
-    void sync(AppSyncSource* source);
-    void startedSync(AppSyncSource* source);
-    void finishedSync(AppSyncSource* source, SyncReport* report);
-
-    void addReceived(const char* key);
-    void delReceived(const char* key);
-    void updReceived(const char* key);
-    void addSent(const char* key);
-    void delSent(const char* key);
-    void updSent(const char* key);
-
-    void totalServerItems(int n);
-    void totalClientItems(int n);
-
-signals:
-    void fireSync(AppSyncSource* appSource);
-
-private:
-    void parseConfigDialog();
-    void loadConfig();
-    void setIcons();
-    void writeConfig();
-    void changeSent(const char* key);
-    void changeReceived(const char* key);
-
-private:
-    
-    Ui::MainWindowClass ui;
-
-    Settings *m_s;
-    SourceManager *m_sourceManager;
-
-    QString m_user;
-    QString m_password;
-    QString m_syncUrl;
-    QProgressDialog *m_syncDialog;
-
-    int numSent;
-    int numReceived;
-
-    int numServerItems;
-    int numClientItems;
-};
-
-#endif // MAINWINDOW_H

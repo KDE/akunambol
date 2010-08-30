@@ -34,75 +34,49 @@
  * the words "Powered by Funambol".
  */
 
+#ifndef APPSYNCSOURCE_H
+#define APPSYNCSOURCE_H
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include<QWidget>
 
-#include <QProgressDialog>
-#include <QtGui/QMainWindow>
-#include "ui_mainwindow.h"
+#include <base/util/StringBuffer.h>
+#include <base/Log.h>
 
-#include <spds/SyncReport.h>
+#include <syncsource/akonadisource.h>
+#include <client/appsyncsourceconfig.h>
 
-#include<client/appsyncsource.h>
+// Forward declarations to avoid circular deps
+class SourcePushButton;
 
-class Config;
-class Settings;
-class SourceManager;
+using namespace Funambol;
 
-class MainWindow : public QMainWindow
+class AppSyncSource
 {
-    Q_OBJECT
+    public:
+        AppSyncSource(const char* name, AkonadiSource* source);
+        const char* getName();
+        AkonadiSource* getSyncSource();
 
-public:
-    MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
-    ~MainWindow();
+        QWidget* getSettingsTab();
+        void setSettingsTab(QWidget* tab);
 
-private slots:
-    void launchConfigDialog();
-    void launchAboutDialog();
-    void sync(AppSyncSource* source);
-    void startedSync(AppSyncSource* source);
-    void finishedSync(AppSyncSource* source, SyncReport* report);
+        SourcePushButton* getPushButton();
+        void setPushButton(SourcePushButton* button);
 
-    void addReceived(const char* key);
-    void delReceived(const char* key);
-    void updReceived(const char* key);
-    void addSent(const char* key);
-    void delSent(const char* key);
-    void updSent(const char* key);
+        AppSyncSourceConfig* getConfig();
+        void setConfig(AppSyncSourceConfig* c);
 
-    void totalServerItems(int n);
-    void totalClientItems(int n);
+        const char* getAkonadiMimeType();
+        void setAkonadiMimeType(const char* mimeType);
 
-signals:
-    void fireSync(AppSyncSource* appSource);
-
-private:
-    void parseConfigDialog();
-    void loadConfig();
-    void setIcons();
-    void writeConfig();
-    void changeSent(const char* key);
-    void changeReceived(const char* key);
-
-private:
-    
-    Ui::MainWindowClass ui;
-
-    Settings *m_s;
-    SourceManager *m_sourceManager;
-
-    QString m_user;
-    QString m_password;
-    QString m_syncUrl;
-    QProgressDialog *m_syncDialog;
-
-    int numSent;
-    int numReceived;
-
-    int numServerItems;
-    int numClientItems;
+    private:
+        StringBuffer name;
+        AkonadiSource* source;
+        QWidget* settingsTab;
+        AppSyncSourceConfig* config;
+        StringBuffer akonadiMimeType;
+        SourcePushButton* button;
 };
 
-#endif // MAINWINDOW_H
+#endif
+
