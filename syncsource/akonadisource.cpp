@@ -163,7 +163,7 @@ StringBuffer AkonadiSource::getItemSignature(StringBuffer& key) {
     const QString fp = ts.toString();
     StringBuffer res(fp.toLatin1());
 
-    LOG.info("******************** FP is %s ***********", res.c_str());
+    LOG.debug("******************** FP is %s ***********", res.c_str());
 
     return res;
 }
