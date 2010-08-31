@@ -59,7 +59,7 @@ static StringBuffer generateDeviceID() {
 /**
  * Default constructor
  */
-KFunSyncConfig::KFunSyncConfig(): DMTClientConfig(KFUNSYNC_APPLICATION_URI) {
+KFunSyncConfig::KFunSyncConfig(): DMTClientConfig() {
 
 }
 
