@@ -80,7 +80,7 @@ Enumeration* AkonadiSource::getAllItemList()
     foreach(Akonadi::Item item, m_items) {
         QString uid = QString::number(item.id());
         StringBuffer key((const char*)uid.toLatin1());
-        LOG.info("Found contact: %s", key.c_str());
+        LOG.debug("Found contact: %s", key.c_str());
         items.add(key);
     }
 
