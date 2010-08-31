@@ -1,70 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>StandardSourceSettings</class>
- <widget class="QFrame" name="StandardSourceSettings">
+ <widget class="QWidget" name="StandardSourceSettings">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>357</width>
-    <height>300</height>
+    <width>318</width>
+    <height>71</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
-  </property>
-  <widget class="QComboBox" name="collections">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>60</y>
-     <width>211</width>
-     <height>26</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPlainTextEdit" name="remoteUri">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>20</y>
-     <width>211</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="remoteUriLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Remote URI</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="collectionLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>60</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Collection</string>
-   </property>
-  </widget>
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="remoteUriLabel">
+     <property name="text">
+      <string>Remote URI</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="collectionLabel">
+     <property name="text">
+      <string>Collection</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QComboBox" name="collections"/>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="remoteUri"/>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

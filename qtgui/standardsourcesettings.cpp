@@ -99,7 +99,7 @@ void StandardSourceSettings::load() {
     AppSyncSourceConfig *config = source->getConfig();
     config->load();
     // Now set the value into the UI
-    m_ui->remoteUri->setPlainText(config->getRemoteUri());
+    m_ui->remoteUri->setText(config->getRemoteUri());
     // Search for the proper index
     qint64 id = config->getCollectionId();
     int idx = -1;
@@ -118,7 +118,7 @@ void StandardSourceSettings::load() {
 
 void StandardSourceSettings::save() {
     AppSyncSourceConfig *config = source->getConfig();
-    const char* uri = m_ui->remoteUri->toPlainText().toLatin1();
+    const char* uri = m_ui->remoteUri->text().toLatin1();
     config->setRemoteUri(uri);
     qint64 id = idList.at(m_ui->collections->currentIndex());
     config->setCollectionId(id);
