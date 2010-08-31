@@ -104,7 +104,7 @@ void MainWindow::setIcons()
 
 void MainWindow::launchAboutDialog()
 {
-    KMessageBox::about(this, tr("About Akunambol"), tr("this release will eat your babies :)"));
+    KMessageBox::about(this, i18n("this release will eat your babies :)"), i18n("About Akunambol"));
 }
 
 void MainWindow::sync(AppSyncSource* appSource)
