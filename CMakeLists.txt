@@ -1,6 +1,6 @@
 project(akunabmol)
 
-set(VERSION 0.1.90)
+set(VERSION 0.2)
 configure_file(${CMAKE_SOURCE_DIR}/config.h.cmake ${CMAKE_SOURCE_DIR}/config.h)
 
 set( CMAKE_CXX_FLAGS "-O0 -g")
