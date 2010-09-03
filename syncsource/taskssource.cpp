@@ -109,7 +109,7 @@ void* TasksSource::getItemContent(StringBuffer& key, size_t* size)
     todoCal.addIncidence(todo->clone());
     KCal::ICalFormat formatter;
     QString vCal = formatter.toString(&todoCal);
-    QByteArray bytes = vCal.toLatin1();
+    QByteArray bytes = vCal.toUtf8();
     const char* data = bytes.constData();
     const StringBuffer item(data);
     *size = item.length();
@@ -159,7 +159,7 @@ int TasksSource::insertItem(SyncItem& item)
     job->exec();
     
     Akonadi::Item newItem = job->item();
-    item.setKey(QString::number(newItem.id()).toLatin1());
+    item.setKey(QString::number(newItem.id()).toUtf8());
     return STC_ITEM_ADDED;
 }
 

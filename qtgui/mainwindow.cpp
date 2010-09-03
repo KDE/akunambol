@@ -280,9 +280,9 @@ void MainWindow::writeConfig()
 {
     KFunSyncConfig *config = KFunSyncConfig::getInstance();
     AccessConfig &ac = config->getAccessConfig();
-    ac.setUsername(m_user.toLatin1());
-    ac.setPassword(m_password.toLatin1());
-    ac.setSyncURL(m_syncUrl.toLatin1());
+    ac.setUsername(m_user.toUtf8());
+    ac.setPassword(m_password.toUtf8());
+    ac.setSyncURL(m_syncUrl.toUtf8());
     config->getClientConfig().setLogLevel(m_logLevel);
     config->save();
 }

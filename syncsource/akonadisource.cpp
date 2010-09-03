@@ -79,7 +79,7 @@ Enumeration* AkonadiSource::getAllItemList()
     // Tranform the List into an ArrayList suitable for the sync engine
     foreach(Akonadi::Item item, m_items) {
         QString uid = QString::number(item.id());
-        StringBuffer key((const char*)uid.toLatin1());
+        StringBuffer key((const char*)uid.toUtf8());
         LOG.debug("Found contact: %s", key.c_str());
         items.add(key);
     }
@@ -94,7 +94,7 @@ Akonadi::Item AkonadiSource::fetchItem(QString uid) {
     job->fetchScope().fetchFullPayload();
     
     if (!job->exec()) {
-        //LOG.error("Error!!! %s", job->errorText().toLatin1());
+        //LOG.error("Error!!! %s", job->errorText().toUtf8());
         LOG.error("I'm going to crash and can't avoid it... :(");
     }
     
@@ -161,7 +161,7 @@ StringBuffer AkonadiSource::getItemSignature(StringBuffer& key) {
         ts.setTime_t(0);
     }
     const QString fp = ts.toString();
-    StringBuffer res(fp.toLatin1());
+    StringBuffer res(fp.toUtf8());
 
     LOG.debug("******************** FP is %s ***********", res.c_str());
 

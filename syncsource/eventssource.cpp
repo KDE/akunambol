@@ -107,7 +107,7 @@ void* EventsSource::getItemContent(StringBuffer& key, size_t* size)
     eventCal.addIncidence(event->clone());
     KCal::ICalFormat formatter;
     QString vCal = formatter.toString(&eventCal);
-    QByteArray bytes = vCal.toLatin1();
+    QByteArray bytes = vCal.toUtf8();
     const char* data = bytes.constData();
     const StringBuffer item(data);
     *size = item.length();
@@ -157,7 +157,7 @@ int EventsSource::insertItem(SyncItem& item)
     job->exec();
     
     Akonadi::Item newItem = job->item();
-    item.setKey(QString::number(newItem.id()).toLatin1());
+    item.setKey(QString::number(newItem.id()).toUtf8());
     return STC_ITEM_ADDED;
 }
 

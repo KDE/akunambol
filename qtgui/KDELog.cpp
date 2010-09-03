@@ -76,7 +76,7 @@ void KDELog::printLine(bool firstLine, time_t time, const char *fullTime,
             logFileInitialized = true;
 
             QString fName = KStandardDirs::locateLocal("appdata", "synclog.txt");
-            const char* s = fName.toLatin1();
+            const char* s = fName.toUtf8();
             StringBuffer buf(s);
             POSIXLog::setLogFile(NULL, buf.c_str(), false);
         }

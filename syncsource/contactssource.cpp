@@ -129,7 +129,7 @@ int ContactsSource::insertItem(SyncItem& item)
     
     Akonadi::Item newItem = job->item();
 //     kDebug() << "ID now.." << newItem.id();
-    item.setKey(QString::number(newItem.id()).toLatin1());
+    item.setKey(QString::number(newItem.id()).toUtf8());
     
     return STC_ITEM_ADDED;
 }

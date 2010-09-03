@@ -47,7 +47,7 @@ Enumeration* CalendarSource::getAllItemList() {
     for(;it != end;++it) {
         KCal::Event *e = *it;
         QString uid = e->uid();
-        StringBuffer key((const char*)uid.toLatin1());
+        StringBuffer key((const char*)uid.toUtf8());
         LOG.info("Found event: %s", key.c_str());
         items.add(key);
     }
@@ -69,7 +69,7 @@ void* CalendarSource::getItemContent(StringBuffer& key, size_t* size) {
     eventCal.addIncidence(event->clone());
     KCal::ICalFormat formatter;
     QString vCal = formatter.toString(&eventCal);
-    QByteArray bytes = vCal.toLatin1();
+    QByteArray bytes = vCal.toUtf8();
     const char* data = bytes.constData();
     const StringBuffer item(data);
     *size = item.length();
@@ -111,7 +111,7 @@ int CalendarSource::insertItem(SyncItem& item) {
     calendar->addIncidence(e);
     calendar->save();
     QString uid = e->uid();
-    StringBuffer key((const char*)uid.toLatin1());
+    StringBuffer key((const char*)uid.toUtf8());
     LOG.info("New event key: %s", key.c_str());
     item.setKey(key.c_str());
 
@@ -200,7 +200,7 @@ StringBuffer CalendarSource::getItemSignature(StringBuffer& key) {
         d.setTime_t(0);
     }
     const QString fp = d.toString();
-    StringBuffer res(fp.toLatin1());
+    StringBuffer res(fp.toUtf8());
     return res;
 }
 
