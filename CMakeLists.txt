@@ -65,6 +65,7 @@ set(akunambol_SRCS
     qtgui/mainwindow.cpp
     qtgui/KDELog.cpp
     qtgui/sourcepushbutton.cpp
+    ${likeback_SRCS}
     ${syncsource_SRCS}
     ${client_SRCS}
     )
@@ -75,7 +76,7 @@ set_source_files_properties(${akunambol_SRCS} PROPRIETIES COMPILE_FLAGS -fexcept
 set(akunambol_RCCS qtgui/resource.qrc)
 
 kde4_add_ui_files(akunambol_SRCS qtgui/mainwindow.ui qtgui/standardsourcesettings.ui
-                  qtgui/settings.ui)
+                  qtgui/settings.ui likeback/likebackdialog.ui likeback/likebackbar.ui)
 
 Qt4_add_resources(akunambol_SRCS ${akunambol_RCCS})
 

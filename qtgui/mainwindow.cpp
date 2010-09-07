@@ -53,6 +53,8 @@
 #include "spds/AccessConfig.h"
 #include "spds/SyncReport.h"
 
+#include "../likeback/likeback.h"
+
 #include "syncsource/sourcemanager.h"
 #include "client/appsyncsource.h"
 #include "client/appsyncsourcemanager.h"
@@ -73,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     connect(ui.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui.actionConfigure_Akunambol, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
     connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(launchAboutDialog()));
-
+    
     // Create a button for each existing source
     QVBoxLayout *verticalLayout = ui.verticalLayout;
     AppSyncSourceManager *manager = AppSyncSourceManager::getInstance();
@@ -90,11 +92,13 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
         verticalLayout->addItem(verticalSpacer);
     }
 
-    
-    //    resize(minimumSizeHint()); // This looks like a sensible default
     setIcons();
     loadConfig();
     statusBar()->showMessage(tr("Configuration loaded."));
+    
+    LikeBack *likeBack = new LikeBack(LikeBack::AllButtons, true);
+    likeBack->setAcceptedLanguages( QStringList() << "en" << "it" );
+    likeBack->setServer("aku-likeback.ruphy.org", "/send.php");
 }
 
 void MainWindow::setIcons()
