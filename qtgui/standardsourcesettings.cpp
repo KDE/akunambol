@@ -120,8 +120,13 @@ void StandardSourceSettings::save() {
     AppSyncSourceConfig *config = source->getConfig();
     const char* uri = m_ui->remoteUri->text().toUtf8();
     config->setRemoteUri(uri);
-    qint64 id = idList.at(m_ui->collections->currentIndex());
-    config->setCollectionId(id);
+    int index = m_ui->collections->currentIndex();
+    if (index != -1) {
+      qint64 id = idList.at(m_ui->collections->currentIndex());
+      config->setCollectionId(id);
+    } else {
+      config->setCollectionId(-1);
+    }
     config->save();
 }
 
