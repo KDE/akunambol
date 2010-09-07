@@ -39,8 +39,6 @@ set(client_SRCS
     client/collectionsfetcher.cpp
     )
 
-
-
 set(akunambol_LINK_LIBS
     ${KDE4_KDEUI_LIBS}
     ${Kdepimlibs_LIBS}
@@ -53,6 +51,12 @@ set(akunambol_LINK_LIBS
 )
 
 # target_link_libraries(akonadi-test ${akunambol_LINK_LIBS})
+
+set(likeback_SRCS
+    likeback/likeback.cpp
+    likeback/likebackdialog.cpp
+    likeback/likebackbar.cpp
+)
 
 set(akunambol_SRCS
     qtgui/settings.cpp
