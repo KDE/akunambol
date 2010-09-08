@@ -53,9 +53,9 @@ set(akunambol_LINK_LIBS
 # target_link_libraries(akonadi-test ${akunambol_LINK_LIBS})
 
 set(likeback_SRCS
-    likeback/likeback.cpp
-    likeback/likebackdialog.cpp
-    likeback/likebackbar.cpp
+    likeback/LikeBack.cpp
+    likeback/LikeBackDialog.cpp
+    likeback/LikeBackBar.cpp
 )
 
 set(akunambol_SRCS
@@ -76,12 +76,21 @@ set_source_files_properties(${akunambol_SRCS} PROPRIETIES COMPILE_FLAGS -fexcept
 set(akunambol_RCCS qtgui/resource.qrc)
 
 kde4_add_ui_files(akunambol_SRCS qtgui/mainwindow.ui qtgui/standardsourcesettings.ui
-                  qtgui/settings.ui likeback/likebackdialog.ui likeback/likebackbar.ui)
+                  qtgui/settings.ui likeback/LikeBackDialog.ui likeback/LikeBackBar.ui)
 
 Qt4_add_resources(akunambol_SRCS ${akunambol_RCCS})
 
 kde4_add_executable(akunambol ${akunambol_SRCS})
 
 target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} -lkcal)
+
+install( FILES
+	likeback/likeback_like.png
+	likeback/likeback_dislike.png
+	likeback/likeback_bug.png
+	likeback/likeback_feature.png
+        DESTINATION ${DATA_INSTALL_DIR}/akunambol/images)
+
+kde4_install_icons( ${DATA_INSTALL_DIR}/amarok/icons )
 
 install(TARGETS akunambol DESTINATION ${BIN_INSTALL_DIR} )
