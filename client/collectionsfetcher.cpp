@@ -67,7 +67,7 @@ QList<Collection> CollectionsFetcher::fetch()
 
     CollectionFetchJob* job = new CollectionFetchJob( filteredCollection, CollectionFetchJob::Recursive);
     if (!job->exec() ) {
-        const char* err = job->errorString().toLatin1();
+        const char* err = job->errorString().toUtf8();
         LOG.error("Job Error: %s", err);
     } else {
         CollectionFetchJob* cjob = static_cast<CollectionFetchJob*>( job );
