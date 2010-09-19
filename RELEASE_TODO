@@ -1,10 +1,14 @@
 
 What to do to release Akunambol:
 
-- Tag a git version (git tag -s v<VERSION>)
-- Download a tarball from gitorious, check and md5sum it
-- Add a new version to bugzilla
 - Bump the version via CMake
+- Tag a git version (git tag -s v<VERSION>)
+- Get a tarball from git-archive, check and md5sum it
+   git archive --format=tar --prefix=akunambol-VERSION/ vVERSION | gzip > akunambol-VERSION.tar.gz
+
+- I said you must check your tarball
+- Upload tag to gitorious
+- Add a new version to bugzilla
 - Write an announcement
   - Update the website
   - Send info to funambol and kdepim ML
