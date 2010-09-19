@@ -59,7 +59,7 @@
 #include "client/appsyncsource.h"
 #include "client/collectionsfetcher.h"
 
-#include "../config.h"
+#include "aku-auto-config.h"
 
 class SyncThread : public QThread {
 
