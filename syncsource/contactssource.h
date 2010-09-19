@@ -93,6 +93,7 @@ class ContactsSource : public AkonadiSource
     private:
 
         const StringBuffer unfoldVCard(const char*);
+        const char* processIncomingContact(const char* vcard);
 };
 
 #endif
