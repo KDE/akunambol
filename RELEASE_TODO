@@ -1,0 +1,25 @@
+
+What to do to release Akunambol:
+
+- Tag a git version
+- Download a tarball from gitorious, check and md5sum it
+- Add a new version to bugzilla
+- Bump the version via CMake
+- Write an announcement
+  - Update the website
+  - Send info to funambol and kdepim ML
+  - Notify packagers
+
+Optional:
+
+- Write a blog entry
+- Party :)
+
+---
+
+What is still needed for release management:
+
+- A script that cleans out some files, like this one
+- ...?
+
+
