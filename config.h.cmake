@@ -2,7 +2,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#cmakedefine VERSION "@VERSION@"
+#define AKU_VERSION "@VERSION@"
 
 #endif
 

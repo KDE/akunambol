@@ -50,7 +50,7 @@
 #include <QLabel>
 
 // Akunambol
-#include "../config.h"
+#include "aku-auto-config.h"
 #include "mainwindow.h"
 #include "standardsourcesettings.h"
 #include "KDELog.h"
@@ -125,7 +125,7 @@ void setupSources() {
 int main(int argc, char *argv[])
 {
     KCmdLineArgs::init(argc, argv, "akunambol", "", ki18n("Akunambol"),
-                       VERSION, ki18n("SyncML Client for Akonadi using Funambol libraries"));
+                       AKU_VERSION, ki18n("SyncML Client for Akonadi using Funambol libraries"));
     
     KApplication app;
 
@@ -152,8 +152,8 @@ int main(int argc, char *argv[])
     setupSources();
     
     // Fire the UI
-    MainWindow w;
-    w.show();
+    MainWindow *w = new MainWindow;
+    w->show();
     
     return app.exec();
 }

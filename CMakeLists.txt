@@ -1,7 +1,7 @@
 project(akunabmol)
 
-set(VERSION 0.2)
-configure_file(${CMAKE_SOURCE_DIR}/config.h.cmake ${CMAKE_SOURCE_DIR}/config.h)
+set(VERSION "0.2.1")
+configure_file(${CMAKE_SOURCE_DIR}/config.h.cmake  ${CMAKE_CURRENT_BINARY_DIR}/aku-auto-config.h)
 
 set( CMAKE_CXX_FLAGS "-O0 -g")
 
@@ -85,6 +85,7 @@ kde4_add_executable(akunambol ${akunambol_SRCS})
 target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} -lkcal)
 
 install( FILES
+	images/64akunambol.png
 	likeback/likeback_like.png
 	likeback/likeback_dislike.png
 	likeback/likeback_bug.png
