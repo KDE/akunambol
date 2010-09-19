@@ -1,5 +1,7 @@
 project(akunabmol)
 
+add_subdirectory(images/icons)
+
 set(VERSION "0.2.1")
 configure_file(${CMAKE_SOURCE_DIR}/config.h.cmake  ${CMAKE_CURRENT_BINARY_DIR}/aku-auto-config.h)
 
@@ -84,14 +86,13 @@ kde4_add_executable(akunambol ${akunambol_SRCS})
 
 target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} -lkcal)
 
-install( FILES
-	images/64akunambol.png
+install(FILES
 	likeback/likeback_like.png
 	likeback/likeback_dislike.png
 	likeback/likeback_bug.png
 	likeback/likeback_feature.png
         DESTINATION ${DATA_INSTALL_DIR}/akunambol/images)
 
-kde4_install_icons( ${DATA_INSTALL_DIR}/amarok/icons )
+install(FILES akunambol.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 
 install(TARGETS akunambol DESTINATION ${BIN_INSTALL_DIR} )

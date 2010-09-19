@@ -90,7 +90,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     
     QHBoxLayout *hLayout = new QHBoxLayout;
     QLabel* logo = new QLabel("cacca", widget);
-    logo->setPixmap(QPixmap(KStandardDirs::locate( "appdata", "images/64akunambol.png" )));
+    logo->setPixmap(KIcon("akunambol").pixmap(64));
     hLayout->addWidget(logo);
     hLayout->addWidget(new QLabel(QString("Akunambol %1").arg(AKU_VERSION), widget));
     verticalLayout->addLayout(hLayout);
