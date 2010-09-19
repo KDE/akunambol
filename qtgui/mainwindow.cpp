@@ -121,9 +121,11 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     KMenu *file = new KMenu(i18n("File"));
     file->addAction(KStandardAction::quit(this, SLOT(close()), this));
     KMenu *settings = new KMenu(i18n("Settings"));
+    
     KAction *configureAction = new KAction(KIcon("configure"), i18n("Configure Akunambol"), this);
     configureAction->setShortcut(QString("Ctrl+s"));
     connect(configureAction, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
+    
     settings->addAction(configureAction);
     KMenu *help = helpMenu(i18n("Help"));
     
