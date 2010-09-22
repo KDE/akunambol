@@ -14,6 +14,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_FUNAMBOL_NAMESPACE" )
 find_package(KDE4 REQUIRED)
 find_package(Akonadi REQUIRED)
 find_package(KdepimLibs REQUIRED)
+find_package(LikeBack REQUIRED)
 
 # Search for Funambol
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
@@ -23,7 +24,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 
-include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Akonadi_INCLUDES} ${Funambol_INCLUDE_DIR})
+include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Akonadi_INCLUDES} ${Funambol_INCLUDE_DIR} ${LIKEBACK_INCLUDE_DIR})
 
 set(syncsource_SRCS
     syncsource/akonadisource.cpp
@@ -49,16 +50,11 @@ set(akunambol_LINK_LIBS
     ${KDE4_KABC_LIBS}
     ${KDE4_KPIMUTILS_LIBS}
     ${KDE4_AKONADI_LIBS}
+    ${LIKEBACK_LIBRARIES}
     microblog
 )
 
 # target_link_libraries(akonadi-test ${akunambol_LINK_LIBS})
-
-set(likeback_SRCS
-    likeback/LikeBack.cpp
-    likeback/LikeBackDialog.cpp
-    likeback/LikeBackBar.cpp
-)
 
 set(akunambol_SRCS
     qtgui/settings.cpp
@@ -67,7 +63,6 @@ set(akunambol_SRCS
     qtgui/mainwindow.cpp
     qtgui/KDELog.cpp
     qtgui/sourcepushbutton.cpp
-    ${likeback_SRCS}
     ${syncsource_SRCS}
     ${client_SRCS}
     )
@@ -78,20 +73,13 @@ set_source_files_properties(${akunambol_SRCS} PROPRIETIES COMPILE_FLAGS -fexcept
 set(akunambol_RCCS qtgui/resource.qrc)
 
 kde4_add_ui_files(akunambol_SRCS qtgui/mainwindow.ui qtgui/standardsourcesettings.ui
-                  qtgui/settings.ui likeback/LikeBackDialog.ui likeback/LikeBackBar.ui)
+                  qtgui/settings.ui)
 
 Qt4_add_resources(akunambol_SRCS ${akunambol_RCCS})
 
 kde4_add_executable(akunambol ${akunambol_SRCS})
 
 target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} -lkcal)
-
-install(FILES
-	likeback/likeback_like.png
-	likeback/likeback_dislike.png
-	likeback/likeback_bug.png
-	likeback/likeback_feature.png
-        DESTINATION ${DATA_INSTALL_DIR}/akunambol/images)
 
 install(FILES akunambol.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 
