@@ -122,7 +122,7 @@ int ContactsSource::insertItem(SyncItem& item)
     }
 
     Akonadi::Item i;
-    i.setMimeType("text/x-vcard");
+    i.setMimeType(Addressee::mimeType());
     KABC::VCardConverter converter;
     QByteArray bytes(processedData);
 
@@ -175,7 +175,7 @@ int ContactsSource::modifyItem(SyncItem& item)
         return STC_COMMAND_FAILED;
     }
     
-    i.setMimeType("text/x-vcard");
+    i.setMimeType(Addressee::mimeType());
     i.setPayload(contact);
     Akonadi::ItemModifyJob *job2 = new Akonadi::ItemModifyJob(i);
     if (job2->exec()){
