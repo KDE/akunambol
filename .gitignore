@@ -6,5 +6,5 @@ build/
 .cproject
 Debug/
 *.o
-config.h
+aku-auto-config.h
 *kdev4

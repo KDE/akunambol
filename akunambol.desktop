@@ -1,0 +1,14 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Akunambol
+Name[x-test]=xxAkunambolxx
+GenericName=Syncronization tool
+Exec=akunambol
+Comment=Akunambol is an utility to sync your data
+Comment[x-test]=xxAkunambol is an utility to sync your dataxx
+Icon=akunambol
+X-DocPath=akunambol/index.html
+Terminal=false
+Categories=Qt;KDE;Utility;Archiving;TelephonyTools;FileTransfer;

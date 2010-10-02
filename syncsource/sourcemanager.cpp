@@ -59,7 +59,7 @@
 #include "client/appsyncsource.h"
 #include "client/collectionsfetcher.h"
 
-#include "../config.h"
+#include "aku-auto-config.h"
 
 class SyncThread : public QThread {
 
@@ -127,9 +127,9 @@ SourceManager::~SourceManager()
 void SourceManager::setData(QString username, QString password, QString url)
 {
     KFunSyncConfig* m_conf = KFunSyncConfig::getInstance();
-    m_conf->getAccessConfig().setUsername(username.toAscii());
-    m_conf->getAccessConfig().setPassword(password.toAscii());
-    m_conf->getAccessConfig().setSyncURL(url.toAscii());
+    m_conf->getAccessConfig().setUsername(username.toUtf8());
+    m_conf->getAccessConfig().setPassword(password.toUtf8());
+    m_conf->getAccessConfig().setSyncURL(url.toUtf8());
 }
 
 void SourceManager::sync(AppSyncSource* appSource) {

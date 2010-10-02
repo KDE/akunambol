@@ -83,7 +83,7 @@ void StandardSourceSettings::populateCollections()
     foreach( const Collection &collection, colls ) {
         if (collection.contentMimeTypes().contains(source->getAkonadiMimeType())) {
             i++;
-            const char* dn = collection.name().toLatin1();
+            const char* dn = collection.name().toUtf8();
             LOG.debug("Adding collection id %lld named %s", collection.id(), dn);
             collections->addItem(dn);
             idList.append(collection.id());
@@ -118,10 +118,15 @@ void StandardSourceSettings::load() {
 
 void StandardSourceSettings::save() {
     AppSyncSourceConfig *config = source->getConfig();
-    const char* uri = m_ui->remoteUri->text().toLatin1();
+    const char* uri = m_ui->remoteUri->text().toUtf8();
     config->setRemoteUri(uri);
-    qint64 id = idList.at(m_ui->collections->currentIndex());
-    config->setCollectionId(id);
+    int index = m_ui->collections->currentIndex();
+    if (index != -1) {
+      qint64 id = idList.at(m_ui->collections->currentIndex());
+      config->setCollectionId(id);
+    } else {
+      config->setCollectionId(-1);
+    }
     config->save();
 }
 

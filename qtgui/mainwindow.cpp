@@ -44,14 +44,22 @@
 #include <QProgressDialog>
 
 #include <KDebug>
+#include <KMenu>
+#include <KMenuBar>
+#include <KStatusBar>
 
 #include <Akonadi/CollectionDialog>
 #include <Akonadi/CollectionModel>
 #include <Akonadi/CollectionView>
 
+#include <KAboutApplicationDialog>
+#include <KStandardDirs>
+
 #include "base/util/StringBuffer.h"
 #include "spds/AccessConfig.h"
 #include "spds/SyncReport.h"
+
+#include "../likeback/LikeBack.h"
 
 #include "syncsource/sourcemanager.h"
 #include "client/appsyncsource.h"
@@ -59,52 +67,87 @@
 #include "syncsource/KFunSyncConfig.h"
 
 #include "sourcepushbutton.h"
-#include "config.h"
+#include "aku-auto-config.h"
 #include "settings.h"
 #include "mainwindow.h"
+#include <KAction>
+#include <kstandardaction.h>
 
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
-    : QMainWindow(parent, flags)
+    : KMainWindow(parent, flags)
 {
     m_s = 0;
     m_syncDialog = 0;
     m_sourceManager = new SourceManager;
-    ui.setupUi(this);
-    connect(ui.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
-    connect(ui.actionConfigure_Akunambol, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
-    connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(launchAboutDialog()));
-
-    // Create a button for each existing source
-    QVBoxLayout *verticalLayout = ui.verticalLayout;
+    
+//     connect(ui.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+//     connect(ui.actionConfigure_Akunambol, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
+//     connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(launchAboutDialog()));
+    QWidget *widget = new QWidget(this);
+    
+//     Create a button for each existing source
+    QVBoxLayout *verticalLayout = new QVBoxLayout(widget);
+    
+    QHBoxLayout *hLayout = new QHBoxLayout;
+    QLabel* logo = new QLabel("cacca", widget);
+    logo->setPixmap(KIcon("akunambol").pixmap(64));
+    hLayout->addWidget(logo);
+    hLayout->addWidget(new QLabel(QString("Akunambol %1").arg(AKU_VERSION), widget));
+    verticalLayout->addLayout(hLayout);
+    
     AppSyncSourceManager *manager = AppSyncSourceManager::getInstance();
     QList<AppSyncSource*> sources = manager->getRegisteredSources();
     foreach (AppSyncSource* source, sources) {
         LOG.debug("Creating a button for source: %s", source->getName());
 
-        // Add the push button
+//         Add the push button
         SourcePushButton* sourceButton = source->getPushButton();
         verticalLayout->addWidget(sourceButton);
         connect(sourceButton, SIGNAL(clicked(AppSyncSource*)), this, SLOT(sync(AppSyncSource*)));
-        // Add a spacer
-        QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-        verticalLayout->addItem(verticalSpacer);
+//         Add a spacer
+//         QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+//         verticalLayout->addItem(verticalSpacer);
     }
-
     
-    //    resize(minimumSizeHint()); // This looks like a sensible default
+//     verticalLayout->addItem(new QSpacerItem(0, 20, QSizePolicy::MinimumExpanding));
+    verticalLayout->addStretch(2);
+    widget->setLayout(verticalLayout);
+    setCentralWidget(widget);
+    
     setIcons();
     loadConfig();
+    
     statusBar()->showMessage(tr("Configuration loaded."));
+    KMenu *file = new KMenu(i18n("File"));
+    file->addAction(KStandardAction::quit(this, SLOT(close()), this));
+    KMenu *settings = new KMenu(i18n("Settings"));
+    
+    KAction *configureAction = new KAction(KIcon("configure"), i18n("Configure Akunambol"), this);
+    configureAction->setShortcut(QString("Ctrl+s"));
+    connect(configureAction, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
+    
+    settings->addAction(configureAction);
+    KMenu *help = helpMenu(i18n("Help"));
+    
+    menuBar()->addMenu(file);
+    menuBar()->addMenu(settings);
+    menuBar()->addMenu(help);
+ 
+    LikeBack *likeBack = new LikeBack(LikeBack::AllButtons, true);
+    likeBack->setAcceptedLanguages( QStringList() << "en" << "it" );
+    likeBack->setServer("aku-likeback.ruphy.org", "/send.php");
+    resize(260, 230);
 }
 
 void MainWindow::setIcons()
 {
-    ui.actionQuit->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
+//     ui.actionQuit->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
 }
 
 void MainWindow::launchAboutDialog()
 {
-    KMessageBox::about(this, i18n("this release will eat your babies :)"), i18n("About Akunambol"));
+
+  
 }
 
 void MainWindow::sync(AppSyncSource* appSource)
@@ -280,12 +323,12 @@ void MainWindow::writeConfig()
 {
     KFunSyncConfig *config = KFunSyncConfig::getInstance();
     AccessConfig &ac = config->getAccessConfig();
-    ac.setUsername(m_user.toLatin1());
-    ac.setPassword(m_password.toLatin1());
-    ac.setSyncURL(m_syncUrl.toLatin1());
+    ac.setUsername(m_user.toUtf8());
+    ac.setPassword(m_password.toUtf8());
+    ac.setSyncURL(m_syncUrl.toUtf8());
     config->getClientConfig().setLogLevel(m_logLevel);
     config->save();
-}
+} 
 
 void MainWindow::parseConfigDialog()
 {

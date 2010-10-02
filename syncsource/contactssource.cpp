@@ -46,13 +46,17 @@
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>
+#include <kdeversion.h>
 
 #include <base/util/Enumeration.h>
 #include <base/util/ArrayList.h>
 #include <base/util/ArrayListEnumeration.h>
 #include <base/util/StringBuffer.h>
-#include <spds/SyncStatus.h>
 #include <base/Log.h>
+#include <spds/SyncStatus.h>
+#include <vocl/VConverter.h>
+#include <vocl/VObject.h>
+#include <vocl/VProperty.h>
 
 #include "contactssource.h"
 
@@ -111,11 +115,17 @@ int ContactsSource::insertItem(SyncItem& item)
     LOG.info("ContactsSource: adding new item");
     LOG.debug("ContactsSource: %s", data);
 
+    const char* processedData = processIncomingContact(data);
+
+    if (processedData != data) {
+        LOG.debug("ContactsSource: processedData: %s", processedData);
+    }
+
     Akonadi::Item i;
-    
-    i.setMimeType("text/x-vcard");
+    i.setMimeType(Addressee::mimeType());
     KABC::VCardConverter converter;
-    QByteArray bytes(data);
+    QByteArray bytes(processedData);
+
     Addressee contact = converter.parseVCard(bytes);
     if (contact.isEmpty()) {
         LOG.error("Cannot convert incoming item");
@@ -129,7 +139,7 @@ int ContactsSource::insertItem(SyncItem& item)
     
     Akonadi::Item newItem = job->item();
 //     kDebug() << "ID now.." << newItem.id();
-    item.setKey(QString::number(newItem.id()).toLatin1());
+    item.setKey(QString::number(newItem.id()).toUtf8());
     
     return STC_ITEM_ADDED;
 }
@@ -151,16 +161,21 @@ int ContactsSource::modifyItem(SyncItem& item)
     KABC::Addressee contact = i.payload<KABC::Addressee>();
     const char* data = (const char*)item.getData();
     LOG.debug("ContactsSource: %s", data);
+    const char* processedData = processIncomingContact(data);
+
+    if (processedData != data) {
+        LOG.debug("ContactsSource: processedData: %s", processedData);
+    }
 
     KABC::VCardConverter converter;
-    QByteArray bytes(data);
+    QByteArray bytes(processedData);
     contact = converter.parseVCard(bytes);
     if (contact.isEmpty()) {
         LOG.error("Cannot convert incoming item");
         return STC_COMMAND_FAILED;
     }
     
-    i.setMimeType("text/x-vcard");
+    i.setMimeType(Addressee::mimeType());
     i.setPayload(contact);
     Akonadi::ItemModifyJob *job2 = new Akonadi::ItemModifyJob(i);
     if (job2->exec()){
@@ -175,6 +190,46 @@ const StringBuffer ContactsSource::unfoldVCard(const char* vcard)
     StringBuffer buf(vcard);
     buf.replaceAll("\r\n ", "");
     return buf;
+}
+
+const char* ContactsSource::processIncomingContact(const char* vcard) {
+
+    // Preprocess any incoming item and adapt it to the KDE libs, working around
+    // interoperability issues and bugs
+
+
+    bool changed = false;
+    const char* newData = vcard;
+
+    // In version 4.4.x of KDE libs, a contact with emtpy TZ causes the parsing
+    // to fail. If this vcard has an empty TZ, we remove it
+    if (KDE::versionMajor() < 4 ||
+        (KDE::versionMajor() == 4 && KDE::versionMinor() < 5)) {
+
+        LOG.debug("Applying patch for TZ on KDE <= 4.4.5");
+
+        VObject* contact = VConverter::parse(vcard);
+        VProperty* tzProperty = contact->getProperty("TZ");
+        if (tzProperty != NULL) {
+            LOG.debug("TZ field found");
+            // Is it empty?
+            const char* value = tzProperty->getValue();
+            if (value == NULL || strlen(value) == 0) {
+                LOG.debug("TZ field empty");
+                // We must remove this property
+                contact->removeProperty("TZ");
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            newData = contact->toString();
+        }
+
+        delete contact;
+    }
+
+    return newData;
 }
 
 

@@ -39,7 +39,7 @@
 #define MAINWINDOW_H
 
 #include <QProgressDialog>
-#include <QtGui/QMainWindow>
+#include <KMainWindow>
 #include "ui_mainwindow.h"
 #include <base/Log.h>
 
@@ -51,7 +51,7 @@ class Config;
 class Settings;
 class SourceManager;
 
-class MainWindow : public QMainWindow
+class MainWindow : public KMainWindow
 {
     Q_OBJECT
 
@@ -88,9 +88,6 @@ private:
     void changeReceived(const char* key);
 
 private:
-    
-    Ui::MainWindowClass ui;
-
     Settings *m_s;
     SourceManager *m_sourceManager;
 
