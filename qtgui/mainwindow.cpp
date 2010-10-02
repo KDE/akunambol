@@ -55,11 +55,11 @@
 #include <KAboutApplicationDialog>
 #include <KStandardDirs>
 
+#include <LikeBack/LikeBack>
+
 #include "base/util/StringBuffer.h"
 #include "spds/AccessConfig.h"
 #include "spds/SyncReport.h"
-
-#include "../likeback/LikeBack.h"
 
 #include "syncsource/sourcemanager.h"
 #include "client/appsyncsource.h"
