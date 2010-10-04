@@ -22,7 +22,7 @@ add_subdirectory(images/icons)
 set(VERSION "0.2.70")
 configure_file(${CMAKE_SOURCE_DIR}/config.h.cmake  ${CMAKE_CURRENT_BINARY_DIR}/aku-auto-config.h)
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_FUNAMBOL_NAMESPACE" )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} -DENABLE_FUNAMBOL_NAMESPACE" )
 
 
 include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Akonadi_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS} ${Funambol_INCLUDE_DIR} ${LIKEBACK_INCLUDE_DIR})
@@ -86,9 +86,6 @@ set(akunambol_SRCS
     ${syncsource_SRCS}
     ${client_SRCS}
     )
-
-
-set_source_files_properties(${akunambol_SRCS} PROPRIETIES COMPILE_FLAGS -fexceptions)
 
 set(akunambol_RCCS qtgui/resource.qrc)
 
