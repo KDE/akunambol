@@ -175,7 +175,7 @@ void MainWindow::sync(AppSyncSource* appSource)
     numServerItems = -1;
     numClientItems = -1;
 
-    m_syncDialog = new QProgressDialog();
+    m_syncDialog = new QProgressDialog(this);
     m_syncDialog->setLabelText(i18n("Connecting.."));
     m_syncDialog->setWindowModality(Qt::WindowModal);
     m_syncDialog->setMinimum(0);
