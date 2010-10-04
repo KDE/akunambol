@@ -1,17 +1,4 @@
-
-cmake_minimum_required(VERSION 2.8)
-
-project(akunabmol)
-
-add_subdirectory(images/icons)
-
-set(VERSION "0.2.70")
-configure_file(${CMAKE_SOURCE_DIR}/config.h.cmake  ${CMAKE_CURRENT_BINARY_DIR}/aku-auto-config.h)
-
-set( CMAKE_CXX_FLAGS "-O0 -g")
-
-#set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_FUNAMBOL_NAMESPACE" )
+project(akunambol)
 
 # Search KDE packages
 find_package(KDE4 REQUIRED)
@@ -23,11 +10,22 @@ find_package(LikeBack REQUIRED)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 find_package(Funambol REQUIRED)
 
+# include(KDE4Defaults)
+
 include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 
-include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Akonadi_INCLUDES} ${Funambol_INCLUDE_DIR} ${LIKEBACK_INCLUDE_DIR})
+
+add_subdirectory(images/icons)
+
+set(VERSION "0.2.70")
+configure_file(${CMAKE_SOURCE_DIR}/config.h.cmake  ${CMAKE_CURRENT_BINARY_DIR}/aku-auto-config.h)
+
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_FUNAMBOL_NAMESPACE" )
+
+
+include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Akonadi_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS} ${Funambol_INCLUDE_DIR} ${LIKEBACK_INCLUDE_DIR})
 
 ######### libakunambol
 
@@ -54,7 +52,7 @@ set(syncsource_SRCS
     syncsource/taskssource.cpp
     syncsource/sourcemanager.cpp
     syncsource/statuslistener.cpp
-    akonadi/contacts.cpp
+#     akonadi/contacts.cpp
     )
 
 set(client_SRCS
