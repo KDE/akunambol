@@ -61,10 +61,13 @@
 #include "spds/AccessConfig.h"
 #include "spds/SyncReport.h"
 
-#include "syncsource/sourcemanager.h"
 #include "client/appsyncsource.h"
 #include "client/appsyncsourcemanager.h"
 #include "syncsource/KFunSyncConfig.h"
+#include "../syncsource/sourcemanager.h"
+#include "../syncsource/statuslistener.h"
+#include "../syncsource/syncconfig.h"
+// #include "../syncsource/contactssyncer.h"
 
 #include "sourcepushbutton.h"
 #include "aku-auto-config.h"

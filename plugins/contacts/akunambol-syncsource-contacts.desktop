@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=Cucu clock
+Comment=Old fashioned clock for the nostalgic.
+Type=Service
+X-KDE-ServiceTypes=Akunambol/SyncSource
+
+X-KDE-Library=akunambol_syncsource_contacts
+X-KDE-PluginInfo-Author=Riccardo Iaconelli
+X-KDE-PluginInfo-Email=riccardo@kde.org
+X-KDE-PluginInfo-Name=contacts
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://akunambol.ruphy.org/
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true

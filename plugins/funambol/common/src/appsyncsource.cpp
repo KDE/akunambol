@@ -34,49 +34,50 @@
  * the words "Powered by Funambol".
  */
 
+#include <QWidget>
+#include <base/Log.h>
 
-#ifndef DIALOG_H
-#define DIALOG_H
+#include <base/util/StringBuffer.h>
+#include <base/Log.h>
 
-#include <QtGui/QDialog>
+#include "akonadisource.h"
+#include "appsyncsource.h"
 
-class SourceManager;
-class KJob;
-class Contacts;
-
-namespace Ui
+AppSyncSource::AppSyncSource(const char* n, AkonadiSource* s) : name(n),
+                                                                source(s),
+                                                                settingsTab(NULL)
 {
-    class Dialog;
 }
 
-namespace Akonadi {
-    class Item;
-    class Monitor;
+const char* AppSyncSource::getName() {
+    return name.c_str();
 }
 
-class ContactsSyncer : public QObject
-{
-    Q_OBJECT
+AkonadiSource* AppSyncSource::getSyncSource() {
+    return source;
+}
 
-    public:
-        ContactsSyncer(SourceManager *s, QObject *parent = 0);
-        ~ContactsSyncer();
-        
-    signals:
-        void noCollections();
-        void finishedSync();
-        void startedSync();
-        
-    private slots:
-        void init();
-        void prepareSyncFor(qint64 id);
-        void startSync();
+QWidget* AppSyncSource::getSettingsTab() {
+    return settingsTab;
+}
 
-    private:
-        void populateTable();
-        Contacts *c;
-        Ui::Dialog *ui;
-	SourceManager *m_sourceManager;
-};
+void AppSyncSource::setSettingsTab(QWidget* tab) {
+    settingsTab = tab;
+}
 
-#endif // DIALOG_H
+AppSyncSourceConfig* AppSyncSource::getConfig() {
+    return config;
+}
+
+void AppSyncSource::setConfig(AppSyncSourceConfig* c) {
+    config = c;
+}
+
+const char* AppSyncSource::getAkonadiMimeType() {
+    return akonadiMimeType.c_str();
+}
+
+void AppSyncSource::setAkonadiMimeType(const char* mimeType) {
+    akonadiMimeType.assign(mimeType);
+}
+
