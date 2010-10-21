@@ -2,7 +2,7 @@ project(akunabmol)
 
 add_subdirectory(images/icons)
 
-set(VERSION "0.2.1")
+set(VERSION "0.2.2")
 configure_file(${CMAKE_SOURCE_DIR}/config.h.cmake  ${CMAKE_CURRENT_BINARY_DIR}/aku-auto-config.h)
 
 set( CMAKE_CXX_FLAGS "-O0 -g")
