@@ -146,11 +146,61 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 
 void MainWindow::pluginLoaded(SyncSource2* s)
 {
-    kDebug() << "Waaa";
-    kDebug() << "Control text is:" << s->controlText();
     QPushButton *b = new QPushButton(s->controlText(), this);
-    connect(b, SIGNAL(clicked()), s, SLOT(doSync()));
     m_controlsLayout->addWidget(b);
+    
+    // add settings
+    
+    connect(b, SIGNAL(clicked()), s, SLOT(triggerSync()));
+    connect(s, SIGNAL(started()), this, SLOT(syncTriggered()));
+}
+
+void MainWindow::syncTriggered()
+{
+    SyncSource2 *source = qobject_cast< SyncSource2* >(sender());
+    
+    connect(source, SIGNAL(success()), SLOT(syncFinished()));
+    connect(source, SIGNAL(error(QString)), SLOT(syncFinished()));
+    
+//     connect(source, SIGNAL(success()), 
+  
+//     SourceManager *syncer = new SourceManager(this);
+//     
+//     connect(this, SIGNAL(fireSync(AppSyncSource*)), syncer, SLOT(sync(AppSyncSource*)));
+//     connect(syncer, SIGNAL(sourceStarted(AppSyncSource*)), this, SLOT(startedSync(AppSyncSource*)));
+//     connect(syncer, SIGNAL(sourceEnded(AppSyncSource*, SyncReport*)), this, SLOT(finishedSync(AppSyncSource*, SyncReport*)));
+//     connect(syncer, SIGNAL(addReceived(const char*)), this, SLOT(addReceived(const char*)));
+//     connect(syncer, SIGNAL(delReceived(const char*)), this, SLOT(delReceived(const char*)));
+//     connect(syncer, SIGNAL(updReceived(const char*)), this, SLOT(updReceived(const char*)));
+//     connect(syncer, SIGNAL(addSent(const char*)), this, SLOT(addSent(const char*)));
+//     connect(syncer, SIGNAL(delSent(const char*)), this, SLOT(delSent(const char*)));
+//     connect(syncer, SIGNAL(updSent(const char*)), this, SLOT(updSent(const char*)));
+//     connect(syncer, SIGNAL(totalServerItems(int)), this, SLOT(totalServerItems(int)));
+//     connect(syncer, SIGNAL(totalClientItems(int)), this, SLOT(totalClientItems(int)));
+//     emit fireSync(appSource);
+    
+//     numSent = 0;
+//     numReceived = 0;
+//     numServerItems = -1;
+//     numClientItems = -1;
+    
+    m_syncDialog = new QProgressDialog(this);
+    m_syncDialog->setLabelText(i18n("Connecting.."));
+    m_syncDialog->setWindowModality(Qt::WindowModal);
+    m_syncDialog->setMinimum(0);
+    m_syncDialog->setMaximum(0);
+    // FIXME TODO: enable the cancel button to interrupt the sync
+    m_syncDialog->setCancelButton(0);
+    m_syncDialog->exec();
+}
+
+void MainWindow::syncFinished()
+{
+    if (m_syncDialog) {
+        m_syncDialog->cancel();
+        m_syncDialog->deleteLater();
+        m_syncDialog = 0;
+    }
 }
 
 void MainWindow::sync(AppSyncSource* appSource)

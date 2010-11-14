@@ -23,6 +23,7 @@
 #include <KGenericFactory>
 
 class SyncConfig;
+class QWidget;
 
 #warning fix version
 
@@ -45,23 +46,47 @@ class KDE_EXPORT SyncSource2 : public QObject
         virtual QString controlText() = 0;
         
         /*
-         * Sets the status of the source as "locked", aka a sync is in progress
+         * Sets the status of the source as "locked", aka a sync is in progress.
+         * Will deadlock if already locked.
          */
-        void setLocked(bool lock);
-        bool isLocked();
+        void lock();
+        /*
+         * Unlocks the source.
+         */
+        void unlock();
+        /*
+         * Operates in the same way as QMutex.
+         */
+        bool tryLock();
+        
+        /*
+         * Reimplement to provide a configuration interface to the user.
+         */
+        QWidget* configurationInterface();
         
     public slots:
-
         /*
-         * This function is called when the user, or any other event, triggers a sync.
-         * This should launch the sync until finished, and should use the signals to notify the UI.
+         * Triggers a sync in the sane way
          */
-        virtual void doSync() = 0;
+        void triggerSync();
         
+    protected:
+    
+    /*
+     * This function is called when the user, or any other event, triggers a sync.
+     * This should launch the sync until finished, and should use the signals to notify the UI.
+     */
+    virtual void doSync() = 0;
+    
     signals:
         void newStatus(QString);
         void error(QString);
         void success();
+        
+        /*
+         * Internally used
+         */
+        void started();
         
     private:
         class SyncSourcePrivate;

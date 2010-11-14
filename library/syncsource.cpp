@@ -39,22 +39,34 @@ SyncSource2::~SyncSource2()
     delete d;
 }
 
-bool SyncSource2::isLocked()
+void SyncSource2::triggerSync()
 {
-
+    if (tryLock()) {
+        emit started();
+        doSync();
+    } else {
+        emit error(i18n("A sync is already in progress."));
+    }
 }
 
-void SyncSource2::setLocked(bool lock)
+bool SyncSource2::tryLock()
 {
+    d->lock.tryLock();
+}
 
+void SyncSource2::lock()
+{
+    d->lock.lock();
+}
+
+void SyncSource2::unlock()
+{
+    d->lock.unlock();
 }
 
 void SyncSource2::setConfig(SyncConfig* c)
 {
     d->config = c;
 }
-
-
-
 
 

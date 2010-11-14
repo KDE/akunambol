@@ -62,7 +62,10 @@ public:
 
 private slots:
     void pluginLoaded(SyncSource2 *s);
-  
+    void syncTriggered();
+    void syncFinished();
+    
+    // old stuff
     void launchConfigDialog();
     void sync(AppSyncSource* source);
     void startedSync(AppSyncSource* source);

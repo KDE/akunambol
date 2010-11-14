@@ -25,11 +25,12 @@ class ContactsSource : public SyncSource2
 {
     Q_OBJECT
     public:
-        ContactsSource(QObject* parent = 0, const QVariantList& args = QVariantList()) : SyncSource2(parent, args){};
-        ~ContactsSource() {};
+        ContactsSource(QObject* parent = 0, const QVariantList& args = QVariantList());
+        ~ContactsSource();
         
         QString controlText();
-    public slots:
+        
+    protected:
         void doSync();
     
 };

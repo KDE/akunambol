@@ -19,6 +19,17 @@
 #include <syncsource.h>
 #include <KDebug>
 
+ContactsSource::ContactsSource(QObject* parent, const QVariantList& args)
+    : SyncSource2(parent, args)
+{
+    
+}
+
+ContactsSource::~ContactsSource()
+{
+
+}
+
 QString ContactsSource::controlText()
 {
     return "Sync contacts";
