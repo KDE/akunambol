@@ -18,26 +18,26 @@
 #include "syncsource.h"
 #include "syncconfig.h"
 
-class SyncSource::SyncSourcePrivate {
+class SyncSource2::SyncSourcePrivate {
     public:
-        SyncSourcePrivate(SyncSource *q) : q(q), config(0) {}
-        SyncSource *q;
+        SyncSourcePrivate(SyncSource2 *q) : q(q), config(0) {}
+        SyncSource2 *q;
         SyncConfig *config;
 };
 
-SyncSource::SyncSource(QObject* parent, const QVariantList& args)
+SyncSource2::SyncSource2(QObject* parent, const QVariantList& args)
     : QObject(parent)
 {
     d = new SyncSourcePrivate(this);
     Q_UNUSED(args);
 }
 
-void SyncSource::setConfig(SyncConfig* c)
+void SyncSource2::setConfig(SyncConfig* c)
 {
     d->config = c;
 }
 
-SyncSource::~SyncSource()
+SyncSource2::~SyncSource2()
 {
     delete d;
 }

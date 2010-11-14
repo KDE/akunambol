@@ -50,6 +50,7 @@
 class Config;
 class Settings;
 class SourceManager;
+class SyncSource2;
 
 class MainWindow : public KMainWindow
 {
@@ -60,6 +61,8 @@ public:
     ~MainWindow();
 
 private slots:
+    void pluginLoaded(SyncSource2 *s);
+  
     void launchConfigDialog();
     void launchAboutDialog();
     void sync(AppSyncSource* source);

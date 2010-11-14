@@ -33,16 +33,20 @@ include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Akonadi_INCLUDES} ${KDEPIM
 
 set(akunambolprivate_SRCS
     library/syncsource.cpp
+    library/syncsourceloader.cpp
     library/syncconfig.cpp
     )
 
 # kde4_add_ui_files(kcmsync_SRCS kcmsync/kcmsync.ui kcmsync/serverproperties.ui)
 
+## FIXME STATIC??? WTF???
 kde4_add_library(akunambolprivate SHARED ${akunambolprivate_SRCS})
 
-target_link_libraries(akunambolprivate ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambolprivate_LINK_LIBS} ${akunambol_LINK_LIBS})
+target_link_libraries(akunambolprivate ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambolprivate_LINK_LIBS})
+set_target_properties(akunambolprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+install(TARGETS akunambolprivate ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install(TARGETS akunambolprivate DESTINATION ${LIBRARY_OUTPUT_PATH})
+# install(TARGETS akunambolprivate DESTINATION ${LIBRARY_OUTPUT_PATH})
 
 # install( FILES kcmsync/kcm_sync.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
 ###############
@@ -99,51 +103,7 @@ Qt4_add_resources(akunambol_SRCS ${akunambol_RCCS})
 kde4_add_executable(akunambol ${akunambol_SRCS})
 
 
-target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} ${akunambolprivate_LINK_LIBS} -lkcal)
-
-########### KCModule ####################
-# 
-# set(kcmsync_SRCS
-#     kcmsync/kcmsync.cpp
-#     kcmsync/syncserver.cpp
-#     kcmsync/syncjob.cpp
-#     kcmsync/serverproperties.cpp
-#     ${syncsource_SRCS}
-#     ${akonadi_SRCS}
-#     )
-# 
-# kde4_add_ui_files(kcmsync_SRCS kcmsync/kcmsync.ui kcmsync/serverproperties.ui)
-# 
-# kde4_add_plugin(kcm_sync ${kcmsync_SRCS})
-# 
-# target_link_libraries(kcm_sync ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS})
-# 
-# install(TARGETS kcm_sync DESTINATION ${PLUGIN_INSTALL_DIR})
-# 
-# install( FILES kcmsync/kcm_sync.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
-# 
-# ########### KDEDModule ####################
-# 
-# set(kded_akunambolsync_SRCS
-#     kded/akunambolsyncdaemon.cpp
-#     kcmsync/syncserver.cpp
-#     kcmsync/syncjob.cpp
-#     ${syncsource_SRCS}
-#     ${akonadi_SRCS}
-#     )
-# 
-# ######### PLUGINS ########################
-# add_subdirectory(plugins)
-# 
-# qt4_add_dbus_adaptor(kded_akunambolsync_SRCS kded/org.kde.akunambolsync.xml kded/akunambolsyncdaemon.h AkunambolSyncDaemon)
-# 
-# kde4_add_plugin(kded_akunambolsync ${kded_akunambolsync_SRCS})
-# 
-# target_link_libraries(kded_akunambolsync ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} ${KDE4_SOLID_LIBS})
-# 
-# install(TARGETS kded_akunambolsync DESTINATION ${PLUGIN_INSTALL_DIR})
-# 
-# install( FILES kded/akunambolsync.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kded)
+target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} akunambolprivate -lkcal)
 
 install(FILES akunambol.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 

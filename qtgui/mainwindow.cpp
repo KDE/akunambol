@@ -57,6 +57,9 @@
 
 #include <LikeBack/LikeBack>
 
+#include <library/syncsourceloader.h>
+#include <library/syncsource.h>
+
 #include "base/util/StringBuffer.h"
 #include "spds/AccessConfig.h"
 #include "spds/SyncReport.h"
@@ -140,6 +143,15 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     likeBack->setAcceptedLanguages( QStringList() << "en" << "it" );
     likeBack->setServer("aku-likeback.ruphy.org", "/send.php");
     resize(260, 230);
+    
+    SyncSourceLoader *l = new SyncSourceLoader(this);
+    connect(l, SIGNAL(syncSourceLoaded(SyncSource2*)), SLOT(pluginLoaded(SyncSource2*)));
+    l->loadAllSyncSources();
+}
+
+void MainWindow::pluginLoaded(SyncSource2* s)
+{
+    s->doSync();
 }
 
 void MainWindow::setIcons()

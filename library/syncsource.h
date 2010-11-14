@@ -26,13 +26,13 @@ class SyncConfig;
 
 #warning fix version
 
-class KDE_EXPORT SyncSource : public QObject
+class KDE_EXPORT SyncSource2 : public QObject
 {
     Q_OBJECT
     
     public:
-        SyncSource(QObject* parent = 0, const QVariantList &args = QVariantList());
-        ~SyncSource();
+        SyncSource2(QObject* parent = 0, const QVariantList &args = QVariantList());
+        ~SyncSource2();
         
         void setConfig(SyncConfig *c);
         

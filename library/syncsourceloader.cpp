@@ -16,6 +16,7 @@
 */
 
 #include "syncsourceloader.h"
+#include "syncsource.h"
 
 #include <KDebug>
 #include <KService>
@@ -43,7 +44,7 @@ void SyncSourceLoader::loadAllSyncSources()
 	  continue;
       }
 
-      SyncSource *plugin = factory->create<SyncSource>(this);
+      SyncSource2 *plugin = factory->create<SyncSource2>(this);
 
       if (plugin) {
 	  kDebug() << "Load plugin:" << service->name();

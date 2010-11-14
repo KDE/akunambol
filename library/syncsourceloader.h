@@ -19,19 +19,21 @@
 #define SYNCSOURCELOADER_H
 
 #include <QObject>
-class SyncSource;
+#include <kdemacros.h>
 
-class SyncSourceLoader : public QObject
+class SyncSource2;
+
+class KDE_EXPORT SyncSourceLoader : public QObject
 {
     Q_OBJECT
     public:
-        SyncSourceLoader(QObject* parent = 0);
-        virtual ~SyncSourceLoader();
+        SyncSourceLoader(QObject* parent = 0) {};
+//         virtual ~SyncSourceLoader();
         
         void loadAllSyncSources();
         
     signals:
-        void syncSourceLoaded(SyncSource *s);
+        void syncSourceLoaded(SyncSource2 *s);
 };
 
 #endif // SYNCSOURCELOADER_H
