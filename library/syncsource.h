@@ -37,12 +37,6 @@ class KDE_EXPORT SyncSource2 : public QObject
         void setConfig(SyncConfig *c);
         
         /*
-         * Reimplement this function.
-         * Use the signals to notify the UI.
-         */
-         virtual void doSync() = 0;
-        
-        /*
          * Returns the text that should be shown to the user in order to activate
          * this control.
          * 
@@ -50,10 +44,24 @@ class KDE_EXPORT SyncSource2 : public QObject
          */
         virtual QString controlText() = 0;
         
-//     signals:
-//         void newStatus(QString);
-//         void error(QString);
-//         void success();
+        /*
+         * Sets the status of the source as "locked", aka a sync is in progress
+         */
+        void setLocked(bool lock);
+        bool isLocked();
+        
+    public slots:
+
+        /*
+         * This function is called when the user, or any other event, triggers a sync.
+         * This should launch the sync until finished, and should use the signals to notify the UI.
+         */
+        virtual void doSync() = 0;
+        
+    signals:
+        void newStatus(QString);
+        void error(QString);
+        void success();
         
     private:
         class SyncSourcePrivate;

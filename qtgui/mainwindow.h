@@ -64,7 +64,6 @@ private slots:
     void pluginLoaded(SyncSource2 *s);
   
     void launchConfigDialog();
-//     void launchAboutDialog();
     void sync(AppSyncSource* source);
     void startedSync(AppSyncSource* source);
     void finishedSync(AppSyncSource* source, SyncReport* report);
@@ -85,7 +84,6 @@ signals:
 private:
     void parseConfigDialog();
     void loadConfig();
-//     void setIcons();
     void writeConfig();
     void changeSent(const char* key);
     void changeReceived(const char* key);

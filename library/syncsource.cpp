@@ -17,12 +17,14 @@
 
 #include "syncsource.h"
 #include "syncconfig.h"
+#include <QMutex>
 
 class SyncSource2::SyncSourcePrivate {
     public:
         SyncSourcePrivate(SyncSource2 *q) : q(q), config(0) {}
         SyncSource2 *q;
         SyncConfig *config;
+        QMutex lock;
 };
 
 SyncSource2::SyncSource2(QObject* parent, const QVariantList& args)
@@ -32,15 +34,26 @@ SyncSource2::SyncSource2(QObject* parent, const QVariantList& args)
     Q_UNUSED(args);
 }
 
+SyncSource2::~SyncSource2()
+{
+    delete d;
+}
+
+bool SyncSource2::isLocked()
+{
+
+}
+
+void SyncSource2::setLocked(bool lock)
+{
+
+}
+
 void SyncSource2::setConfig(SyncConfig* c)
 {
     d->config = c;
 }
 
-SyncSource2::~SyncSource2()
-{
-    delete d;
-}
 
 
 
