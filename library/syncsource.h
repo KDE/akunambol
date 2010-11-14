@@ -72,11 +72,11 @@ class KDE_EXPORT SyncSource2 : public QObject
         
     protected:
     
-    /*
-     * This function is called when the user, or any other event, triggers a sync.
-     * This should launch the sync until finished, and should use the signals to notify the UI.
-     */
-    virtual void doSync() = 0;
+        /*
+        * This function is called when the user, or any other event, triggers a sync.
+        * This should launch the sync until finished, and should use the signals to notify the UI.
+        */
+        virtual void doSync() = 0;
     
     signals:
         void newStatus(QString);
