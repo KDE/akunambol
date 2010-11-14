@@ -62,7 +62,7 @@ class KDE_EXPORT SyncSource2 : public QObject
         /*
          * Reimplement to provide a configuration interface to the user.
          */
-        QWidget* configurationInterface();
+        virtual QWidget* configurationInterface() = 0;
         
     public slots:
         /*

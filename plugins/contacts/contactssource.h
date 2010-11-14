@@ -19,9 +19,9 @@
 #define CONTACTSSOURCE_H
 
 #include <QObject>
-#include <syncsource.h>
+#include <funambolsyncsource.h>
 
-class ContactsSource : public SyncSource2
+class ContactsSource : public FunambolSyncSource
 {
     Q_OBJECT
     public:
@@ -29,6 +29,8 @@ class ContactsSource : public SyncSource2
         ~ContactsSource();
         
         QString controlText();
+        
+        QWidget* configurationInterface();
         
     protected:
         void doSync();

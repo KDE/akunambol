@@ -16,11 +16,12 @@
 */
 
 #include "contactssource.h"
-#include <syncsource.h>
+// #include <funambolsyncsource.h>
 #include <KDebug>
+#include <QWidget>
 
 ContactsSource::ContactsSource(QObject* parent, const QVariantList& args)
-    : SyncSource2(parent, args)
+    : FunambolSyncSource(parent, args)
 {
     
 }
@@ -28,6 +29,11 @@ ContactsSource::ContactsSource(QObject* parent, const QVariantList& args)
 ContactsSource::~ContactsSource()
 {
 
+}
+
+QWidget* ContactsSource::configurationInterface()
+{
+    return new QWidget;
 }
 
 QString ContactsSource::controlText()
