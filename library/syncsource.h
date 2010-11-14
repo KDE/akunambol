@@ -42,6 +42,14 @@ class KDE_EXPORT SyncSource2 : public QObject
          */
         void doSync() {};
         
+        /*
+         * Returns the text that should be shown to the user in order to activate
+         * this control.
+         * 
+         * Example: "Synchronize contacts"
+         */
+        virtual QString controlText() = 0;
+        
 //     signals:
 //         void newStatus(QString);
 //         void error(QString);

@@ -19,6 +19,12 @@
 #include <syncsource.h>
 #include <KDebug>
 
+QString ContactsSource::controlText()
+{
+    return "Sync contacts";
+}
+
+
 void ContactsSource::doSync()
 {
     kDebug() << "sync";

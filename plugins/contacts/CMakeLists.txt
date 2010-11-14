@@ -1,8 +1,8 @@
 
 # Search KDE packages
 find_package(KDE4 REQUIRED)
-find_package(Akonadi REQUIRED)
-find_package(KdepimLibs REQUIRED)
+# find_package(Akonadi REQUIRED)
+# find_package(KdepimLibs REQUIRED)
 
 # Search for Funambol
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")

@@ -27,6 +27,9 @@ class ContactsSource : public SyncSource2
     public:
         ContactsSource(QObject* parent = 0, const QVariantList& args = QVariantList()) : SyncSource2(parent, args){};
         ~ContactsSource() {};
+        
+        QString controlText();
+        
         void doSync();
     
 };

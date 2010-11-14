@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Cucu clock
-Comment=Old fashioned clock for the nostalgic.
+Name=Contacts
+Comment=Contacts Synchronization
 Type=Service
 X-KDE-ServiceTypes=Akunambol/SyncSource
 
