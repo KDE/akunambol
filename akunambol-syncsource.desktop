@@ -1,0 +1,4 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=Akunambol/SyncSource
+Comment=Akunambol synchronization plugin

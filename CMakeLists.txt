@@ -106,6 +106,8 @@ target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunamb
 
 install(FILES akunambol.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 
+install(FILES akunambol-syncsource.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
+
 install(TARGETS akunambol DESTINATION ${BIN_INSTALL_DIR} )
 
 add_subdirectory(plugins/contacts)
