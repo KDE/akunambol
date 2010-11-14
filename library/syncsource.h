@@ -40,7 +40,7 @@ class KDE_EXPORT SyncSource2 : public QObject
          * Reimplement this function.
          * Use the signals to notify the UI.
          */
-        void doSync() {};
+         virtual void doSync() = 0;
         
         /*
          * Returns the text that should be shown to the user in order to activate

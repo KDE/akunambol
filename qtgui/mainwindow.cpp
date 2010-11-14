@@ -152,8 +152,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 void MainWindow::pluginLoaded(SyncSource2* s)
 {
     kDebug() << "Waaa";
-    kDebug() << s->controlText();
-    s->doSync();
+    kDebug() << "Control text is:" << s->controlText();
+//     s->doSync();
 }
 
 void MainWindow::setIcons()
