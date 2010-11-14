@@ -16,7 +16,6 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 
-
 add_subdirectory(images/icons)
 
 set(VERSION "0.2.70")
@@ -108,4 +107,6 @@ target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunamb
 install(FILES akunambol.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 
 install(TARGETS akunambol DESTINATION ${BIN_INSTALL_DIR} )
+
+add_subdirectory(plugins/contacts)
 

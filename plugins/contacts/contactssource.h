@@ -21,11 +21,11 @@
 #include <QObject>
 #include <syncsource.h>
 
-class ContactsSource : public SyncSource
+class ContactsSource : public SyncSource2
 {
     Q_OBJECT
     public:
-        ContactsSource(QObject* parent = 0, const QVariantList& args = QVariantList()) : SyncSource(parent, args){};
+        ContactsSource(QObject* parent = 0, const QVariantList& args = QVariantList()) : SyncSource2(parent, args){};
         ~ContactsSource() {};
         void doSync();
     
