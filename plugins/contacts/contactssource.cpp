@@ -39,6 +39,7 @@ QString ContactsSource::controlText()
 void ContactsSource::doSync()
 {
     kDebug() << "sync";
+    emit success();
 }
 
 

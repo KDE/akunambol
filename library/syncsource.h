@@ -55,7 +55,7 @@ class KDE_EXPORT SyncSource2 : public QObject
          */
         void unlock();
         /*
-         * Operates in the same way as QMutex.
+         * Operates in the same way as you can see in the QMutex documentation.
          */
         bool tryLock();
         
@@ -66,7 +66,7 @@ class KDE_EXPORT SyncSource2 : public QObject
         
     public slots:
         /*
-         * Triggers a sync in the sane way
+         * Triggers a sync. It will fail with a meaningful error if the source is already locked.
          */
         void triggerSync();
         

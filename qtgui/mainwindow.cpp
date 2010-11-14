@@ -158,9 +158,10 @@ void MainWindow::pluginLoaded(SyncSource2* s)
 void MainWindow::syncTriggered()
 {
     SyncSource2 *source = qobject_cast< SyncSource2* >(sender());
-    
     connect(source, SIGNAL(success()), SLOT(syncFinished()));
-    connect(source, SIGNAL(error(QString)), SLOT(syncFinished()));
+    
+    
+//     connect(source, SIGNAL(error(QString)), SLOT(syncFinished()));
     
 //     connect(source, SIGNAL(success()), 
   
@@ -186,12 +187,11 @@ void MainWindow::syncTriggered()
     
     m_syncDialog = new QProgressDialog(this);
     m_syncDialog->setLabelText(i18n("Connecting.."));
-    m_syncDialog->setWindowModality(Qt::WindowModal);
     m_syncDialog->setMinimum(0);
     m_syncDialog->setMaximum(0);
     // FIXME TODO: enable the cancel button to interrupt the sync
     m_syncDialog->setCancelButton(0);
-    m_syncDialog->exec();
+    m_syncDialog->show();
 }
 
 void MainWindow::syncFinished()
