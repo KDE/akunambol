@@ -110,17 +110,12 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
         SourcePushButton* sourceButton = source->getPushButton();
         m_controlsLayout->addWidget(sourceButton);
         connect(sourceButton, SIGNAL(clicked(AppSyncSource*)), this, SLOT(sync(AppSyncSource*)));
-//         Add a spacer
-//         QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-//         verticalLayout->addItem(verticalSpacer);
     }
     
-//     verticalLayout->addItem(new QSpacerItem(0, 20, QSizePolicy::MinimumExpanding));
     m_controlsLayout->addStretch(2);
     widget->setLayout(m_controlsLayout);
     setCentralWidget(widget);
     
-    setIcons();
     loadConfig();
     
     statusBar()->showMessage(tr("Configuration loaded."));
@@ -156,18 +151,6 @@ void MainWindow::pluginLoaded(SyncSource2* s)
     QPushButton *b = new QPushButton(s->controlText(), this);
     connect(b, SIGNAL(clicked()), s, SLOT(doSync()));
     m_controlsLayout->addWidget(b);
-//     s->doSync();
-}
-
-void MainWindow::setIcons()
-{
-//     ui.actionQuit->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
-}
-
-void MainWindow::launchAboutDialog()
-{
-
-  
 }
 
 void MainWindow::sync(AppSyncSource* appSource)
