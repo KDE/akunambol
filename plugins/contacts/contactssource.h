@@ -29,7 +29,7 @@ class ContactsSource : public SyncSource2
         ~ContactsSource() {};
         
         QString controlText();
-        
+    public slots:
         void doSync();
     
 };

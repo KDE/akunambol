@@ -92,14 +92,14 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     QWidget *widget = new QWidget(this);
     
 //     Create a button for each existing source
-    QVBoxLayout *verticalLayout = new QVBoxLayout(widget);
+    m_controlsLayout = new QVBoxLayout(widget);
     
     QHBoxLayout *hLayout = new QHBoxLayout;
     QLabel* logo = new QLabel("cacca", widget);
     logo->setPixmap(KIcon("akunambol").pixmap(64));
     hLayout->addWidget(logo);
     hLayout->addWidget(new QLabel(QString("Akunambol %1").arg(AKU_VERSION), widget));
-    verticalLayout->addLayout(hLayout);
+    m_controlsLayout->addLayout(hLayout);
     
     AppSyncSourceManager *manager = AppSyncSourceManager::getInstance();
     QList<AppSyncSource*> sources = manager->getRegisteredSources();
@@ -108,7 +108,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 
 //         Add the push button
         SourcePushButton* sourceButton = source->getPushButton();
-        verticalLayout->addWidget(sourceButton);
+        m_controlsLayout->addWidget(sourceButton);
         connect(sourceButton, SIGNAL(clicked(AppSyncSource*)), this, SLOT(sync(AppSyncSource*)));
 //         Add a spacer
 //         QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -116,8 +116,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     }
     
 //     verticalLayout->addItem(new QSpacerItem(0, 20, QSizePolicy::MinimumExpanding));
-    verticalLayout->addStretch(2);
-    widget->setLayout(verticalLayout);
+    m_controlsLayout->addStretch(2);
+    widget->setLayout(m_controlsLayout);
     setCentralWidget(widget);
     
     setIcons();
@@ -153,6 +153,9 @@ void MainWindow::pluginLoaded(SyncSource2* s)
 {
     kDebug() << "Waaa";
     kDebug() << "Control text is:" << s->controlText();
+    QPushButton *b = new QPushButton(s->controlText(), this);
+    connect(b, SIGNAL(clicked()), s, SLOT(doSync()));
+    m_controlsLayout->addWidget(b);
 //     s->doSync();
 }
 

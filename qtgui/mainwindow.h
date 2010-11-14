@@ -94,6 +94,8 @@ private:
     Settings *m_s;
     SourceManager *m_sourceManager;
 
+    QVBoxLayout *m_controlsLayout;
+    
     QString m_user;
     QString m_password;
     QString m_syncUrl;
