@@ -41,7 +41,7 @@ FunambolSyncSouceConfig::FunambolSyncSouceConfig()
 
     // Handle backward compatibility: if the stored version is
     // different from the current one, take the proper action
-    if (strcmp (this->getClientConfig().getSwv(), AKU_VERSION) != 0) {
+    if (strcmp(this->getClientConfig().getSwv(), AKU_VERSION) != 0) {
     }
 }
 
@@ -55,7 +55,7 @@ bool FunambolSyncSouceConfig::read()
     }
 
     // Read client-specific properties from the config
-    Funambol::ManagementNode *node = dmt->readManagementNode (rootContext);
+    Funambol::ManagementNode *node = dmt->readManagementNode(rootContext);
 
     if (node) {
         delete node;
@@ -77,7 +77,7 @@ bool FunambolSyncSouceConfig::save()
     }
 
     // Write client-specific properties to the config
-    ManagementNode *node = dmt->readManagementNode (rootContext);
+    ManagementNode *node = dmt->readManagementNode(rootContext);
     if (node) {
         delete node;
         close();
@@ -91,28 +91,28 @@ bool FunambolSyncSouceConfig::save()
 void FunambolSyncSouceConfig::createConfig()
 {
     Funambol::AccessConfig* ac = Funambol::DefaultConfigFactory::getAccessConfig();
-    ac->setMaxMsgSize (60000);
-    ac->setUserAgent ("Akunambol " AKU_VERSION);
+    ac->setMaxMsgSize(60000);
+    ac->setUserAgent("Akunambol " AKU_VERSION);
 
-    this->setAccessConfig (*ac);
+    this->setAccessConfig(*ac);
     delete ac;
 
     Funambol::DeviceConfig* dc = Funambol::DefaultConfigFactory::getDeviceConfig();
-    dc->setDevID (generateDeviceID());
-    dc->setMan ("Funambol");
-    dc->setLoSupport (true);
-    dc->setSwv (AKU_VERSION);
-    this->setDeviceConfig (*dc);
+    dc->setDevID(generateDeviceID());
+    dc->setMan("Funambol");
+    dc->setLoSupport(true);
+    dc->setSwv(AKU_VERSION);
+    this->setDeviceConfig(*dc);
     delete dc;
 
     // Create a node for this specific source
 
     // Configure the source to work with vCard 2.1
-    Funambol::SyncSourceConfig* sc = Funambol::DefaultConfigFactory::getSyncSourceConfig (KFUNSYNC_SOURCE_NAME);
-    sc->setType ("text/x-vcard");
-    sc->setURI ("card");
-    sc->setEncoding (Funambol::SyncItem::encodings::plain);
-    this->setSyncSourceConfig (*sc);
+    Funambol::SyncSourceConfig* sc = Funambol::DefaultConfigFactory::getSyncSourceConfig(KFUNSYNC_SOURCE_NAME);
+    sc->setType("text/x-vcard");
+    sc->setURI("card");
+    sc->setEncoding(Funambol::SyncItem::encodings::plain);
+    this->setSyncSourceConfig(*sc);
     delete sc;
 
     // save the configuration
@@ -132,8 +132,8 @@ class FunambolManagerPrivate
 };
 
 // TODO make me a thread?
-FunambolSyncSource::FunambolSyncSource (QObject* parent, const QVariantList& args)
-        : SyncSource2 (parent, args)
+FunambolSyncSource::FunambolSyncSource(QObject* parent, const QVariantList& args)
+        : SyncSource2(parent, args)
 {
     d = new FunambolManagerPrivate;
 }
@@ -143,12 +143,12 @@ FunambolSyncSource::~FunambolSyncSource()
 
 }
 
-void FunambolSyncSource::setSyncData (QString username, QString password, QString url)
+void FunambolSyncSource::setSyncData(QString username, QString password, QString url)
 {
     d->config;
 }
 
-void FunambolSyncSource::setSourceUID (QString uid)
+void FunambolSyncSource::setSourceUID(QString uid)
 {
     d->name = "aku-" + uid;
 }
@@ -163,4 +163,4 @@ QWidget* FunambolSyncSource::configurationInterface()
     return (new QWidget);
 }
 
-// kate: indent-mode cstyle; space-indent on; indent-width 4; replace-tabs on;  replace-tabs on;
+// kate: indent-mode cstyle; space-indent on; indent-width 4; replace-tabs on;
