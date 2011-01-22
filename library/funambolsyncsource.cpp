@@ -180,6 +180,11 @@ void FunambolSyncSource::setRemoteURI(QString uri, Encoding encoding)
     d->encoding = encoding;
 }
 
+void FunambolSyncSource::setSyncMimeType(QString mimeType)
+{
+    d->syncMimeType = mimeType;
+}
+
 void FunambolSyncSource::doSync()
 {
     d->initConfig();
