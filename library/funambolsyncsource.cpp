@@ -39,6 +39,7 @@ class FunambolManagerPrivate
         }
         
         FunambolSyncSouceConfig *config;
+        QString name;
 
 };
 
@@ -69,14 +70,64 @@ bool FunambolSyncSouceConfig::read()
     
     if (node) {
         delete node;
-        node = 0;
-        
         close();
         return true; // success!
     }
     
     close();
     return false; // failure :(
+}
+
+bool FunambolSyncSouceConfig::save()
+{
+    if ( !DMTClientConfig::save() ) {
+        return false; // error in the common config save.
+    }
+    if (!open()) {
+        return false;
+    }
+    
+    // Write client-specific properties to the config
+    ManagementNode *node = dmt->readManagementNode(rootContext);
+    if (node) {
+        delete node;
+        close();
+        return true; // success!
+    }
+    
+    close();
+    return false; // failure :(
+}
+
+void FunambolSyncSouceConfig::createConfig()
+{
+    Funambol::AccessConfig* ac = Funambol::DefaultConfigFactory::getAccessConfig();
+    ac->setMaxMsgSize(60000);
+    ac->setUserAgent("Akunambol " AKU_VERSION);
+    
+    this->setAccessConfig(*ac);
+    delete ac;
+    
+    Funambol::DeviceConfig* dc = Funambol::DefaultConfigFactory::getDeviceConfig();
+    dc->setDevID(generateDeviceID());
+    dc->setMan("Funambol");
+    dc->setLoSupport(true);
+    dc->setSwv(AKU_VERSION);
+    this->setDeviceConfig(*dc);
+    delete dc;
+    
+    // Create a node for this specific source
+    
+    // Configure the source to work with vCard 2.1
+    Funambol::SyncSourceConfig* sc = Funambol::DefaultConfigFactory::getSyncSourceConfig(KFUNSYNC_SOURCE_NAME);
+    sc->setType     ("text/x-vcard");
+    sc->setURI      ("card");
+    sc->setEncoding (Funambol::SyncItem::encodings::plain);
+    this->setSyncSourceConfig(*sc);
+    delete sc;
+    
+    // save the configuration
+    save();
 }
 
 
@@ -95,8 +146,11 @@ FunambolSyncSource::~FunambolSyncSource()
 void FunambolSyncSource::setSyncData (QString username, QString password, QString url)
 {
     d->config;
-    // #include <base/fscapi.h>
-    // #include <base/util/StringBuffer.h>
+}
+
+void FunambolSyncSource::setSourceUID (QString uid)
+{
+    d->name = "aku-" + uid;
 }
 
 void FunambolSyncSource::doSync()

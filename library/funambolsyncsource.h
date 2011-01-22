@@ -34,13 +34,14 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
         virtual ~FunambolSyncSource();
 
         void setSyncData (QString username, QString password, QString url);
+        void setSourceUID (QString uid);
 
         virtual QString controlText() = 0;
         virtual QWidget* configurationInterface();
 
     protected:
         virtual void doSync();
-        
+
     private:
         FunambolManagerPrivate *d;
 
@@ -48,37 +49,23 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
 
 class FunambolSyncSouceConfig : public Funambol::DMTClientConfig
 {
-    
-public:
-    
-    /**
-     * Default constructor: uses the macros KFUNSYNC_APPLICATION_URI and
-     * KFUNSYNC_DEFAULT_PATH to initialize the config.
-     * By default also reads the config from the store.
-     */
-    FunambolSyncSouceConfig();
-    
-    ~FunambolSyncSouceConfig();
-    
-    // Overloaded methods from DMTClientConfig
-    virtual bool read();
-    virtual bool save();
-    
-    /**
-     * Initialize the config: try to read it from file or generate a default one.
-     */
-    void init();
-    
-private:
-    
-    
-    /**
-     * Generates a default config.
-     */
-    void createConfig();
-    
+
+    public:
+        FunambolSyncSouceConfig();
+        ~FunambolSyncSouceConfig();
+
+        // Overloaded methods from DMTClientConfig
+        virtual bool read();
+        virtual bool save();
+ 
+        // Initialize the config: try to read it from file or generate a default one.
+        void init();
+
+    private:
+        // Generate a default config
+        void createConfig();
 };
 
 
 #endif // FUNAMBOLSYNCSOURCE_H
-// kate: indent-mode cstyle; space-indent on; indent-width 4; replace-tabs on; 
+// kate: indent-mode cstyle; space-indent on; indent-width 4; replace-tabs on;  replace-tabs on;  replace-tabs on;
