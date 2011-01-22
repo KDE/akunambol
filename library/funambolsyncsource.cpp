@@ -21,6 +21,10 @@
 
 #include <QWidget>
 
+class FunambolManagerPrivate {
+};
+
+// TODO make me a thread?
 FunambolSyncSource::FunambolSyncSource(QObject* parent, const QVariantList& args)
     : SyncSource2(parent, args)
 {
