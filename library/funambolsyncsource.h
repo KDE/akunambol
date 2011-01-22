@@ -60,7 +60,7 @@ class FunambolSyncSouceConfig : public Funambol::DMTClientConfig
 {
 
     public:
-        ~FunambolSyncSouceConfig();
+        FunambolSyncSouceConfig() {};
 
         // Overloaded methods from DMTClientConfig
         virtual bool read();
