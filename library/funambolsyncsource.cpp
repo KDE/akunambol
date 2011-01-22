@@ -19,21 +19,84 @@
 
 #include "funambolsyncsource.h"
 
+// Funambol
+#include "base/fscapi.h"
+#include "spdm/DMTreeFactory.h"
+#include "spds/DefaultConfigFactory.h"
+#include "spds/SyncItem.h"
+
+// Qt/KDE
 #include <QWidget>
 
-class FunambolManagerPrivate {
+// Akunambol
+#include <aku-auto-config.h>
+
+class FunambolManagerPrivate
+{
+    public:
+        FunambolManagerPrivate() {
+            config = new FunambolSyncSouceConfig;
+        }
+        
+        FunambolSyncSouceConfig *config;
+
 };
 
-// TODO make me a thread?
-FunambolSyncSource::FunambolSyncSource(QObject* parent, const QVariantList& args)
-    : SyncSource2(parent, args)
+FunambolSyncSouceConfig::FunambolSyncSouceConfig()
 {
+    // Read the configuration. If not found, generate a default one
+    if (!read()) {
+        createConfig();
+    }
     
+    // Handle backward compatibility: if the stored version is
+    // different from the current one, take the proper action
+    if (strcmp(this->getClientConfig().getSwv(), AKU_VERSION) != 0) {
+    }
+}
+
+bool FunambolSyncSouceConfig::read()
+{
+    if (!DMTClientConfig::read()) {
+        return false; // error in the common config read.
+    }
+    if (!open()) {
+        return false;
+    }
+    
+    // Read client-specific properties from the config
+    Funambol::ManagementNode *node = dmt->readManagementNode(rootContext);
+    
+    if (node) {
+        delete node;
+        node = 0;
+        
+        close();
+        return true; // success!
+    }
+    
+    close();
+    return false; // failure :(
+}
+
+
+// TODO make me a thread?
+FunambolSyncSource::FunambolSyncSource (QObject* parent, const QVariantList& args)
+        : SyncSource2 (parent, args)
+{
+    d = new FunambolManagerPrivate;
 }
 
 FunambolSyncSource::~FunambolSyncSource()
 {
 
+}
+
+void FunambolSyncSource::setSyncData (QString username, QString password, QString url)
+{
+    d->config;
+    // #include <base/fscapi.h>
+    // #include <base/util/StringBuffer.h>
 }
 
 void FunambolSyncSource::doSync()
@@ -46,3 +109,4 @@ QWidget* FunambolSyncSource::configurationInterface()
     return (new QWidget);
 }
 
+// kate: indent-mode cstyle; space-indent on; indent-width 4; replace-tabs on; 

@@ -22,20 +22,63 @@
 
 #include "syncsource.h"
 
+#include <client/DMTClientConfig.h>
+
+class FunambolManagerPrivate;
 class QWidget;
 
 class KDE_EXPORT FunambolSyncSource : public SyncSource2
 {
     public:
-        FunambolSyncSource(QObject* parent = 0, const QVariantList& args = QVariantList());
+        FunambolSyncSource (QObject* parent = 0, const QVariantList& args = QVariantList());
         virtual ~FunambolSyncSource();
-        
+
+        void setSyncData (QString username, QString password, QString url);
+
         virtual QString controlText() = 0;
         virtual QWidget* configurationInterface();
-        
+
     protected:
         virtual void doSync();
+        
+    private:
+        FunambolManagerPrivate *d;
 
 };
 
+class FunambolSyncSouceConfig : public Funambol::DMTClientConfig
+{
+    
+public:
+    
+    /**
+     * Default constructor: uses the macros KFUNSYNC_APPLICATION_URI and
+     * KFUNSYNC_DEFAULT_PATH to initialize the config.
+     * By default also reads the config from the store.
+     */
+    FunambolSyncSouceConfig();
+    
+    ~FunambolSyncSouceConfig();
+    
+    // Overloaded methods from DMTClientConfig
+    virtual bool read();
+    virtual bool save();
+    
+    /**
+     * Initialize the config: try to read it from file or generate a default one.
+     */
+    void init();
+    
+private:
+    
+    
+    /**
+     * Generates a default config.
+     */
+    void createConfig();
+    
+};
+
+
 #endif // FUNAMBOLSYNCSOURCE_H
+// kate: indent-mode cstyle; space-indent on; indent-width 4; replace-tabs on; 
