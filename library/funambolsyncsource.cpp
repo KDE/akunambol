@@ -31,17 +31,6 @@
 // Akunambol
 #include <aku-auto-config.h>
 
-class FunambolManagerPrivate
-{
-    public:
-        FunambolManagerPrivate() {
-            config = new FunambolSyncSouceConfig;
-        }
-        
-        FunambolSyncSouceConfig *config;
-        QString name;
-
-};
 
 FunambolSyncSouceConfig::FunambolSyncSouceConfig()
 {
@@ -130,6 +119,17 @@ void FunambolSyncSouceConfig::createConfig()
     save();
 }
 
+class FunambolManagerPrivate
+{
+    public:
+        FunambolManagerPrivate() {
+            config = new FunambolSyncSouceConfig;
+        }
+        
+        FunambolSyncSouceConfig *config;
+        QString name;
+
+};
 
 // TODO make me a thread?
 FunambolSyncSource::FunambolSyncSource (QObject* parent, const QVariantList& args)
