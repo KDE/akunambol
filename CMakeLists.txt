@@ -33,6 +33,7 @@ include_directories(${QT_INCLUDES} ${KDE4_INCLUDES} ${Akonadi_INCLUDES} ${KDEPIM
 set(akunambolprivate_SRCS
     library/syncsource.cpp
     library/funambolsyncsource.cpp
+    library/funambolbackend.cpp
     library/syncsourceloader.cpp
     library/syncconfig.cpp
     )

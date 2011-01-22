@@ -188,6 +188,29 @@ void FunambolSyncSource::setSyncMimeType(QString mimeType)
 void FunambolSyncSource::doSync()
 {
     d->initConfig();
+//     AkonadiSource *source = appSource->getSyncSource();
+//     AppSyncSourceConfig* sourceConfig = appSource->getConfig();
+//     source->setCollectionId(sourceConfig->getCollectionId());
+//     SyncSourceConfig *srcConfig = d->config->getSyncSourceConfig(d->sourceName);
+//     if (srcConfig != NULL) {
+//         source->setConfig(srcConfig);
+//     }
+//     const char* remoteUri = sourceConfig->getRemoteUri();
+//     if (remoteUri == NULL || strlen(remoteUri) == 0) {
+//         sourceConfig->setRemoteUri(srcConfig->getURI());
+//         sourceConfig->save();
+//     } else {
+//         srcConfig->setURI(remoteUri);
+//     }
+//     
+//     SyncSource* ssArray[] = { source, NULL } ;
+//     if (client->sync(*KFunSyncConfig::getInstance(), ssArray)) {
+//         LOG.error("Error during sync.\n");
+//     }
+//     
+//     // Save the anchors
+//     KFunSyncConfig::getInstance()->save();
+//     manager->emitSourceEnded(appSource, client->getSyncReport());
 
 }
 
