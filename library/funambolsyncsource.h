@@ -34,14 +34,14 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
         enum Encoding {
             None = 1,
             Base64 = 2,
-            EncryptedDES = 4  
+            EncryptedDES = 4
         };
-    
-        FunambolSyncSource (QObject* parent = 0, const QVariantList& args = QVariantList());
+
+        FunambolSyncSource(QObject* parent = 0, const QVariantList& args = QVariantList());
         virtual ~FunambolSyncSource();
 
-        void setSyncData (QString username, QString password, QString url);
-        void setSourceUID (QString uid);
+        void setSyncData(QString username, QString password, QString url);
+        void setSourceUID(QString uid);
         void setSyncMimeType(QString mimeType);
         void setRemoteURI(QString uri, Encoding encodingType);
 
@@ -65,10 +65,10 @@ class FunambolSyncSouceConfig : public Funambol::DMTClientConfig
         // Overloaded methods from DMTClientConfig
         virtual bool read();
         virtual bool save();
- 
+
         // Initialize the config: try to read it from file or generate a default one.
         void init();
-        
+
         QString m_sourceName, m_syncMimeType, m_remoteURI;
         const char* m_encoding;
 
@@ -79,4 +79,4 @@ class FunambolSyncSouceConfig : public Funambol::DMTClientConfig
 
 
 #endif // FUNAMBOLSYNCSOURCE_H
-// kate: indent-mode cstyle; space-indent on; indent-width 4; replace-tabs on;  replace-tabs on;  replace-tabs on;
+// kate: indent-mode cstyle; space-indent on; indent-width 4; replace-tabs on;  replace-tabs on;  replace-tabs on;  replace-tabs on;
