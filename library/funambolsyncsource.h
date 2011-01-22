@@ -23,6 +23,7 @@
 #include "syncsource.h"
 
 #include <client/DMTClientConfig.h>
+#include <spds/SyncItem.h>
 
 class FunambolManagerPrivate;
 class QWidget;
@@ -30,11 +31,19 @@ class QWidget;
 class KDE_EXPORT FunambolSyncSource : public SyncSource2
 {
     public:
+        enum Encoding {
+            None = 1,
+            Base64 = 2,
+            EncryptedDES = 4  
+        };
+    
         FunambolSyncSource (QObject* parent = 0, const QVariantList& args = QVariantList());
         virtual ~FunambolSyncSource();
 
         void setSyncData (QString username, QString password, QString url);
         void setSourceUID (QString uid);
+        void setSyncMimeType(QString mimeType);
+        void setRemoteURI(QString uri, Encoding encodingType);
 
         virtual QString controlText() = 0;
         virtual QWidget* configurationInterface();
@@ -51,7 +60,6 @@ class FunambolSyncSouceConfig : public Funambol::DMTClientConfig
 {
 
     public:
-        FunambolSyncSouceConfig();
         ~FunambolSyncSouceConfig();
 
         // Overloaded methods from DMTClientConfig
@@ -60,6 +68,9 @@ class FunambolSyncSouceConfig : public Funambol::DMTClientConfig
  
         // Initialize the config: try to read it from file or generate a default one.
         void init();
+        
+        QString m_sourceName, m_syncMimeType, m_remoteURI;
+        Funambol::SyncItem::encodings m_encoding;
 
     private:
         // Generate a default config

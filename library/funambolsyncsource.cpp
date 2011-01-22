@@ -32,7 +32,7 @@
 #include <aku-auto-config.h>
 #include "akunambol_macros.h"
 
-FunambolSyncSouceConfig::FunambolSyncSouceConfig()
+void FunambolSyncSouceConfig::init()
 {
     // Read the configuration. If not found, generate a default one
     if (!read()) {
@@ -98,7 +98,7 @@ void FunambolSyncSouceConfig::createConfig()
     delete ac;
 
     Funambol::DeviceConfig* dc = Funambol::DefaultConfigFactory::getDeviceConfig();
-    dc->setDevID(AkuGlobal::deviceUid());
+    dc->setDevID(AkuGlobal::deviceUid().toUtf8());
     dc->setMan("Funambol");
     dc->setLoSupport(true);
     dc->setSwv(AKU_VERSION);
@@ -106,12 +106,10 @@ void FunambolSyncSouceConfig::createConfig()
     delete dc;
 
     // Create a node for this specific source
-
-    // Configure the source to work with vCard 2.1
-    Funambol::SyncSourceConfig* sc = Funambol::DefaultConfigFactory::getSyncSourceConfig(KFUNSYNC_SOURCE_NAME);
-    sc->setType("text/x-vcard");
-    sc->setURI("card");
-    sc->setEncoding(Funambol::SyncItem::encodings::plain);
+    Funambol::SyncSourceConfig* sc = Funambol::DefaultConfigFactory::getSyncSourceConfig(m_sourceName);
+    sc->setType(m_syncMimeType);
+    sc->setURI(m_remoteURI);
+    sc->setEncoding(m_encoding);
     this->setSyncSourceConfig(*sc);
     delete sc;
 
@@ -125,10 +123,33 @@ class FunambolManagerPrivate
         FunambolManagerPrivate() {
             config = new FunambolSyncSouceConfig;
         }
+        
+        void initConfig() {
+            if (sourceName.isEmpty() ||
+                syncType.isEmpty() ||
+                remoteURI.isEmpty()) {
+                qFatal("Dear fellow developer, the mandatory parameters (sourceUID, syncType, remoteURI) are not set. This will screw things up.");
+            } else {
+                config->m_remoteURI = remoteURI;
+                config->m_sourceName = sourceName;
+                config->m_syncMimeType = syncMimeType;
+                switch (encoding) {
+                    case FunambolSyncSource::None:
+                        config->m_encoding = Funambol::SyncItem::encodings::plain;
+                    case FunambolSyncSource::Base64:
+                        config->m_encoding = Funambol::SyncItem::encodings::escaped;
+                    case FunambolSyncSource::EncryptedDES:
+                        config->m_encoding = Funambol::SyncItem::encodings::des;
+                    default: // even if we should never get here...
+                        config->m_encoding = Funambol::SyncItem::encodings::plain;
+                }
+                config->init();
+            }
+        }
 
         FunambolSyncSouceConfig *config;
-        QString name;
-
+        QString sourceName, syncMimeType, remoteURI;
+        FunambolSyncSource::Encoding encoding;
 };
 
 // TODO make me a thread?
@@ -145,16 +166,22 @@ FunambolSyncSource::~FunambolSyncSource()
 
 void FunambolSyncSource::setSyncData(QString username, QString password, QString url)
 {
-    d->config;
+//     d->config;
 }
 
 void FunambolSyncSource::setSourceUID(QString uid)
 {
-    d->name = "aku-" + uid;
+    d->sourceName = "aku-" + uid;
+}
+
+void FunambolSyncSource::setRemoteURI(QString uri)
+{
+    d->remoteURI = uri;
 }
 
 void FunambolSyncSource::doSync()
 {
+    d->initConfig();
 
 }
 
