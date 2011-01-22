@@ -30,7 +30,7 @@
 
 // Akunambol
 #include <aku-auto-config.h>
-
+#include "akunambol_macros.h"
 
 FunambolSyncSouceConfig::FunambolSyncSouceConfig()
 {
@@ -77,7 +77,7 @@ bool FunambolSyncSouceConfig::save()
     }
 
     // Write client-specific properties to the config
-    ManagementNode *node = dmt->readManagementNode(rootContext);
+    Funambol::ManagementNode *node = dmt->readManagementNode(rootContext);
     if (node) {
         delete node;
         close();
@@ -98,7 +98,7 @@ void FunambolSyncSouceConfig::createConfig()
     delete ac;
 
     Funambol::DeviceConfig* dc = Funambol::DefaultConfigFactory::getDeviceConfig();
-    dc->setDevID(generateDeviceID());
+    dc->setDevID(AkuGlobal::deviceUid());
     dc->setMan("Funambol");
     dc->setLoSupport(true);
     dc->setSwv(AKU_VERSION);

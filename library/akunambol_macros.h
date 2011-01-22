@@ -19,8 +19,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdemacros.h>
 #include <KPluginFactory>
 #include <KPluginLoader>
- 
-#define AKUNAMBOL_EXPORT( c ) \
-  K_PLUGIN_FACTORY( TextEditorFactory, registerPlugin< c >(); ) \
-  K_EXPORT_PLUGIN( TextEditorFactory("c") )
 
+#define AKUNAMBOL_EXPORT( c ) \
+    K_PLUGIN_FACTORY( TextEditorFactory, registerPlugin< c >(); ) \
+    K_EXPORT_PLUGIN( TextEditorFactory("c") )
+
+class AkuGlobal
+{
+
+    public:
+        static QString deviceUid() {
+            KConfig* config = KGlobal::config();
+            KConfigGroup funambol(&config, "FunambolGlobal");
+            QString devid = funambol.readEntry("deviceUID", QString());
+            if (devid.isEmpty()) {
+                devid = "aku-" + time_t(NULL);
+                funambol.writeEntry("deviceUID", devid);
+            }
+            return devid;
+        }
+        
+};
+// kate: indent-mode cstyle; space-indent on; indent-width 4; replace-tabs on; 
