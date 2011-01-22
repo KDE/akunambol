@@ -182,21 +182,6 @@ bool KFunSyncConfig::save() {
     return false;
 }
 
-/*
-void KFunSyncConfig::createSourcesConfig() {
-    AppSyncSourceManager* manager = AppSyncSourceManager::getInstance();
-    QList<AppSyncSource*> sources = manager->getRegisteredSources();
-    foreach(AppSyncSource* source, sources) {
-        // Configure the source to work with vCard 2.1
-        SyncSourceConfig* sc = DefaultConfigFactory::getSyncSourceConfig(NAME);
-        sc->setType     ("text/x-vcard");
-        sc->setURI      ("card");
-        sc->setEncoding (SyncItem::encodings::plain);
-        this->setSyncSourceConfig(*sc);
-        delete sc;
-    }
-}
-*/
 
 /**
  * Method to create a default config.
