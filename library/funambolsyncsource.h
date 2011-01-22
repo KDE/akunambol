@@ -32,9 +32,9 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
 {
     public:
         enum Encoding {
-            None = 1,
-            Base64 = 2,
-            EncryptedDES = 4
+            None = 1, /** No encoding will be made and the data will be sent as-is */
+            Base64 = 2, /** The data will be base64 encoded during the transfer */
+            EncryptedDES = 4  /** Data will be DES-encrypted, encoded in base64, and transferred */
         };
 
         FunambolSyncSource(QObject* parent = 0, const QVariantList& args = QVariantList());
