@@ -70,7 +70,7 @@ class FunambolSyncSouceConfig : public Funambol::DMTClientConfig
         void init();
         
         QString m_sourceName, m_syncMimeType, m_remoteURI;
-        Funambol::SyncItem::encodings m_encoding;
+        const char* m_encoding;
 
     private:
         // Generate a default config

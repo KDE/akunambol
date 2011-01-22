@@ -106,9 +106,9 @@ void FunambolSyncSouceConfig::createConfig()
     delete dc;
 
     // Create a node for this specific source
-    Funambol::SyncSourceConfig* sc = Funambol::DefaultConfigFactory::getSyncSourceConfig(m_sourceName);
-    sc->setType(m_syncMimeType);
-    sc->setURI(m_remoteURI);
+    Funambol::SyncSourceConfig* sc = Funambol::DefaultConfigFactory::getSyncSourceConfig(m_sourceName.toUtf8());
+    sc->setType(m_syncMimeType.toUtf8());
+    sc->setURI(m_remoteURI.toUtf8());
     sc->setEncoding(m_encoding);
     this->setSyncSourceConfig(*sc);
     delete sc;
@@ -126,7 +126,7 @@ class FunambolManagerPrivate
         
         void initConfig() {
             if (sourceName.isEmpty() ||
-                syncType.isEmpty() ||
+                syncMimeType.isEmpty() ||
                 remoteURI.isEmpty()) {
                 qFatal("Dear fellow developer, the mandatory parameters (sourceUID, syncType, remoteURI) are not set. This will screw things up.");
             } else {
@@ -174,9 +174,10 @@ void FunambolSyncSource::setSourceUID(QString uid)
     d->sourceName = "aku-" + uid;
 }
 
-void FunambolSyncSource::setRemoteURI(QString uri)
+void FunambolSyncSource::setRemoteURI(QString uri, Encoding encoding)
 {
     d->remoteURI = uri;
+    d->encoding = encoding;
 }
 
 void FunambolSyncSource::doSync()
