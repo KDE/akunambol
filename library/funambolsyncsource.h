@@ -26,7 +26,6 @@
 #include <client/DMTClientConfig.h>
 #include <spds/SyncItem.h>
 
-class FunambolManagerPrivate;
 class QWidget;
 
 class KDE_EXPORT FunambolSyncSource : public SyncSource2
@@ -52,7 +51,8 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
         virtual void doSync();
 
     private:
-        FunambolManagerPrivate *d;
+        class Private;
+        FunambolSyncSource::Private *d;
 
 };
 

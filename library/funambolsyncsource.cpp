@@ -117,10 +117,10 @@ void FunambolSyncSouceConfig::createConfig()
     save();
 }
 
-class FunambolManagerPrivate
+class FunambolSyncSource::Private
 {
     public:
-        FunambolManagerPrivate() {
+        Private() {
             config = new FunambolSyncSouceConfig;
         }
         
@@ -156,7 +156,7 @@ class FunambolManagerPrivate
 FunambolSyncSource::FunambolSyncSource(QObject* parent, const QVariantList& args)
         : SyncSource2(parent, args)
 {
-    d = new FunambolManagerPrivate;
+    d = new FunambolSyncSource::Private;
 }
 
 FunambolSyncSource::~FunambolSyncSource()
