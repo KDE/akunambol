@@ -16,6 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef AKUNAMBOLMACROS_H
+#define AKUNAMBOLMACROS_H
+
 #include <kdemacros.h>
 #include <KPluginFactory>
 #include <KPluginLoader>
@@ -43,3 +46,5 @@ class AkuGlobal
         
 };
 // kate: indent-mode cstyle; space-indent on; indent-width 4; replace-tabs on; 
+
+#endif
