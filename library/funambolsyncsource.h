@@ -21,6 +21,7 @@
 #define FUNAMBOLSYNCSOURCE_H
 
 #include "syncsource.h"
+#include "syncconfig.h"
 
 #include <client/DMTClientConfig.h>
 #include <spds/SyncItem.h>
@@ -40,7 +41,6 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
         FunambolSyncSource(QObject* parent = 0, const QVariantList& args = QVariantList());
         virtual ~FunambolSyncSource();
 
-        void setSyncData(QString username, QString password, QString url);
         void setSourceUID(QString uid);
         void setSyncMimeType(QString mimeType);
         void setRemoteURI(QString uri, Encoding encodingType);
@@ -56,7 +56,7 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
 
 };
 
-class FunambolSyncSouceConfig : public Funambol::DMTClientConfig
+class FunambolSyncSouceConfig : public Funambol::DMTClientConfig, public SyncConfig2
 {
 
     public:

@@ -164,11 +164,6 @@ FunambolSyncSource::~FunambolSyncSource()
 
 }
 
-void FunambolSyncSource::setSyncData(QString username, QString password, QString url)
-{
-//     d->config;
-}
-
 void FunambolSyncSource::setSourceUID(QString uid)
 {
     d->sourceName = "aku-" + uid;
@@ -187,7 +182,13 @@ void FunambolSyncSource::setSyncMimeType(QString mimeType)
 
 void FunambolSyncSource::doSync()
 {
+    if (!config()->isComplete()) {
+        emit error(i18n("Please configure "));
+        return;
+    }
+    
     d->initConfig();
+    
 //     AkonadiSource *source = appSource->getSyncSource();
 //     AppSyncSourceConfig* sourceConfig = appSource->getConfig();
 //     source->setCollectionId(sourceConfig->getCollectionId());

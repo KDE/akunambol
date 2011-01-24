@@ -25,7 +25,6 @@
 
 class FunambolBackend : public Funambol::SyncSource
 {
-
     public:
         virtual int deleteItem(Funambol::SyncItem& item);
         virtual int updateItem(Funambol::SyncItem& item);
