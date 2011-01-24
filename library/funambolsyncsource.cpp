@@ -183,11 +183,13 @@ void FunambolSyncSource::setSyncMimeType(QString mimeType)
 void FunambolSyncSource::doSync()
 {
     if (!config()->isComplete()) {
-        emit error(i18n("Please configure "));
+        emit error(i18n("Please set your credentials and synchronization URL."));
         return;
     }
     
     d->initConfig();
+    
+    // TODO uncomment this code:
     
 //     AkonadiSource *source = appSource->getSyncSource();
 //     AppSyncSourceConfig* sourceConfig = appSource->getConfig();
