@@ -19,8 +19,9 @@
 #define SYNCCONFIG_H
 
 #include <QString>
+#include "akunambol_macros.h"
 
-class SyncConfig2
+class KDE_EXPORT SyncConfig2
 {
     // enum loglevel
     public:
@@ -33,6 +34,14 @@ class SyncConfig2
         QString user() { return m_user; };
         QString password() { return m_password; };
         QString syncUrl() { return m_url; };
+        
+        /**
+         * Check if this object is "complete". Useful instead of checking if
+         * password, username and url are not empty.
+         * @return true if is complete.
+         * @return false if it is not complete.
+         */
+        bool isComplete();
         
     private:
         QString m_user, m_password, m_url;

@@ -18,7 +18,6 @@
 #include "syncconfig.h"
 #include <QString>
 
-
 SyncConfig2::SyncConfig2()
 {
     m_url = m_password = m_user = QString();
@@ -38,3 +37,12 @@ void SyncConfig2::setSyncUrl(QString url)
 {
     m_url = url;
 }
+
+bool SyncConfig2::isComplete()
+{
+    bool complete = !m_user.isEmpty() and
+                    !m_password.isEmpty() and
+                    m_url.isEmpty();
+    return complete;
+}
+
