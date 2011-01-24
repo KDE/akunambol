@@ -23,7 +23,7 @@ class SyncSource2::SyncSourcePrivate {
     public:
         SyncSourcePrivate(SyncSource2 *q) : q(q), config(0) {}
         SyncSource2 *q;
-        SyncConfig *config;
+        SyncConfig2 *config;
         QMutex lock;
 };
 
@@ -66,9 +66,15 @@ void SyncSource2::unlock()
     d->lock.unlock();
 }
 
-void SyncSource2::setConfig(SyncConfig* c)
+void SyncSource2::setConfig(SyncConfig2* c)
 {
     d->config = c;
 }
+
+SyncConfig2* SyncSource2::config()
+{
+    return d->config;
+}
+
 
 

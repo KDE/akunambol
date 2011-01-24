@@ -22,7 +22,7 @@
 #include <kdemacros.h>
 #include <KGenericFactory>
 
-class SyncConfig;
+class SyncConfig2;
 class QWidget;
 
 #warning fix version
@@ -35,7 +35,8 @@ class KDE_EXPORT SyncSource2 : public QObject
         SyncSource2(QObject* parent = 0, const QVariantList &args = QVariantList());
         ~SyncSource2();
         
-        void setConfig(SyncConfig *c);
+        void setConfig(SyncConfig2 *c);
+        SyncConfig2* config();
         
         /*
          * Returns the text that should be shown to the user in order to activate
