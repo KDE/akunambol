@@ -119,49 +119,51 @@ void FunambolSyncSouceConfig::createConfig()
 
 class FunambolSyncSource::Private
 {
-    public:
-        Private() {
-            config = new FunambolSyncSouceConfig;
-        }
-        
-        void initConfig() {
-            if (sourceName.isEmpty() ||
+public:
+    Private(FunambolSyncSource *parent) {
+        this->parent = parent;
+        config = new FunambolSyncSouceConfig;
+    }
+
+    void initConfig() {
+        if (sourceName.isEmpty() ||
                 syncMimeType.isEmpty() ||
                 remoteURI.isEmpty()) {
-                qFatal("Dear fellow developer, the mandatory parameters (sourceUID, syncType, remoteURI) are not set. This will screw things up.");
-            } else {
-                config->m_remoteURI = remoteURI;
-                config->m_sourceName = sourceName;
-                config->m_syncMimeType = syncMimeType;
-                switch (encoding) {
-                    case FunambolSyncSource::None:
-                        config->m_encoding = Funambol::SyncItem::encodings::plain;
-                    case FunambolSyncSource::Base64:
-                        config->m_encoding = Funambol::SyncItem::encodings::escaped;
-                    case FunambolSyncSource::EncryptedDES:
-                        config->m_encoding = Funambol::SyncItem::encodings::des;
-                    default: // even if we should never get here...
-                        config->m_encoding = Funambol::SyncItem::encodings::plain;
-                }
-                config->init();
+            qFatal("Dear fellow developer, the mandatory parameters (sourceUID, syncType, remoteURI) are not set. This will screw things up.");
+        } else {
+            config->m_remoteURI = remoteURI;
+            config->m_sourceName = sourceName;
+            config->m_syncMimeType = syncMimeType;
+            switch (encoding) {
+            case FunambolSyncSource::None:
+                config->m_encoding = Funambol::SyncItem::encodings::plain;
+            case FunambolSyncSource::Base64:
+                config->m_encoding = Funambol::SyncItem::encodings::escaped;
+            case FunambolSyncSource::EncryptedDES:
+                config->m_encoding = Funambol::SyncItem::encodings::des;
+            default: // even if we should never get here...
+                config->m_encoding = Funambol::SyncItem::encodings::plain;
             }
+            config->init();
         }
+    }
 
-        FunambolSyncSouceConfig *config;
-        QString sourceName, syncMimeType, remoteURI;
-        FunambolSyncSource::Encoding encoding;
+    FunambolSyncSource *parent;
+    FunambolSyncSouceConfig *config;
+    QString sourceName, syncMimeType, remoteURI;
+    FunambolSyncSource::Encoding encoding;
 };
 
 // TODO make me a thread?
 FunambolSyncSource::FunambolSyncSource(QObject* parent, const QVariantList& args)
         : SyncSource2(parent, args)
 {
-    d = new FunambolSyncSource::Private;
+    d = new FunambolSyncSource::Private(this);
 }
 
 FunambolSyncSource::~FunambolSyncSource()
 {
-
+    delete d;
 }
 
 void FunambolSyncSource::setSourceUID(QString uid)
@@ -186,11 +188,11 @@ void FunambolSyncSource::doSync()
         emit error(i18n("Please set your credentials and synchronization URL."));
         return;
     }
-    
+
     d->initConfig();
-    
+
     // TODO uncomment this code:
-    
+
 //     AkonadiSource *source = appSource->getSyncSource();
 //     AppSyncSourceConfig* sourceConfig = appSource->getConfig();
 //     source->setCollectionId(sourceConfig->getCollectionId());
@@ -205,12 +207,12 @@ void FunambolSyncSource::doSync()
 //     } else {
 //         srcConfig->setURI(remoteUri);
 //     }
-//     
+//
 //     SyncSource* ssArray[] = { source, NULL } ;
 //     if (client->sync(*KFunSyncConfig::getInstance(), ssArray)) {
 //         LOG.error("Error during sync.\n");
 //     }
-//     
+//
 //     // Save the anchors
 //     KFunSyncConfig::getInstance()->save();
 //     manager->emitSourceEnded(appSource, client->getSyncReport());
@@ -222,4 +224,4 @@ QWidget* FunambolSyncSource::configurationInterface()
     return (new QWidget);
 }
 
-// kate: indent-mode cstyle; space-indent on; indent-width 4; replace-tabs on;
+// kate: indent-mode cstyle; space-indent on; indent-width 0;  replace-tabs on;
