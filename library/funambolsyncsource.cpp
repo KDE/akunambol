@@ -126,6 +126,9 @@ public:
     }
 
     void initConfig() {
+        // These parameters are set from the plugin developer, and are mandatory.
+        // This is a safety net so that the developer is warned, and has a clue, when
+        // he finds out that nothing works as expected.
         if (sourceName.isEmpty() ||
                 syncMimeType.isEmpty() ||
                 remoteURI.isEmpty()) {
@@ -146,6 +149,13 @@ public:
             }
             config->init();
         }
+        
+        // These values are set from the user. We could fail here, but it's not particularly important.
+        // These values should be set at every execution, but this (and error reporting) is already
+        // taken care of by FunambolSyncSource::doSync()
+        config->getAccessConfig().setUsername(parent->config()->user().toUtf8());
+        config->getAccessConfig().setPassword(parent->config()->password().toUtf8());
+        config->getAccessConfig().setSyncURL(parent->config()->syncUrl().toUtf8());
     }
 
     FunambolSyncSource *parent;
@@ -184,12 +194,14 @@ void FunambolSyncSource::setSyncMimeType(QString mimeType)
 
 void FunambolSyncSource::doSync()
 {
+    // The config() object is manipulated from the private class, and is not used directly.
+    // FIXME: is this a good thing? This is not very elegant, so Riccardo accepts suggestions
     if (!config()->isComplete()) {
         emit error(i18n("Please set your credentials and synchronization URL."));
         return;
     }
 
-    d->initConfig();
+    d->initConfig(); // read and eventually initialize the configuration.
 
     // TODO uncomment this code:
 
