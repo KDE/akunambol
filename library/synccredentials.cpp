@@ -23,26 +23,26 @@ SyncCredentials::SyncCredentials()
     m_url = m_password = m_user = QString();
 }
 
-void SyncCredentials::setUsername(QString user)
+void SyncCredentials::setUsername(const QString& user)
 {
     m_user = user;
 }
 
-void SyncCredentials::setPassword(QString password)
+void SyncCredentials::setPassword(const QString& password)
 {
     m_password = password;
 }
 
-void SyncCredentials::setSyncUrl(QString url)
+void SyncCredentials::setSyncUrl(const QString& url)
 {
     m_url = url;
 }
 
 bool SyncCredentials::isComplete()
 {
-    bool complete = !m_user.isEmpty() and
-                    !m_password.isEmpty() and
-                    m_url.isEmpty();
+    bool complete = !m_user.isEmpty() and !m_user.isNull() and
+                    !m_password.isEmpty() and !m_password.isNull() and
+                    !m_url.isEmpty() and !m_url.isNull();
     return complete;
 }
 

@@ -21,19 +21,28 @@
 #include <QString>
 #include "akunambol_macros.h"
 
+/**
+ * @brief SyncCredentials is a class created to allow easy sharing of credential data between SyncSources
+ * 
+ * It is mostly a container class, which has three parameters: username, password, and syncUrl.
+ * 
+ * None of these fields is checked in any way, except for not being empty(), so especially syncUrl
+ * can be used by SyncSources of the same kind the way they prefer.
+ * 
+ **/
 class KDE_EXPORT SyncCredentials
 {
     // enum loglevel
     public:
         SyncCredentials();
         
-        void setUsername(QString user);
-        void setPassword(QString password);
-        void setSyncUrl(QString url);
+        void setUsername(const QString &user);
+        void setPassword(const QString &password);
+        void setSyncUrl(const QString &url);
         
-        QString user() { return m_user; };
-        QString password() { return m_password; };
-        QString syncUrl() { return m_url; };
+        const QString user() { return m_user; };
+        const QString password() { return m_password; };
+        const QString syncUrl() { return m_url; };
         
         /**
          * Check if this object is "complete". Useful instead of checking if
