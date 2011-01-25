@@ -18,27 +18,27 @@
 #include "syncconfig.h"
 #include <QString>
 
-SyncConfig2::SyncConfig2()
+SyncCredentials::SyncCredentials()
 {
     m_url = m_password = m_user = QString();
 }
 
-void SyncConfig2::setUsername(QString user)
+void SyncCredentials::setUsername(QString user)
 {
     m_user = user;
 }
 
-void SyncConfig2::setPassword(QString password)
+void SyncCredentials::setPassword(QString password)
 {
     m_password = password;
 }
 
-void SyncConfig2::setSyncUrl(QString url)
+void SyncCredentials::setSyncUrl(QString url)
 {
     m_url = url;
 }
 
-bool SyncConfig2::isComplete()
+bool SyncCredentials::isComplete()
 {
     bool complete = !m_user.isEmpty() and
                     !m_password.isEmpty() and

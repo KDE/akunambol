@@ -21,11 +21,11 @@
 #include <QString>
 #include "akunambol_macros.h"
 
-class KDE_EXPORT SyncConfig2
+class KDE_EXPORT SyncCredentials
 {
     // enum loglevel
     public:
-        SyncConfig2();
+        SyncCredentials();
         
         void setUsername(QString user);
         void setPassword(QString password);

@@ -176,18 +176,18 @@ FunambolSyncSource::~FunambolSyncSource()
     delete d;
 }
 
-void FunambolSyncSource::setSourceUID(QString uid)
+void FunambolSyncSource::setSourceUID(const QString &uid)
 {
     d->sourceName = "aku-" + uid;
 }
 
-void FunambolSyncSource::setRemoteURI(QString uri, Encoding encoding)
+void FunambolSyncSource::setRemoteURI(const QString &uri, Encoding encoding)
 {
     d->remoteURI = uri;
     d->encoding = encoding;
 }
 
-void FunambolSyncSource::setSyncMimeType(QString mimeType)
+void FunambolSyncSource::setSyncMimeType(const QString &mimeType)
 {
     d->syncMimeType = mimeType;
 }

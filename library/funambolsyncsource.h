@@ -40,9 +40,9 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
         FunambolSyncSource(QObject* parent = 0, const QVariantList& args = QVariantList());
         virtual ~FunambolSyncSource();
 
-        void setSourceUID(QString uid);
-        void setSyncMimeType(QString mimeType);
-        void setRemoteURI(QString uri, Encoding encodingType);
+        void setSourceUID(const QString &uid);
+        void setSyncMimeType(const QString &mimeType);
+        void setRemoteURI(const QString &uri, Encoding encodingType);
 
         virtual QString controlText() = 0;
         virtual QWidget* configurationInterface();
@@ -56,7 +56,7 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
 
 };
 
-class FunambolSyncSouceConfig : public Funambol::DMTClientConfig, public SyncConfig2
+class FunambolSyncSouceConfig : public Funambol::DMTClientConfig, public SyncCredentials
 {
 
     public:
