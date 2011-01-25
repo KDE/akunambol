@@ -29,6 +29,10 @@
  * None of these fields is checked in any way, except for not being empty(), so especially syncUrl
  * can be used by SyncSources of the same kind the way they prefer.
  * 
+ * The three "mandatory" fields are username, password, and syncurl. There is an optional "type" field
+ * which can be used from syncsource developers in order to let the user share the configuration in
+ * multiple sync sources of the same type.
+ * 
  **/
 class KDE_EXPORT SyncCredentials
 {
@@ -39,6 +43,15 @@ class KDE_EXPORT SyncCredentials
         void setUsername(const QString &user);
         void setPassword(const QString &password);
         void setSyncUrl(const QString &url);
+        
+        /**
+         * @brief Sets the kind of SyncSource that should use this config.
+         *
+         * @param type Unique string that identifies the SyncSource type. It is only used in the UI to display
+         * @return void
+         **/
+        void setSyncTypeUID(const QString &type);
+        const QString syncTypeUID();
         
         const QString user() { return m_user; };
         const QString password() { return m_password; };
