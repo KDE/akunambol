@@ -71,7 +71,7 @@ void SyncSource2::setConfig(SyncCredentials* c)
     d->config = c;
 }
 
-SyncCredentials* SyncSource2::config()
+SyncCredentials* SyncSource2::credentials()
 {
     return d->config;
 }

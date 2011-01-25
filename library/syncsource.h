@@ -36,7 +36,7 @@ class KDE_EXPORT SyncSource2 : public QObject
         ~SyncSource2();
         
         void setConfig(SyncCredentials *c);
-        SyncCredentials* config();
+        SyncCredentials* credentials();
         
         /**
          * Returns the text that should be shown to the user in order to activate
@@ -47,7 +47,7 @@ class KDE_EXPORT SyncSource2 : public QObject
         virtual QString controlText() = 0;
         
         /**
-         * Sets the status of the source as "locked", aka a sync is in progress.
+         * @brief Sets the status of the source as "locked", aka a sync is in progress.
          * Will deadlock if already locked. Also see documentation from QMutex, which is used
          * internally.
          */
@@ -66,6 +66,8 @@ class KDE_EXPORT SyncSource2 : public QObject
          * Reimplement to provide a configuration interface to the user.
          */
         virtual QWidget* configurationInterface() = 0;
+        
+        // TODO: do like Plasma::Applet here: KConfig config();
         
     public slots:
         /**

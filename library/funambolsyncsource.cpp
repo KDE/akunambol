@@ -153,9 +153,9 @@ public:
         // These values are set from the user. We could fail here, but it's not particularly important.
         // These values should be set at every execution, but this (and error reporting) is already
         // taken care of by FunambolSyncSource::doSync()
-        config->getAccessConfig().setUsername(parent->config()->user().toUtf8());
-        config->getAccessConfig().setPassword(parent->config()->password().toUtf8());
-        config->getAccessConfig().setSyncURL(parent->config()->syncUrl().toUtf8());
+        config->getAccessConfig().setUsername(parent->credentials()->user().toUtf8());
+        config->getAccessConfig().setPassword(parent->credentials()->password().toUtf8());
+        config->getAccessConfig().setSyncURL(parent->credentials()->syncUrl().toUtf8());
     }
 
     FunambolSyncSource *parent;
@@ -196,7 +196,7 @@ void FunambolSyncSource::doSync()
 {
     // The config() object is manipulated from the private class, and is not used directly.
     // FIXME: is this a good thing? This is not very elegant, so Riccardo accepts suggestions
-    if (!config()->isComplete()) {
+    if (!credentials()->isComplete()) {
         emit error(i18n("Please set your credentials and synchronization URL."));
         return;
     }
