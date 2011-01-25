@@ -35,7 +35,7 @@ set(akunambolprivate_SRCS
     library/funambolsyncsource.cpp
     library/funambolbackend.cpp
     library/syncsourceloader.cpp
-    library/syncconfig.cpp
+    library/synccredentials.cpp
     )
 
 # kde4_add_ui_files(kcmsync_SRCS kcmsync/kcmsync.ui kcmsync/serverproperties.ui)

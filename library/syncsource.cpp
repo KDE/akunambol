@@ -16,7 +16,7 @@
 */
 
 #include "syncsource.h"
-#include "syncconfig.h"
+#include "syncsource.h"
 #include <QMutex>
 
 class SyncSource2::SyncSourcePrivate {

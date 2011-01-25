@@ -21,7 +21,7 @@
 #define FUNAMBOLSYNCSOURCE_H
 
 #include "syncsource.h"
-#include "syncconfig.h"
+#include "synccredentials.h"
 
 #include <client/DMTClientConfig.h>
 #include <spds/SyncItem.h>
