@@ -19,63 +19,63 @@
 
 #include "funambolbackend.h"
 
-int FunambolBackend::deleteItem(Funambol::SyncItem& item)
-{
-
-}
-
-int FunambolBackend::updateItem(Funambol::SyncItem& item)
-{
-
-}
-
-int FunambolBackend::addItem(Funambol::SyncItem& item)
-{
-
-}
-
-Funambol::SyncItem* FunambolBackend::getNextDeletedItem()
-{
-
-}
-
-Funambol::SyncItem* FunambolBackend::getFirstDeletedItem()
-{
-
-}
-
-Funambol::SyncItem* FunambolBackend::getNextUpdatedItem()
-{
-
-}
-
-Funambol::SyncItem* FunambolBackend::getFirstUpdatedItem()
-{
-
-}
-
-Funambol::SyncItem* FunambolBackend::getNextNewItem()
-{
-
-}
-
-Funambol::SyncItem* FunambolBackend::getFirstNewItem()
-{
-
-}
-
-Funambol::SyncItem* FunambolBackend::getNextItem()
-{
-
-}
-
-Funambol::SyncItem* FunambolBackend::getFirstItem()
-{
-
-}
-
-int FunambolBackend::removeAllItems()
-{
-
-}
+// int FunambolBackend::deleteItem(Funambol::SyncItem& item)
+// {
+// 
+// }
+// 
+// int FunambolBackend::updateItem(Funambol::SyncItem& item)
+// {
+// 
+// }
+// 
+// int FunambolBackend::addItem(Funambol::SyncItem& item)
+// {
+// 
+// }
+// 
+// Funambol::SyncItem* FunambolBackend::getNextDeletedItem()
+// {
+// 
+// }
+// 
+// Funambol::SyncItem* FunambolBackend::getFirstDeletedItem()
+// {
+// 
+// }
+// 
+// Funambol::SyncItem* FunambolBackend::getNextUpdatedItem()
+// {
+// 
+// }
+// 
+// Funambol::SyncItem* FunambolBackend::getFirstUpdatedItem()
+// {
+// 
+// }
+// 
+// Funambol::SyncItem* FunambolBackend::getNextNewItem()
+// {
+// 
+// }
+// 
+// Funambol::SyncItem* FunambolBackend::getFirstNewItem()
+// {
+// 
+// }
+// 
+// Funambol::SyncItem* FunambolBackend::getNextItem()
+// {
+// 
+// }
+// 
+// Funambol::SyncItem* FunambolBackend::getFirstItem()
+// {
+// 
+// }
+// 
+// int FunambolBackend::removeAllItems()
+// {
+// 
+// }
 

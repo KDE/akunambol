@@ -53,7 +53,7 @@ void SyncSource2::triggerSync()
 
 bool SyncSource2::tryLock()
 {
-    d->lock.tryLock();
+    return d->lock.tryLock();
 }
 
 void SyncSource2::lock()
