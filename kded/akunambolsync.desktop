@@ -1,5 +1,9 @@
 [Desktop Entry]
 Name=Akunambol Sync Daemon
+Name[pt]=Servidor de Sincronização do Akunambol
+Name[sv]=Akunambol-synkroniseringsdemon
+Name[uk]=Фонова служба синхронізації Akunambol
+Name[x-test]=xxAkunambol Sync Daemonxx
 Type=Service
 X-KDE-ServiceTypes=KDEDModule
 X-KDE-ModuleType=Library

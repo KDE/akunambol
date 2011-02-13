@@ -2,3 +2,7 @@
 Type=ServiceType
 X-KDE-ServiceType=Akunambol/SyncSource
 Comment=Akunambol synchronization plugin
+Comment[pt]='Plugin' de sincronização do Akunambol
+Comment[sv]=Akunambol-insticksprogram för synkronisering
+Comment[uk]=Додаток синхронізації Akunambol
+Comment[x-test]=xxAkunambol synchronization pluginxx
