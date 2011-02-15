@@ -2,6 +2,7 @@
 What to do to release Akunambol:
 
 - Bump the version via CMake
+- Bump the version in desktop files
 - Tag a git version (git tag -s v<VERSION>)
 - Get a tarball from git-archive, check and md5sum it
    git archive --format=tar --prefix=akunambol-VERSION/ vVERSION | gzip > akunambol-VERSION.tar.gz
