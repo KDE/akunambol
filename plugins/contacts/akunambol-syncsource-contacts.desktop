@@ -2,11 +2,13 @@
 Name=Contacts
 Name[nl]=Contactpersonen
 Name[pt]=Contactos
+Name[pt_BR]=Contatos
 Name[sv]=Kontakter
 Name[uk]=Контакти
 Name[x-test]=xxContactsxx
 Comment=Contacts Synchronization
 Comment[pt]=Sincronização dos Contactos
+Comment[pt_BR]=Sincronização dos contatos
 Comment[sv]=Kontaktsynkronisering
 Comment[uk]=Синхронізація записів контактів
 Comment[x-test]=xxContacts Synchronizationxx
