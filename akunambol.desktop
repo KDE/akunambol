@@ -3,6 +3,7 @@
 Type=Application
 Version=1.0
 Name=Akunambol
+Name[cs]=Akunambol
 Name[de]=Akunambol
 Name[es]=Akunambol
 Name[nds]=Akunambol
@@ -13,6 +14,7 @@ Name[sv]=Akunambol
 Name[uk]=Akunambol
 Name[x-test]=xxAkunambolxx
 GenericName=Syncronization tool
+GenericName[cs]=Nástroj pro synchronizaci
 GenericName[es]=Herramienta de sincronización
 GenericName[pt]=Ferramenta de sincronização
 GenericName[pt_BR]=Ferramenta de sincronização

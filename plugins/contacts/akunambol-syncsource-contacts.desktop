@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Contacts
+Name[cs]=Kontakty
 Name[de]=Kontakte
 Name[es]=Contactos
 Name[nds]=Kontakten
@@ -10,6 +11,7 @@ Name[sv]=Kontakter
 Name[uk]=Контакти
 Name[x-test]=xxContactsxx
 Comment=Contacts Synchronization
+Comment[cs]=Synchronizace kontaktů
 Comment[es]=Sincronización de contactos
 Comment[pt]=Sincronização dos Contactos
 Comment[pt_BR]=Sincronização dos contatos
