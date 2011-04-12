@@ -14,6 +14,7 @@ X-KDE-Keywords=KCMSync,akonadi,funambol,sync
 
 Name=Akunambol sync
 Name[es]=Sincronización de Akunambol
+Name[et]=Akunamboli sünkroonimine
 Name[pt]=Sincronização do Akunambol
 Name[pt_BR]=Sincronização do Akunambol
 Name[sv]=Akunambol-synkronisering
@@ -22,6 +23,7 @@ Name[x-test]=xxAkunambol syncxx
 
 Comment=Configure your sync servers
 Comment[es]=Configure sus servidores de sincronización
+Comment[et]=Oma sünkroonimisserverite seadistamine
 Comment[pt]=Configurar os seus servidores de sincronização
 Comment[pt_BR]=Configurar os seus servidores de sincronização
 Comment[sv]=Anpassa synkroniseringsservrar
