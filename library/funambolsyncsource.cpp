@@ -237,15 +237,13 @@ void FunambolSyncSource::doSync()
     //FunambolSyncSouceConfig config;
     
     if (d->client->sync(*(d->config), ssArray)) {
-       // LOG.error("Error during sync.\n");
-        emit error("");
+        emit error("Sync failed."); // TODO: we need finer grained errors
     }
     
     d->config->save();
     emit success();
     
     
-    // TODO uncomment this code:
 
 //     AkonadiSource *source = appSource->getSyncSource();
 //     AppSyncSourceConfig* sourceConfig = appSource->getConfig();
