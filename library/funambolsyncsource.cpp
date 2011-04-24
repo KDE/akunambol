@@ -209,11 +209,19 @@ void FunambolSyncSource::doSync()
     // FIXME: is this a good thing? This is not very elegant, so Riccardo accepts suggestions
     if (!credentials()->isComplete()) {
         emit error(i18n("Please set your credentials and synchronization URL."));
+        return; // TODO: maybe this should be moved to be handled from the individual sources.
+    } else if (!d->backend) {
+        qFatal() << "No backend set. This is a -very- bad thing.";
         return;
     }
 
     d->initConfig(); // read and eventually initialize the configuration.
 
+    SyncSource* ssArray[] = { backend, NULL } ;
+    if (client->sync(credentials(), ssArray)) {
+        LOG.error("Error during sync.\n");
+    }
+    
     // TODO uncomment this code:
 
 //     AkonadiSource *source = appSource->getSyncSource();
