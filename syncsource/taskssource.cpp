@@ -138,16 +138,12 @@ int TasksSource::insertItem(SyncItem& item)
         return STC_COMMAND_FAILED;
     }
 
-    KCal::Todo::List todos = todoCal.todos();
-    KCal::Todo::List::const_iterator it = todos.begin();
-    KCal::Todo::List::const_iterator end = todos.end();
-
-    if (it == end) {
+    if (todoCal.todos().isEmpty()) {
         LOG.error("Cannot convert incoming todo");
         return STC_COMMAND_FAILED;
     }
 
-    KCal::Todo *t = (*it)->clone();
+    KCal::Todo *t = todoCal.todos().first()->clone();
 
     Akonadi::Item i;
     
@@ -188,16 +184,12 @@ int TasksSource::modifyItem(SyncItem& item)
         return STC_COMMAND_FAILED;
     }
 
-    KCal::Todo::List todos = todoCal.todos();
-    KCal::Todo::List::const_iterator it = todos.begin();
-    KCal::Todo::List::const_iterator end = todos.end();
-
-    if (it == end) {
+    if (todoCal.todos().isEmpty()) {
         LOG.error("Cannot convert incoming task");
         return STC_COMMAND_FAILED;
     }
 
-    KCal::Todo *t = (*it)->clone();
+    KCal::Todo *t = todoCal.todos().first()->clone();
     i.setMimeType("text/calendar");
     i.setPayload(IncidencePtr(t));
     Akonadi::ItemModifyJob *job2 = new Akonadi::ItemModifyJob(i);

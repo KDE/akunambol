@@ -21,8 +21,7 @@ add_subdirectory(images/icons)
 set(VERSION "0.2.70")
 configure_file(${CMAKE_SOURCE_DIR}/config.h.cmake  ${CMAKE_CURRENT_BINARY_DIR}/aku-auto-config.h)
 
-
-add_definitions(-DENABLE_FUNAMBOL_NAMESPACE)
+add_definitions(-DENABLE_FUNAMBOL_NAMESPACE -DQT_STRICT_ITERATORS)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 

@@ -24,33 +24,30 @@
 
 void SyncSourceLoader::loadAllSyncSources()
 {
-    KService::List services;
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
     
-    services = trader->query("Akunambol/SyncSource");
+    KService::List services = trader->query("Akunambol/SyncSource");
     KService::List::const_iterator iter;
-    for(iter = services.begin(); iter < services.end(); ++iter)
-    {
-      QString error;
-      KService::Ptr service = *iter;
- 
-      KPluginFactory *factory = KPluginLoader(service->library()).factory();
+    foreach (const KService::Ptr &service, services) {
+        QString error;
+        KService::Ptr service = *iter;
 
-      if (!factory)
-      {
-	  //KMessageBox::error(0, i18n("<html><p>KPluginFactory could not load the plugin:<br/><i>%1</i></p></html>",
-	    //                         service->library()));
-	  kError(5001) << "KPluginFactory could not load the plugin:" << service->library();
-	  continue;
-      }
+        KPluginFactory *factory = KPluginLoader(service->library()).factory();
 
-      SyncSource2 *plugin = factory->create<SyncSource2>(this);
+        if (!factory) {
+            //KMessageBox::error(0, i18n("<html><p>KPluginFactory could not load the plugin:<br/><i>%1</i></p></html>",
+            //                         service->library()));
+            kError(5001) << "KPluginFactory could not load the plugin:" << service->library();
+            continue;
+        }
 
-      if (plugin) {
-	  kDebug() << "Load plugin:" << service->name();
-	  emit syncSourceLoaded(plugin);
-      } else {
-	  kDebug() << error;
-      }
+        SyncSource2 *plugin = factory->create<SyncSource2>(this);
+
+        if (plugin) {
+            kDebug() << "Load plugin:" << service->name();
+            emit syncSourceLoaded(plugin);
+        } else {
+            kDebug() << error;
+        }
     }
 }

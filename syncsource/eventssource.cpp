@@ -136,16 +136,12 @@ int EventsSource::insertItem(SyncItem& item)
         return STC_COMMAND_FAILED;
     }
 
-    KCal::Event::List evts = eventCal.events();
-    KCal::Event::List::const_iterator it = evts.begin();
-    KCal::Event::List::const_iterator end = evts.end();
-
-    if (it == end) {
+    if (eventCal.events().isEmpty()) {
         LOG.error("Cannot convert incoming event");
         return STC_COMMAND_FAILED;
     }
 
-    KCal::Event *e = (*it)->clone();
+    KCal::Event *e = eventCal.events().first()->clone();
 
     Akonadi::Item i;
     
@@ -186,16 +182,12 @@ int EventsSource::modifyItem(SyncItem& item)
         return STC_COMMAND_FAILED;
     }
 
-    KCal::Event::List evts = eventCal.events();
-    KCal::Event::List::const_iterator it = evts.begin();
-    KCal::Event::List::const_iterator end = evts.end();
-
-    if (it == end) {
+    if (eventCal.events().isEmpty()) {
         LOG.error("Cannot convert incoming event");
         return STC_COMMAND_FAILED;
     }
 
-    KCal::Event *e = (*it)->clone();
+    KCal::Event *e = eventCal.events().first()->clone();
     i.setMimeType("text/calendar");
     i.setPayload(IncidencePtr(e));
     Akonadi::ItemModifyJob *job2 = new Akonadi::ItemModifyJob(i);
