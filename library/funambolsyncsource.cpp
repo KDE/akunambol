@@ -123,6 +123,7 @@ public:
     Private(FunambolSyncSource *parent) {
         this->parent = parent;
         config = new FunambolSyncSouceConfig;
+        backend = 0;
     }
 
     void initConfig() {
@@ -162,6 +163,7 @@ public:
     FunambolSyncSouceConfig *config;
     QString sourceName, syncMimeType, remoteURI;
     FunambolSyncSource::Encoding encoding;
+    FunambolBackend *backend;
 };
 
 // TODO make me a thread?
@@ -190,6 +192,11 @@ void FunambolSyncSource::setRemoteURI(const QString &uri, Encoding encoding)
 void FunambolSyncSource::setSyncMimeType(const QString &mimeType)
 {
     d->syncMimeType = mimeType;
+}
+
+void FunambolSyncSource::setBackend(FunambolBackend* backend)
+{
+    d->backend = backend;
 }
 
 void FunambolSyncSource::doSync()

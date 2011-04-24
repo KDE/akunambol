@@ -22,6 +22,7 @@
 
 #include "syncsource.h"
 #include "synccredentials.h"
+#include "funambolbackend.h"
 
 #include <client/DMTClientConfig.h>
 #include <spds/SyncItem.h>
@@ -40,8 +41,10 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
         FunambolSyncSource(QObject* parent = 0, const QVariantList& args = QVariantList());
         virtual ~FunambolSyncSource();
 
+        // TODO: implement a getter for each setter, and vice versa
         void setSourceUID(const QString &uid);
         void setSyncMimeType(const QString &mimeType);
+        void setBackend(FunambolBackend *backend);
         void setRemoteURI(const QString &uri, Encoding encodingType);
 
         virtual QString controlText() = 0;
