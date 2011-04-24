@@ -45,7 +45,6 @@ void SyncSource2::triggerSync()
     if (tryLock()) {
         doSync(); // TODO: make me run in another thread
         unlock();
-        emit success();
     } else {
         emit error(i18n("A synchronization is already in progress."));
     }
