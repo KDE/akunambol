@@ -44,7 +44,7 @@ class KDE_EXPORT SyncSource2 : public QObject
          * 
          * Example: "Synchronize contacts"
          */
-        virtual QString controlText() = 0;
+        virtual QString controlText() const = 0;
         
         /**
          * @brief Sets the status of the source as "locked", aka a sync is in progress.
@@ -69,7 +69,7 @@ class KDE_EXPORT SyncSource2 : public QObject
         
         // TODO: do like Plasma::Applet here: KConfig config();
         
-    public slots:
+    public Q_SLOTS:
         /**
          * Triggers a sync. It will fail with a meaningful error if the source is already locked.
          */
@@ -83,7 +83,7 @@ class KDE_EXPORT SyncSource2 : public QObject
         */
         virtual void doSync() = 0;
     
-    signals:
+    Q_SIGNALS:
         void newStatus(QString);
         void error(QString);
         void success();
@@ -95,7 +95,7 @@ class KDE_EXPORT SyncSource2 : public QObject
         
     private:
         class SyncSourcePrivate;
-        SyncSourcePrivate *d;
+        SyncSourcePrivate * const d;
 };
 
 
