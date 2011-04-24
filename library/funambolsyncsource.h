@@ -28,6 +28,7 @@
 #include <spds/SyncItem.h>
 
 class QWidget;
+class FunambolSyncSourceConfig;
 
 class KDE_EXPORT FunambolSyncSource : public SyncSource2
 {
@@ -41,13 +42,15 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
         FunambolSyncSource(QObject* parent = 0, const QVariantList& args = QVariantList());
         virtual ~FunambolSyncSource();
 
+        virtual void setCredentials(SyncCredentials *c);
+        
         // TODO: implement a getter for each setter, and vice versa
         void setSourceUID(const QString &uid);
         void setSyncMimeType(const QString &mimeType);
         void setBackend(FunambolBackend *backend);
         void setRemoteURI(const QString &uri, Encoding encodingType);
 
-        virtual QString controlText() = 0;
+        virtual QString controlText() const = 0;
         virtual QWidget* configurationInterface();
 
     protected:
@@ -59,11 +62,11 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
 
 };
 
-class FunambolSyncSouceConfig : public Funambol::DMTClientConfig, public SyncCredentials
+class FunambolSyncSourceConfig : public Funambol::DMTClientConfig, public SyncCredentials
 {
 
     public:
-        FunambolSyncSouceConfig() {};
+        FunambolSyncSourceConfig() {};
 
         // Overloaded methods from DMTClientConfig
         virtual bool read();

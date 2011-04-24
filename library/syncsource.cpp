@@ -28,9 +28,9 @@ class SyncSource2::SyncSourcePrivate {
 };
 
 SyncSource2::SyncSource2(QObject* parent, const QVariantList& args)
-    : QObject(parent)
+    : QObject(parent),
+    d(new SyncSourcePrivate(this))
 {
-    d = new SyncSourcePrivate(this);
     Q_UNUSED(args);
 }
 
@@ -65,7 +65,7 @@ void SyncSource2::unlock()
     d->lock.unlock();
 }
 
-void SyncSource2::setConfig(SyncCredentials* c)
+void SyncSource2::setCredentials(SyncCredentials* c)
 {
     d->config = c;
 }

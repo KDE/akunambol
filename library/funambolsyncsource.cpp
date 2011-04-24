@@ -24,6 +24,7 @@
 #include "spdm/DMTreeFactory.h"
 #include "spds/DefaultConfigFactory.h"
 #include "spds/SyncItem.h"
+#include "client/SyncClient.h"
 
 // Qt/KDE
 #include <QWidget>
@@ -32,7 +33,7 @@
 #include <aku-auto-config.h>
 #include "akunambol_macros.h"
 
-void FunambolSyncSouceConfig::init()
+void FunambolSyncSourceConfig::init()
 {
     // Read the configuration. If not found, generate a default one
     if (!read()) {
@@ -45,7 +46,7 @@ void FunambolSyncSouceConfig::init()
     }
 }
 
-bool FunambolSyncSouceConfig::read()
+bool FunambolSyncSourceConfig::read()
 {
     if (!DMTClientConfig::read()) {
         return false; // error in the common config read.
@@ -67,7 +68,7 @@ bool FunambolSyncSouceConfig::read()
     return false; // failure :(
 }
 
-bool FunambolSyncSouceConfig::save()
+bool FunambolSyncSourceConfig::save()
 {
     if (!DMTClientConfig::save()) {
         return false; // error in the common config save.
@@ -88,7 +89,7 @@ bool FunambolSyncSouceConfig::save()
     return false; // failure :(
 }
 
-void FunambolSyncSouceConfig::createConfig()
+void FunambolSyncSourceConfig::createConfig()
 {
     Funambol::AccessConfig* ac = Funambol::DefaultConfigFactory::getAccessConfig();
     ac->setMaxMsgSize(60000);
@@ -122,18 +123,20 @@ class FunambolSyncSource::Private
 public:
     Private(FunambolSyncSource *parent) {
         this->parent = parent;
-        config = new FunambolSyncSouceConfig;
+        config = new FunambolSyncSourceConfig;
         backend = 0;
+        client = new Funambol::SyncClient;
     }
 
-    void initConfig() {
+    void initConfig() { // TODO: init only if we haven't before
         // These parameters are set from the plugin developer, and are mandatory.
         // This is a safety net so that the developer is warned, and has a clue, when
         // he finds out that nothing works as expected.
         if (sourceName.isEmpty() ||
                 syncMimeType.isEmpty() ||
                 remoteURI.isEmpty()) {
-            qFatal("Dear fellow developer, the mandatory parameters (sourceUID, syncType, remoteURI) are not set. This will screw things up.");
+            qFatal("Dear fellow developer, the mandatory parameters (sourceUID, syncType,"
+                   "remoteURI) are not set. This will screw things up.");
         } else {
             config->m_remoteURI = remoteURI;
             config->m_sourceName = sourceName;
@@ -150,20 +153,14 @@ public:
             }
             config->init();
         }
-        
-        // These values are set from the user. We could fail here, but it's not particularly important.
-        // These values should be set at every execution, but this (and error reporting) is already
-        // taken care of by FunambolSyncSource::doSync()
-        config->getAccessConfig().setUsername(parent->credentials()->user().toUtf8());
-        config->getAccessConfig().setPassword(parent->credentials()->password().toUtf8());
-        config->getAccessConfig().setSyncURL(parent->credentials()->syncUrl().toUtf8());
     }
 
     FunambolSyncSource *parent;
-    FunambolSyncSouceConfig *config;
+    FunambolSyncSourceConfig *config;
     QString sourceName, syncMimeType, remoteURI;
     FunambolSyncSource::Encoding encoding;
     FunambolBackend *backend;
+    Funambol::SyncClient *client;
 };
 
 // -------------------
@@ -172,14 +169,25 @@ public:
 
 // TODO make me a thread?
 FunambolSyncSource::FunambolSyncSource(QObject* parent, const QVariantList& args)
-        : SyncSource2(parent, args)
+        : SyncSource2(parent, args),
+        d(new FunambolSyncSource::Private(this))
 {
-    d = new FunambolSyncSource::Private(this);
 }
 
 FunambolSyncSource::~FunambolSyncSource()
 {
     delete d;
+}
+
+void FunambolSyncSource::setCredentials(SyncCredentials *c)
+{
+    // These values are set from the user. We could fail here, but it's not particularly important.
+    // These values should be set at every execution, but this (and error reporting) is already
+    // taken care of by FunambolSyncSource::doSync()
+    d->config->getAccessConfig().setUsername(c->user().toUtf8());
+    d->config->getAccessConfig().setPassword(c->password().toUtf8());
+    d->config->getAccessConfig().setSyncURL(c->syncUrl().toUtf8());
+    SyncSource2::setCredentials(c);
 }
 
 void FunambolSyncSource::setSourceUID(const QString &uid)
@@ -209,18 +217,33 @@ void FunambolSyncSource::doSync()
     // FIXME: is this a good thing? This is not very elegant, so Riccardo accepts suggestions
     if (!credentials()->isComplete()) {
         emit error(i18n("Please set your credentials and synchronization URL."));
-        return; // TODO: maybe this should be moved to be handled from the individual sources.
+        return; // TODO: maybe this should be moved to be handled from the individual sources?
     } else if (!d->backend) {
-        qFatal() << "No backend set. This is a -very- bad thing.";
+        qFatal("No backend set. This is a -very- bad thing.");
         return;
     }
 
     d->initConfig(); // read and eventually initialize the configuration.
 
-    SyncSource* ssArray[] = { backend, NULL } ;
-    if (client->sync(credentials(), ssArray)) {
-        LOG.error("Error during sync.\n");
+    //     const char* remoteUri = sourceConfig->getRemoteUri();
+//     if (remoteUri == NULL || strlen(remoteUri) == 0) {
+//         sourceConfig->setRemoteUri(srcConfig->getURI());
+//         sourceConfig->save();
+//     } else {
+//         srcConfig->setURI(remoteUri);
+//     }
+    
+    Funambol::SyncSource* ssArray[] = { d->backend, NULL } ;
+    //FunambolSyncSouceConfig config;
+    
+    if (d->client->sync(*(d->config), ssArray)) {
+       // LOG.error("Error during sync.\n");
+        emit error("");
     }
+    
+    d->config->save();
+    emit success();
+    
     
     // TODO uncomment this code:
 

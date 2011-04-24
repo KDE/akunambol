@@ -36,7 +36,7 @@ QWidget* ContactsSource::configurationInterface()
     return new QWidget;
 }
 
-QString ContactsSource::controlText()
+QString ContactsSource::controlText() const
 {
     return "Sync contacts";
 }

@@ -28,7 +28,7 @@ class ContactsSource : public FunambolSyncSource
         ContactsSource(QObject* parent = 0, const QVariantList& args = QVariantList());
         ~ContactsSource();
         
-        QString controlText();
+        QString controlText() const;
         
         QWidget* configurationInterface();
         

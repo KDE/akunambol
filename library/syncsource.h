@@ -35,8 +35,8 @@ class KDE_EXPORT SyncSource2 : public QObject
         SyncSource2(QObject* parent = 0, const QVariantList &args = QVariantList());
         ~SyncSource2();
         
-        void setConfig(SyncCredentials *c);
-        SyncCredentials* credentials();
+        virtual void setCredentials(SyncCredentials *c);
+        virtual SyncCredentials* credentials();
         
         /**
          * Returns the text that should be shown to the user in order to activate
