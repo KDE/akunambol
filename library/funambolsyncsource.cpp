@@ -166,6 +166,10 @@ public:
     FunambolBackend *backend;
 };
 
+// -------------------
+// End of private classes
+// -------------------
+
 // TODO make me a thread?
 FunambolSyncSource::FunambolSyncSource(QObject* parent, const QVariantList& args)
         : SyncSource2(parent, args)
@@ -219,6 +223,7 @@ void FunambolSyncSource::doSync()
 //     if (srcConfig != NULL) {
 //         source->setConfig(srcConfig);
 //     }
+    
 //     const char* remoteUri = sourceConfig->getRemoteUri();
 //     if (remoteUri == NULL || strlen(remoteUri) == 0) {
 //         sourceConfig->setRemoteUri(srcConfig->getURI());
