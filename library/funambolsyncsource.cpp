@@ -128,7 +128,7 @@ public:
         client = new Funambol::SyncClient;
     }
 
-    void initConfig() { // TODO: init only if we haven't before
+    void initConfig() { // TODO: init only if we haven't before.
         // These parameters are set from the plugin developer, and are mandatory.
         // This is a safety net so that the developer is warned, and has a clue, when
         // he finds out that nothing works as expected.
