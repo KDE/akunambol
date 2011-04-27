@@ -45,7 +45,7 @@ SyncSource2::~SyncSource2()
 
 void SyncSource2::triggerSync()
 {
-    emit started();
+    setStatus(SyncStarted);
     if (tryLock()) {
         doSync(); // TODO: make me run in another thread
         unlock();

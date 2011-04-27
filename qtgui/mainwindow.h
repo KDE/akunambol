@@ -46,6 +46,7 @@
 #include <spds/SyncReport.h>
 
 #include<client/appsyncsource.h>
+#include <library/syncsource.h>
 
 class Config;
 class Settings;
@@ -80,6 +81,8 @@ private slots:
 
     void totalServerItems(int n);
     void totalClientItems(int n);
+    
+    void syncStatusChanged(SyncSource2::SyncStatus);
 
 signals:
     void fireSync(AppSyncSource* appSource);

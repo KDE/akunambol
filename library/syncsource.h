@@ -37,12 +37,10 @@ class KDE_EXPORT SyncSource2 : public QObject
         */
         enum SyncStatus {
             NoSync = 1, /** No synchronization is in progess. **/
-            Initializing = 2, /** Initializing synchronization **/
-            SyncInProgress = 4, /** A synchronization is in progress **/
-            Finalising = 8, /** A synchronization is finalising **/
-            SyncError = 16, /** An error has happened. After this status is set,
+            SyncStarted = 2, /** A synchronization has started. **/
+            SyncError = 4, /** An error has happened. After this status is set,
                                 it will be changed immediately to NoSync **/
-            SyncSuccess = 32 /** Synchronization successful. After this status
+            SyncSuccess = 8 /** Synchronization successful. After this status
                                 is set, it will be changed immediately to NoSync **/
         };
     
@@ -120,11 +118,6 @@ class KDE_EXPORT SyncSource2 : public QObject
          * If you want to see if a synchronization is finished check for SyncError or SyncSuccess.
          */
         void newStatus(SyncStatus);
-        
-        /**
-         * Internally used.
-         */
-        void started(); // TODO: REMOVE!!!!
         
     private:
         class SyncSourcePrivate;

@@ -78,6 +78,7 @@
 #include "mainwindow.h"
 #include <KAction>
 #include <kstandardaction.h>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     : KMainWindow(parent, flags)
@@ -149,18 +150,24 @@ void MainWindow::pluginLoaded(SyncSource2* s)
     QPushButton *b = new QPushButton(s->controlText(), this);
     m_controlsLayout->addWidget(b);
     
+    connect(s, SIGNAL(newStatus(SyncSource2::SyncStatus)), this, SLOT(syncStatusChanged(SyncSource2::SyncStatus)));
     // add settings
     
     connect(b, SIGNAL(clicked()), s, SLOT(triggerSync()));
-    connect(s, SIGNAL(started()), this, SLOT(syncTriggered()));
+}
+
+void MainWindow::syncStatusChanged(SyncSource2::SyncStatus status)
+{
+    if (status == SyncSource2::SyncStarted) {
+        QTimer::singleShot(0, this, SLOT(syncTriggered()));
+    } else if (status == SyncSource2::SyncSuccess ||
+               status == SyncSource2::SyncError) {
+        QTimer::singleShot(0, this, SLOT(syncFinished()));
+    }
 }
 
 void MainWindow::syncTriggered()
-{
-    SyncSource2 *source = qobject_cast< SyncSource2* >(sender());
-    connect(source, SIGNAL(success()), SLOT(syncFinished()));
-    
-    
+{   
 //     connect(source, SIGNAL(error(QString)), SLOT(syncFinished()));
     
 //     connect(source, SIGNAL(success()), 
