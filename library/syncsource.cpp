@@ -18,6 +18,7 @@
 #include "syncsource.h"
 #include "syncsource.h"
 #include <QMutex>
+#include <QTimer>
 
 class SyncSource2::SyncSourcePrivate {
     public:
@@ -25,12 +26,15 @@ class SyncSource2::SyncSourcePrivate {
         SyncSource2 *q;
         SyncCredentials *config;
         QMutex lock;
+        QString statusMessage;
+        SyncSource2::SyncStatus status;
 };
 
 SyncSource2::SyncSource2(QObject* parent, const QVariantList& args)
     : QObject(parent),
     d(new SyncSourcePrivate(this))
 {
+    d->status = NoSync;
     Q_UNUSED(args);
 }
 
@@ -46,8 +50,46 @@ void SyncSource2::triggerSync()
         doSync(); // TODO: make me run in another thread
         unlock();
     } else {
-        emit error(i18n("A synchronization is already in progress."));
+        setStatus(SyncError);
+        setStatusMessage(i18n("A synchronization is already in progress."));
     }
+}
+
+void SyncSource2::setStatus(SyncSource2::SyncStatus _newStatus)
+{
+    if (_newStatus == d->status) {
+        return;
+    }
+    
+    d->status = _newStatus;
+    
+    if (_newStatus != NoSync) {
+        emit newStatus(_newStatus);
+    }
+    
+    if (_newStatus == SyncError || _newStatus == SyncSuccess) {
+        QTimer::singleShot(0, this, SLOT(setStatus(NoSync)));
+    }
+}
+
+void SyncSource2::setStatusMessage(QString newMessage)
+{
+    if (newMessage == d->statusMessage) {
+        return;
+    }
+        
+    d->statusMessage = newMessage;
+    emit newStatusMessage(newMessage);
+}
+
+SyncSource2::SyncStatus SyncSource2::status()
+{
+    return d->status;
+}
+
+QString SyncSource2::statusMessage()
+{
+    return d->statusMessage;
 }
 
 bool SyncSource2::tryLock()

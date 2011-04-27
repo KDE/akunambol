@@ -45,7 +45,6 @@ QString ContactsSource::controlText() const
 void ContactsSource::doSync()
 {
     kDebug() << "sync";
-    emit success();
 }
 
 

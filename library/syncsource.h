@@ -32,12 +32,27 @@ class KDE_EXPORT SyncSource2 : public QObject
     Q_OBJECT
     
     public:
+        /**
+        * Status of the synchronization
+        */
+        enum SyncStatus {
+            NoSync = 1, /** No synchronization is in progess. **/
+            Initializing = 2, /** Initializing synchronization **/
+            SyncInProgress = 4, /** A synchronization is in progress **/
+            Finalising = 8, /** A synchronization is finalising **/
+            SyncError = 16, /** An error has happened. After this status is set,
+                                it will be changed immediately to NoSync **/
+            SyncSuccess = 32 /** Synchronization successful. After this status
+                                is set, it will be changed immediately to NoSync **/
+        };
+    
         SyncSource2(QObject* parent = 0, const QVariantList &args = QVariantList());
         ~SyncSource2();
         
         virtual void setCredentials(SyncCredentials *c);
         virtual SyncCredentials* credentials();
         
+        // TODO: return a KPluginInfo instead
         /**
          * Returns the text that should be shown to the user in order to activate
          * this control.
@@ -69,11 +84,22 @@ class KDE_EXPORT SyncSource2 : public QObject
         
         // TODO: do like Plasma::Applet here: KConfig config();
         
+        // TODO: public getter, protected setters, for statusMessage and newStatus
+        SyncStatus status();
+        QString statusMessage();
+        
+        // TODO: maybe return a kjob?
+        
     public Q_SLOTS:
         /**
          * Triggers a sync. It will fail with a meaningful error if the source is already locked.
          */
         void triggerSync();
+        
+    protected Q_SLOTS:
+        
+        void setStatus(SyncStatus newStatus);
+        void setStatusMessage(QString message);
         
     protected:
     
@@ -83,15 +109,15 @@ class KDE_EXPORT SyncSource2 : public QObject
         */
         virtual void doSync() = 0;
     
+        
     Q_SIGNALS:
-        void newStatus(QString);
-        void error(QString);
-        void success();
+        void newStatusMessage(QString);
+        void newStatus(SyncStatus);
         
         /**
          * Internally used.
          */
-        void started();
+        void started(); // TODO: REMOVE!!!!
         
     private:
         class SyncSourcePrivate;

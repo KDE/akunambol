@@ -216,7 +216,8 @@ void FunambolSyncSource::doSync()
     // The config() object is manipulated from the private class, and is not used directly.
     // FIXME: is this a good thing? This is not very elegant, so Riccardo accepts suggestions
     if (!credentials()->isComplete()) {
-        emit error(i18n("Please set your credentials and synchronization URL."));
+        setStatus(SyncError);
+        setStatusMessage(i18n("Please set your credentials and synchronization URL."));
         return; // TODO: maybe this should be moved to be handled from the individual sources?
     } else if (!d->backend) {
         qFatal("No backend set. This is a -very- bad thing.");
@@ -237,11 +238,12 @@ void FunambolSyncSource::doSync()
     //FunambolSyncSouceConfig config;
     
     if (d->client->sync(*(d->config), ssArray)) {
-        emit error("Sync failed."); // TODO: we need finer grained errors
+        setStatus(SyncError);
+        setStatusMessage(i18n("Sync failed.")); // TODO: we need finer grained errors
     }
     
     d->config->save();
-    emit success();
+    setStatus(SyncSuccess);
     
     
 

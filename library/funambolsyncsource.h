@@ -44,6 +44,7 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
 
         virtual void setCredentials(SyncCredentials *c);
         
+        // TODO: make them private
         // TODO: implement a getter for each setter, and vice versa
         void setSourceUID(const QString &uid);
         void setSyncMimeType(const QString &mimeType);

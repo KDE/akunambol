@@ -22,7 +22,7 @@
 #include "akunambol_macros.h"
 
 /**
- * @brief SyncCredentials is a class created to allow easy sharing of credential data between SyncSources
+ * @brief SyncCredentials is a class created to allow easy sharing of credential data between various SyncSource objects
  * 
  * It is mostly a container class, which has three parameters: username, password, and syncUrl.
  * 
@@ -36,9 +36,10 @@
  **/
 class KDE_EXPORT SyncCredentials
 {
-    // enum loglevel
     public:
         SyncCredentials();
+        
+        // TODO: set properties as Q_PROPERTIES?
         
         void setUsername(const QString &user);
         void setPassword(const QString &password);
@@ -53,7 +54,7 @@ class KDE_EXPORT SyncCredentials
         void setSyncTypeUID(const QString &type);
         const QString syncTypeUID();
         
-        const QString user() { return m_user; };
+        const QString user() { return m_user; }; // TODO: user -> username
         const QString password() { return m_password; };
         const QString syncUrl() { return m_url; };
         
