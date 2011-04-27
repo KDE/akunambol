@@ -111,7 +111,14 @@ class KDE_EXPORT SyncSource2 : public QObject
     
         
     Q_SIGNALS:
+        /**
+         * This signal is emitted whenever we have a new message state.
+         */
         void newStatusMessage(QString);
+        /**
+         * This signal is emitted whenever we have a new status, except for "NoSync".
+         * If you want to see if a synchronization is finished check for SyncError or SyncSuccess.
+         */
         void newStatus(SyncStatus);
         
         /**
