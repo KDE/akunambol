@@ -82,7 +82,6 @@ class KDE_EXPORT SyncSource2 : public QObject
         
         // TODO: do like Plasma::Applet here: KConfig config();
         
-        // TODO: public getter, protected setters, for statusMessage and newStatus
         SyncStatus status();
         QString statusMessage();
         
