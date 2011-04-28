@@ -29,14 +29,13 @@ class FunambolSyncJob : public SyncJob
 public:
     FunambolSyncJob(QObject *parent);
     virtual void start();
-private:
+    
     void setBackend(FunambolBackend *backend);
     FunambolBackend *backend();
     
+private:
     class Private;
     FunambolSyncJob::Private *d;
-    
-    friend class FunambolSyncSource;
 };
 
 #endif // FUNAMBOLSYNCJOB_H
