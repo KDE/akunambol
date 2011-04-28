@@ -237,7 +237,6 @@ void FunambolSyncSource::doSync()
 //     }
     
     Funambol::SyncSource* ssArray[] = { d->backend, NULL } ;
-    //FunambolSyncSouceConfig config;
     
     if (d->client->sync(*(d->config), ssArray)) {
         setStatus(SyncError);
