@@ -31,6 +31,7 @@ FunambolSyncJob::FunambolSyncJob(QObject* parent)
     d(new FunambolSyncJob::Private)
 {
     d->backend = 0;
+    setCapabilities(KJob::NoCapabilities); // TODO: at a later time, see if we can suspend the sync or kill it
 }
 
 FunambolBackend* FunambolSyncJob::backend()
