@@ -44,12 +44,7 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
 
         virtual void setCredentials(SyncCredentials *c);
         
-        // TODO: make them private
         // TODO: implement a getter for each setter, and vice versa
-        void setSourceUID(const QString &uid);
-        void setSyncMimeType(const QString &mimeType);
-        void setBackend(FunambolBackend *backend);
-        void setRemoteURI(const QString &uri, Encoding encodingType);
 
         virtual QString controlText() const = 0;
         virtual QWidget* configurationInterface();
@@ -57,6 +52,11 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
         virtual SyncJob* syncJob();
 
     protected:
+        void setSourceUID(const QString &uid);
+        void setSyncMimeType(const QString &mimeType);
+        void setBackend(FunambolBackend *backend);
+        void setRemoteURI(const QString &uri, Encoding encodingType);
+        
         virtual void doSync();
 
     private:
