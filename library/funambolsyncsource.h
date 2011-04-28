@@ -28,7 +28,7 @@
 #include <spds/SyncItem.h>
 
 class QWidget;
-class FunambolSyncSourceConfig;
+class FunambolConfig;
 
 class KDE_EXPORT FunambolSyncSource : public SyncSource2
 {
@@ -65,11 +65,11 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
 
 };
 
-class FunambolSyncSourceConfig : public Funambol::DMTClientConfig, public SyncCredentials
+class FunambolConfig : public Funambol::DMTClientConfig, public SyncCredentials
 {
 
     public:
-        FunambolSyncSourceConfig() {};
+        FunambolConfig() {};
 
         // Overloaded methods from DMTClientConfig
         virtual bool read();

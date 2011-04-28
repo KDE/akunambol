@@ -34,7 +34,7 @@
 #include "akunambol_macros.h"
 #include "funambolsyncjob.h"
 
-void FunambolSyncSourceConfig::init()
+void FunambolConfig::init()
 {
     // Read the configuration. If not found, generate a default one
     if (!read()) {
@@ -47,7 +47,7 @@ void FunambolSyncSourceConfig::init()
     }
 }
 
-bool FunambolSyncSourceConfig::read()
+bool FunambolConfig::read()
 {
     if (!DMTClientConfig::read()) {
         return false; // error in the common config read.
@@ -69,7 +69,7 @@ bool FunambolSyncSourceConfig::read()
     return false; // failure :(
 }
 
-bool FunambolSyncSourceConfig::save()
+bool FunambolConfig::save()
 {
     if (!DMTClientConfig::save()) {
         return false; // error in the common config save.
@@ -90,7 +90,7 @@ bool FunambolSyncSourceConfig::save()
     return false; // failure :(
 }
 
-void FunambolSyncSourceConfig::createConfig()
+void FunambolConfig::createConfig()
 {
     Funambol::AccessConfig* ac = Funambol::DefaultConfigFactory::getAccessConfig();
     ac->setMaxMsgSize(60000);
@@ -124,7 +124,7 @@ class FunambolSyncSource::Private
 public:
     Private(FunambolSyncSource *parent) {
         this->parent = parent;
-        config = new FunambolSyncSourceConfig;
+        config = new FunambolConfig;
         backend = 0;
         client = new Funambol::SyncClient;
     }
@@ -157,7 +157,7 @@ public:
     }
 
     FunambolSyncSource *parent;
-    FunambolSyncSourceConfig *config;
+    FunambolConfig *config;
     QString sourceName, syncMimeType, remoteURI;
     FunambolSyncSource::Encoding encoding;
     FunambolBackend *backend;
