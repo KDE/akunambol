@@ -21,7 +21,9 @@
 #include <QtCore/QObject>
 #include <kdemacros.h>
 #include <KGenericFactory>
+#include <KJob>
 
+class SyncJob;
 class SyncCredentials;
 class QWidget;
 
@@ -85,7 +87,10 @@ class KDE_EXPORT SyncSource2 : public QObject
         SyncStatus status();
         QString statusMessage();
         
-        // TODO: maybe return a kjob?
+        /**
+         * Return a KJob that represents the synchronization.
+         */
+        virtual SyncJob *syncJob() = 0;
         
     public Q_SLOTS:
         /**

@@ -53,6 +53,8 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
 
         virtual QString controlText() const = 0;
         virtual QWidget* configurationInterface();
+        
+        virtual SyncJob* syncJob();
 
     protected:
         virtual void doSync();

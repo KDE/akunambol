@@ -32,6 +32,7 @@
 // Akunambol
 #include <aku-auto-config.h>
 #include "akunambol_macros.h"
+#include "funambolsyncjob.h"
 
 void FunambolSyncSourceConfig::init()
 {
@@ -161,6 +162,7 @@ public:
     FunambolSyncSource::Encoding encoding;
     FunambolBackend *backend;
     Funambol::SyncClient *client;
+    FunambolSyncJob *job;
 };
 
 // -------------------
@@ -272,6 +274,11 @@ void FunambolSyncSource::doSync()
 //     KFunSyncConfig::getInstance()->save();
 //     manager->emitSourceEnded(appSource, client->getSyncReport());
 
+}
+
+SyncJob* FunambolSyncSource::syncJob()
+{
+    return d->job; //FIXME
 }
 
 QWidget* FunambolSyncSource::configurationInterface()
