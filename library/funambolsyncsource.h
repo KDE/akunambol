@@ -55,7 +55,7 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
         void setBackend(FunambolBackend *backend);
         void setRemoteURI(const QString &uri, Encoding encodingType);
         
-        virtual void doSync();
+        //virtual void doSync();
 
     private:
         class Private;

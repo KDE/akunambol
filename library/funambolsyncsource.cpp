@@ -20,8 +20,7 @@
 #include "funambolsyncsource.h"
 
 // Funambol
-#include "spds/SyncItem.h"
-#include "client/SyncClient.h"
+//#include "spds/SyncItem.h"
 
 // Qt/KDE
 #include <QWidget>
@@ -35,10 +34,15 @@ class FunambolSyncSource::Private
 {
 public:
     Private(FunambolSyncSource *parent) {
-        this->parent = parent;
+//        this->parent = parent;
         config = new FunambolConfig;
         backend = 0;
-        client = new Funambol::SyncClient;
+     //   client = new Funambol::SyncClient;
+    }
+    
+    ~Private() {
+       // delete client;
+        delete config;
     }
 
     void initConfig() { // TODO: init only if we haven't before.
@@ -73,8 +77,6 @@ public:
     QString sourceName, syncMimeType, remoteURI;
     FunambolSyncSource::Encoding encoding;
     FunambolBackend *backend;
-    Funambol::SyncClient *client;
-    FunambolSyncJob *job;
 };
 
 // -------------------
@@ -98,6 +100,9 @@ void FunambolSyncSource::setCredentials(SyncCredentials *c)
     // These values are set from the user. We could fail here, but it's not particularly important.
     // These values should be set at every execution, but this (and error reporting) is already
     // taken care of by FunambolSyncSource::doSync()
+    
+    // FIXME: we should not write these things twice.
+    
     d->config->getAccessConfig().setUsername(c->user().toUtf8());
     d->config->getAccessConfig().setPassword(c->password().toUtf8());
     d->config->getAccessConfig().setSyncURL(c->syncUrl().toUtf8());
@@ -125,71 +130,14 @@ void FunambolSyncSource::setBackend(FunambolBackend* backend)
     d->backend = backend;
 }
 
-void FunambolSyncSource::doSync()
-{
-    // The config() object is manipulated from the private class, and is not used directly.
-    // FIXME: is this a good thing? This is not very elegant, so Riccardo accepts suggestions
-    if (!credentials()->isComplete()) {
-        setStatus(SyncError);
-        setStatusMessage(i18n("Please set your credentials and synchronization URL."));
-        return; // TODO: maybe this should be moved to be handled from the individual sources?
-    } else if (!d->backend) {
-        qFatal("No backend set. This is a -very- bad thing.");
-        return;
-    }
-
-    d->initConfig(); // read and eventually initialize the configuration.
-
-    //     const char* remoteUri = sourceConfig->getRemoteUri();
-//     if (remoteUri == NULL || strlen(remoteUri) == 0) {
-//         sourceConfig->setRemoteUri(srcConfig->getURI());
-//         sourceConfig->save();
-//     } else {
-//         srcConfig->setURI(remoteUri);
-//     }
-    
-    Funambol::SyncSource* ssArray[] = { d->backend, NULL } ;
-    
-    if (d->client->sync(*(d->config), ssArray)) {
-        setStatus(SyncError);
-        setStatusMessage(i18n("Sync failed.")); // TODO: we need finer grained errors
-    }
-    
-    d->config->save();
-    setStatus(SyncSuccess);
-    
-    
-
-//     AkonadiSource *source = appSource->getSyncSource();
-//     AppSyncSourceConfig* sourceConfig = appSource->getConfig();
-//     source->setCollectionId(sourceConfig->getCollectionId());
-//     SyncSourceConfig *srcConfig = d->config->getSyncSourceConfig(d->sourceName);
-//     if (srcConfig != NULL) {
-//         source->setConfig(srcConfig);
-//     }
-    
-//     const char* remoteUri = sourceConfig->getRemoteUri();
-//     if (remoteUri == NULL || strlen(remoteUri) == 0) {
-//         sourceConfig->setRemoteUri(srcConfig->getURI());
-//         sourceConfig->save();
-//     } else {
-//         srcConfig->setURI(remoteUri);
-//     }
-//
-//     SyncSource* ssArray[] = { source, NULL } ;
-//     if (client->sync(*KFunSyncConfig::getInstance(), ssArray)) {
-//         LOG.error("Error during sync.\n");
-//     }
-//
-//     // Save the anchors
-//     KFunSyncConfig::getInstance()->save();
-//     manager->emitSourceEnded(appSource, client->getSyncReport());
-
-}
-
 SyncJob* FunambolSyncSource::syncJob()
 {
-    return d->job; //FIXME
+    d->initConfig(); // Initialize the configuration (if it's needed)
+    FunambolSyncJob *job = new FunambolSyncJob(this);
+    job->setBackend(d->backend);
+    job->setConfig(d->config);
+    
+    return job; //FIXME make sure this job is created, and initialized.
 }
 
 QWidget* FunambolSyncSource::configurationInterface()

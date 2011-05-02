@@ -19,11 +19,17 @@
 
 #include "funambolsyncjob.h"
 
+// Funambol
+#include "client/SyncClient.h"
+
+#include "funambolconfig.h"
 #include "funambolbackend.h"
 
 class FunambolSyncJob::Private {
 public:
     FunambolBackend *backend;
+    FunambolConfig *config;
+    Funambol::SyncClient *client;
 };
 
 FunambolSyncJob::FunambolSyncJob(QObject* parent)
@@ -31,6 +37,8 @@ FunambolSyncJob::FunambolSyncJob(QObject* parent)
     d(new FunambolSyncJob::Private)
 {
     d->backend = 0;
+    d->config = 0;
+    
     setCapabilities(KJob::NoCapabilities); // TODO: at a later time, see if we can suspend the sync or kill it
 }
 
@@ -44,36 +52,48 @@ void FunambolSyncJob::setBackend(FunambolBackend* backend)
     d->backend = backend;
 }
 
+FunambolConfig* FunambolSyncJob::config()
+{
+    return d->config;
+}
+
+void FunambolSyncJob::setConfig(FunambolConfig* config)
+{
+    d->config = config;
+}
+
 void FunambolSyncJob::start()
 {
-//     // The config() object is manipulated from the private class, and is not used directly.
-//     // FIXME: is this a good thing? This is not very elegant, so Riccardo accepts suggestions
-//     if (!credentials()->isComplete()) {
-//         setStatus(SyncError);
-//         setStatusMessage(i18n("Please set your credentials and synchronization URL."));
-//         return; // TODO: maybe this should be moved to be handled from the individual sources?
-//     } else if (!d->backend) {
-//         qFatal("No backend set. This is a -very- bad thing.");
-//         return;
+    // FIXME: move all this into FunambolSyncSource
+    
+    // The config() object is manipulated from the private class, and is not used directly.
+    // FIXME: is this a good thing? This is not very elegant, so Riccardo accepts suggestions
+    if (!d->config->isComplete()) {
+        //setStatus(SyncError);
+        //setStatusMessage(i18n("Please set your credentials and synchronization URL."));
+        return; // TODO: maybe this should be moved to be handled from the individual sources?
+    } else if (!d->backend) {
+        qFatal("No backend set. This is a -very- bad thing.");
+        return;
+    }
+
+    //d->initConfig(); // read and eventually initialize the configuration.
+
+    //     const char* remoteUri = sourceConfig->getRemoteUri();
+//     if (remoteUri == NULL || strlen(remoteUri) == 0) {
+//         sourceConfig->setRemoteUri(srcConfig->getURI());
+//         sourceConfig->save();
+//     } else {
+//         srcConfig->setURI(remoteUri);
 //     }
-// 
-//     d->initConfig(); // read and eventually initialize the configuration.
-// 
-//     //     const char* remoteUri = sourceConfig->getRemoteUri();
-// //     if (remoteUri == NULL || strlen(remoteUri) == 0) {
-// //         sourceConfig->setRemoteUri(srcConfig->getURI());
-// //         sourceConfig->save();
-// //     } else {
-// //         srcConfig->setURI(remoteUri);
-// //     }
-//     
-//     Funambol::SyncSource* ssArray[] = { d->backend, NULL } ;
-//     
-//     if (d->client->sync(*(d->config), ssArray)) {
-//         setStatus(SyncError);
-//         setStatusMessage(i18n("Sync failed.")); // TODO: we need finer grained errors
-//     }
-//     
-//     d->config->save();
+    
+    Funambol::SyncSource* ssArray[] = { d->backend, NULL } ;
+    
+    if (d->client->sync(*(d->config), ssArray)) {
+        //setStatus(SyncError);
+        //setStatusMessage(i18n("Sync failed.")); // TODO: we need finer grained errors
+    }
+    
+    d->config->save();
 }
 

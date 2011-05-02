@@ -22,6 +22,7 @@
 
 #include "syncjob.h"
 
+class FunambolConfig;
 class FunambolBackend;
 
 class FunambolSyncJob : public SyncJob
@@ -30,10 +31,16 @@ public:
     FunambolSyncJob(QObject *parent);
     virtual void start();
     
-    void setBackend(FunambolBackend *backend);
     FunambolBackend *backend();
+    FunambolConfig *config();
     
 private:
+    
+    void setBackend(FunambolBackend *backend);
+    void setConfig(FunambolConfig *config);
+    
+    friend class FunambolSyncSource;
+    
     class Private;
     FunambolSyncJob::Private *d;
 };
