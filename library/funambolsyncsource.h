@@ -21,11 +21,9 @@
 #define FUNAMBOLSYNCSOURCE_H
 
 #include "syncsource.h"
-#include "synccredentials.h"
 #include "funambolbackend.h"
 
-#include <client/DMTClientConfig.h>
-#include <spds/SyncItem.h>
+//#include <spds/SyncItem.h>
 
 class QWidget;
 class FunambolConfig;
@@ -63,27 +61,6 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
         class Private;
         FunambolSyncSource::Private *d;
 
-};
-
-class FunambolConfig : public Funambol::DMTClientConfig, public SyncCredentials
-{
-
-    public:
-        FunambolConfig() {};
-
-        // Overloaded methods from DMTClientConfig
-        virtual bool read();
-        virtual bool save();
-
-        // Initialize the config: try to read it from file or generate a default one.
-        void init();
-
-        QString m_sourceName, m_syncMimeType, m_remoteURI;
-        const char* m_encoding;
-
-    private:
-        // Generate a default config
-        void createConfig();
 };
 
 

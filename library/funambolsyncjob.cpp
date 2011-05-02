@@ -46,6 +46,34 @@ void FunambolSyncJob::setBackend(FunambolBackend* backend)
 
 void FunambolSyncJob::start()
 {
-
+//     // The config() object is manipulated from the private class, and is not used directly.
+//     // FIXME: is this a good thing? This is not very elegant, so Riccardo accepts suggestions
+//     if (!credentials()->isComplete()) {
+//         setStatus(SyncError);
+//         setStatusMessage(i18n("Please set your credentials and synchronization URL."));
+//         return; // TODO: maybe this should be moved to be handled from the individual sources?
+//     } else if (!d->backend) {
+//         qFatal("No backend set. This is a -very- bad thing.");
+//         return;
+//     }
+// 
+//     d->initConfig(); // read and eventually initialize the configuration.
+// 
+//     //     const char* remoteUri = sourceConfig->getRemoteUri();
+// //     if (remoteUri == NULL || strlen(remoteUri) == 0) {
+// //         sourceConfig->setRemoteUri(srcConfig->getURI());
+// //         sourceConfig->save();
+// //     } else {
+// //         srcConfig->setURI(remoteUri);
+// //     }
+//     
+//     Funambol::SyncSource* ssArray[] = { d->backend, NULL } ;
+//     
+//     if (d->client->sync(*(d->config), ssArray)) {
+//         setStatus(SyncError);
+//         setStatusMessage(i18n("Sync failed.")); // TODO: we need finer grained errors
+//     }
+//     
+//     d->config->save();
 }
 

@@ -33,6 +33,7 @@ set(akunambolprivate_SRCS
     library/syncsource.cpp
     library/syncjob.cpp
     library/funambolsyncsource.cpp
+    library/funambolconfig.cpp
     library/funambolbackend.cpp
     library/funambolsyncjob.cpp
     library/syncsourceloader.cpp
