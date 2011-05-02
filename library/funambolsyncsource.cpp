@@ -42,7 +42,7 @@ public:
         delete config;
     }
 
-    void initConfig() { // TODO: init only if we haven't before.
+    void initConfig() {
         // These parameters are set from the plugin developer, and are mandatory.
         // This is a safety net so that the developer is warned, and has a clue, when
         // he finds out that nothing works as expected.
@@ -65,7 +65,8 @@ public:
             default: // even if we should never get here...
                 config->m_encoding = Funambol::SyncItem::encodings::plain;
             }
-            config->init();
+            
+            config->init(); // This operation is safe: if you init() when you already have, this will do nothing.
         }
     }
 
@@ -93,6 +94,8 @@ FunambolSyncSource::~FunambolSyncSource()
 
 void FunambolSyncSource::setCredentials(SyncCredentials *c)
 {
+    SyncSource2::setCredentials(c);
+    
     // These values are set from the user. We could fail here, but it's not particularly important.
     // These values should be set at every execution, but this (and error reporting) is already
     // taken care of by FunambolSyncSource::doSync()
@@ -102,7 +105,6 @@ void FunambolSyncSource::setCredentials(SyncCredentials *c)
     d->config->getAccessConfig().setUsername(c->user().toUtf8());
     d->config->getAccessConfig().setPassword(c->password().toUtf8());
     d->config->getAccessConfig().setSyncURL(c->syncUrl().toUtf8());
-    SyncSource2::setCredentials(c);
 }
 
 void FunambolSyncSource::setSourceUID(const QString &uid)
