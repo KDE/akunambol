@@ -33,7 +33,7 @@
 class FunambolSyncSource::Private
 {
 public:
-    Private(FunambolSyncSource *parent) {
+    Private() {
         config = new FunambolConfig;
         backend = 0;
     }
@@ -83,7 +83,7 @@ public:
 // TODO make me a thread?
 FunambolSyncSource::FunambolSyncSource(QObject* parent, const QVariantList& args)
         : SyncSource2(parent, args),
-        d(new FunambolSyncSource::Private(this))
+        d(new FunambolSyncSource::Private)
 {
 }
 
