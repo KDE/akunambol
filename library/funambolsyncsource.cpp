@@ -77,10 +77,9 @@ public:
 };
 
 // -------------------
-// End of private classes
+// End of private class
 // -------------------
 
-// TODO make me a thread?
 FunambolSyncSource::FunambolSyncSource(QObject* parent, const QVariantList& args)
         : SyncSource2(parent, args),
         d(new FunambolSyncSource::Private)
