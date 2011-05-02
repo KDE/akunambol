@@ -34,14 +34,11 @@ class FunambolSyncSource::Private
 {
 public:
     Private(FunambolSyncSource *parent) {
-//        this->parent = parent;
         config = new FunambolConfig;
         backend = 0;
-     //   client = new Funambol::SyncClient;
     }
     
     ~Private() {
-       // delete client;
         delete config;
     }
 
@@ -72,7 +69,6 @@ public:
         }
     }
 
-    FunambolSyncSource *parent;
     FunambolConfig *config;
     QString sourceName, syncMimeType, remoteURI;
     FunambolSyncSource::Encoding encoding;
