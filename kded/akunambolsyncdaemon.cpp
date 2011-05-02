@@ -117,7 +117,7 @@ void AkunambolSyncDaemon::scheduleNextSync(){
 void AkunambolSyncDaemon::runSync() {
     kDebug() << "running sync";
     if(m_nextSyncServer){
-        SyncJob *syncJob = new SyncJob(m_nextSyncServer);
+        SyncJob2 *syncJob = new SyncJob2(m_nextSyncServer);
         connect(syncJob, SIGNAL(syncStarted(SyncServer*)), SLOT(syncStarted(SyncServer*)));
         connect(syncJob, SIGNAL(syncFinished(SyncServer*)), SLOT(syncFinished(SyncServer*)));
     } else {

@@ -23,7 +23,7 @@
 
 // #include <syncsource/contactssyncer.h>
 
-SyncJob::SyncJob(SyncServer* syncServer): m_syncServer(syncServer) {
+SyncJob2::SyncJob2(SyncServer* syncServer): m_syncServer(syncServer) {
     m_sourceManager = new SourceManager;
 
     m_sourceManager->setData(syncServer->username(), syncServer->password(), syncServer->syncUrl());
@@ -35,16 +35,16 @@ SyncJob::SyncJob(SyncServer* syncServer): m_syncServer(syncServer) {
 
 }
 
-SyncJob::~SyncJob() {
+SyncJob2::~SyncJob2() {
     delete m_sourceManager;
 }
 
-void SyncJob::startedSync() {
+void SyncJob2::startedSync() {
     m_syncServer->syncing();
     emit syncStarted(m_syncServer);
 }
 
-void SyncJob::finishedSync() {
+void SyncJob2::finishedSync() {
     m_syncServer->synced(true); // TODO: No way to determine result yet...
     emit syncFinished(m_syncServer);
     sender()->deleteLater();

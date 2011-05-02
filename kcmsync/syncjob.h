@@ -26,12 +26,12 @@
 
 #include <syncsource/sourcemanager.h>
 
-class SyncJob: public QObject
+class SyncJob2: public QObject
 {
     Q_OBJECT
     public:
-        SyncJob(SyncServer *syncServer);
-        virtual ~SyncJob();
+        SyncJob2(SyncServer *syncServer);
+        virtual ~SyncJob2();
         
     private:
         SyncServer *m_syncServer;

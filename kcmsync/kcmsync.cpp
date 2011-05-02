@@ -191,7 +191,7 @@ void KCMSync::syncNow() {
     ui.pbSyncNow->setEnabled(false);
     SyncServer *syncServer = qVariantValue<SyncServer*>(ui.lwServerList->currentItem()->data(Qt::UserRole));
 
-    SyncJob *syncJob = new SyncJob(syncServer);
+    SyncJob2 *syncJob = new SyncJob2(syncServer);
     connect(syncJob, SIGNAL(syncStarted(SyncServer*)), SLOT(syncStarted(SyncServer*)));
     connect(syncJob, SIGNAL(syncFinished(SyncServer*)), SLOT(syncFinished(SyncServer*)));
     ui.lwServerList->update(ui.lwServerList->currentIndex());
