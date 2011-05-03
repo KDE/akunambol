@@ -99,7 +99,7 @@ void FunambolSyncSource::setCredentials(SyncCredentials *c)
     // These values should be set at every execution, but this (and error reporting) is already
     // taken care of by FunambolSyncSource::doSync()
     
-    // FIXME: we should not write these things twice.
+    // FIXME: handle config from a unique place
     
     d->config->getAccessConfig().setUsername(c->user().toUtf8());
     d->config->getAccessConfig().setPassword(c->password().toUtf8());
@@ -129,6 +129,7 @@ void FunambolSyncSource::setBackend(FunambolBackend* backend)
 
 SyncJob* FunambolSyncSource::syncJob()
 {
+    // FIXME: disallow multiple concurrent jobs.
     d->initConfig(); // Initialize the configuration (if it's needed)
     FunambolSyncJob *job = new FunambolSyncJob(this);
     job->setBackend(d->backend);
