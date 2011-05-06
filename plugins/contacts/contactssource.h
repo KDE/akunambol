@@ -33,7 +33,7 @@ class ContactsSource : public FunambolSyncSource
         QWidget* configurationInterface();
         
     protected:
-        void doSync();
+        virtual void doSync();
     
 };
 
