@@ -28,9 +28,9 @@ void SyncSourceLoader::loadAllSyncSources()
     
     KService::List services = trader->query("Akunambol/SyncSource");
     KService::List::const_iterator iter;
+    
     foreach (const KService::Ptr &service, services) {
         QString error;
-        KService::Ptr service = *iter;
 
         KPluginFactory *factory = KPluginLoader(service->library()).factory();
 
