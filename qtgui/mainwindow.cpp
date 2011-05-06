@@ -55,7 +55,9 @@
 #include <KAboutApplicationDialog>
 #include <KStandardDirs>
 
+#ifndef NO_LIKEBACK
 #include <LikeBack/LikeBack>
+#endif
 
 #include <library/syncsourceloader.h>
 #include <library/syncsource.h>
@@ -134,10 +136,13 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     menuBar()->addMenu(file);
     menuBar()->addMenu(settings);
     menuBar()->addMenu(help);
- 
+
+#ifndef NO_LIKEBACK 
     LikeBack *likeBack = new LikeBack(LikeBack::AllButtons, true);
     likeBack->setAcceptedLanguages( QStringList() << "en" << "it" );
     likeBack->setServer("aku-likeback.ruphy.org", "/send.php");
+#endif
+
     resize(260, 230);
     
     SyncSourceLoader *l = new SyncSourceLoader(this);

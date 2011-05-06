@@ -4,7 +4,12 @@ project(akunambol)
 find_package(KDE4 REQUIRED)
 find_package(Akonadi REQUIRED)
 find_package(KdepimLibs REQUIRED)
-find_package(LikeBack REQUIRED)
+
+macro_optional_find_package(LikeBack)
+
+if( NOT LIKEBACK_FOUND )
+    add_definitions("-DNO_LIKEBACK")
+endif( NOT LIKEBACK_FOUND )
 
 # Search for Funambol
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
