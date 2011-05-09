@@ -109,9 +109,8 @@ void* TasksSource::getItemContent(StringBuffer& key, size_t* size)
     todoCal.addIncidence(todo->clone());
     KCal::ICalFormat formatter;
     QString vCal = formatter.toString(&todoCal);
-    QByteArray bytes = vCal.toUtf8();
-    const char* data = bytes.constData();
-    const StringBuffer item(data);
+    
+    const StringBuffer item(vCal.toUtf8().constData());
     *size = item.length();
 
     char* res = new char[*size];
@@ -130,9 +129,9 @@ int TasksSource::insertItem(SyncItem& item)
     LOG.debug("CalendarSource: %s", data);
 
     KCal::ICalFormat converter;
-    QString vCal(data);
+    QByteArray vCal(data);
     KCal::CalendarLocal todoCal("GMT");
-    bool success = converter.fromString(&todoCal, vCal);
+    bool success = converter.fromRawString(&todoCal, vCal);
     if (!success) {
         LOG.error("Cannot convert incoming event");
         return STC_COMMAND_FAILED;
