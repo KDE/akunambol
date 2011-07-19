@@ -33,8 +33,13 @@ class FunambolSyncItem : public SyncItem
         
         QString getKey();
         QByteArray getData();
+        QString getMimeType();
         
-        static FunambolSyncItem fromFunambolItem(Funambol::SyncItem);
+        void setKey(const QString &key);
+        void setData(const QByteArray &data);
+        void setMimeType(const QString &mimeType);
+        
+        static FunambolSyncItem fromFunambolItem(Funambol::SyncItem &item);
         
     private:
         class Private;

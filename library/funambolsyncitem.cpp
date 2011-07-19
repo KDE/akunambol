@@ -22,18 +22,63 @@
 class FunambolSyncItem::Private {
 public:
     QByteArray data;
-    QString key;  
+    QString key;
+    QString mimeType;
 };
 
 FunambolSyncItem::FunambolSyncItem()
 {
-
+    d = new FunambolSyncItem::Private;
 }
 
 FunambolSyncItem::~FunambolSyncItem()
 {
-
+    delete d;
 }
 
+FunambolSyncItem FunambolSyncItem::fromFunambolItem(Funambol::SyncItem &item)
+{
+    QByteArray data = QByteArray::fromRawData((const char*)item.getData(), item.getDataSize());
+    QString key;
+    
+    if (item.getKey()) {
+        key = QString::fromLocal8Bit(item.getKey()); // FIXME: is local8bit the right method?
+    }
+    
+    QString mimetype = QString::fromLocal8Bit(item.getDataType()); // FIXME: is local8bit the right method?
+    
+    FunambolSyncItem i;
+    i.setData(data);
+    i.setKey(key);
+    i.setMimeType(mimetype);
+    
+    return i;
+}
 
+QByteArray FunambolSyncItem::getData()
+{
+    return d->data;
+}
+
+QString FunambolSyncItem::getKey()
+{
+    return d->key;
+}
+
+QString FunambolSyncItem::getMimeType()
+{
+    return d->mimeType;
+}
+void FunambolSyncItem::setData(const QByteArray& data)
+{
+    d->data = data;
+}
+void FunambolSyncItem::setKey(const QString& key)
+{
+    d->key = key;
+}
+void FunambolSyncItem::setMimeType(const QString& mimeType)
+{
+    d->mimeType = mimeType;
+}
 
