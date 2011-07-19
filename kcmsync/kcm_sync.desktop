@@ -13,8 +13,12 @@ Categories=Qt;KDE;X-KDE-settings-network;
 X-KDE-Keywords=KCMSync,akonadi,funambol,sync
 
 Name=Akunambol sync
+Name[de]=Akunambol-Abgleich
 Name[es]=Sincronización de Akunambol
 Name[et]=Akunamboli sünkroonimine
+Name[fr]=Synchronisation Akunambol
+Name[km]=ធ្វើ​សមកាលកម្ម Akunambol
+Name[nl]=Akunambol-sync
 Name[pt]=Sincronização do Akunambol
 Name[pt_BR]=Sincronização do Akunambol
 Name[sv]=Akunambol-synkronisering
@@ -22,8 +26,12 @@ Name[uk]=Синхронізація Akunambol
 Name[x-test]=xxAkunambol syncxx
 
 Comment=Configure your sync servers
+Comment[de]=Ihre Server zum Abgleichen einrichten
 Comment[es]=Configure sus servidores de sincronización
 Comment[et]=Oma sünkroonimisserverite seadistamine
+Comment[fr]=Configure vos serveurs de synchronisation
+Comment[km]=កំណត់​រចនាសម្ព័ន្ធ​ម៉ាស៊ីន​បម្រើ​ធ្វើ​សមកាលកម្ម​របស់​អ្នក
+Comment[nl]=Uw sync-servers instellen
 Comment[pt]=Configurar os seus servidores de sincronização
 Comment[pt_BR]=Configurar os seus servidores de sincronização
 Comment[sv]=Anpassa synkroniseringsservrar
