@@ -19,12 +19,11 @@
 
 #include "funambolsyncitem.h"
 
-class FunambolSyncItem::Private{
+class FunambolSyncItem::Private {
 public:
     QByteArray data;
-    QString key;
-    
-}
+    QString key;  
+};
 
 FunambolSyncItem::FunambolSyncItem()
 {
