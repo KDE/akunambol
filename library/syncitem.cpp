@@ -19,4 +19,8 @@
 
 #include "syncitem.h"
 
+SyncItem::SyncItem()
+{
+
+}
 
