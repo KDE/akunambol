@@ -21,11 +21,27 @@
 #define FUNAMBOLBACKEND_H
 
 #include <spds/SyncSource.h>
+#include "funambolsyncitem.h"
 
 
 class FunambolBackend : public Funambol::SyncSource
 {
     public:
+        FunambolBackend(const char* name, Funambol::AbstractSyncSourceConfig* sc);
+        
+        virtual int deleteItem(FunamboSyncItem& item) = 0;
+        virtual int updateItem(FunambolSyncItem& item) = 0;
+        virtual int addItem(FunambolSyncItem& item) = 0;
+        virtual FunambolSyncItem* getNextDeletedItem() = 0;
+        virtual FunambolSyncItem* getFirstDeletedItem() = 0;
+        virtual FunambolSyncItem* getNextUpdatedItem() = 0;
+        virtual FunambolSyncItem* getFirstUpdatedItem() = 0;
+        virtual FunambolSyncItem* getNextNewItem() = 0;
+        virtual FunambolSyncItem* getFirstNewItem() = 0;
+        virtual FunambolSyncItem* getNextItem() = 0;
+        virtual FunambolSyncItem* getFirstItem() = 0;
+        virtual int removeAllItems() = 0;
+        
         virtual int deleteItem(Funambol::SyncItem& item);
         virtual int updateItem(Funambol::SyncItem& item);
         virtual int addItem(Funambol::SyncItem& item);
@@ -37,7 +53,6 @@ class FunambolBackend : public Funambol::SyncSource
         virtual Funambol::SyncItem* getFirstNewItem();
         virtual Funambol::SyncItem* getNextItem();
         virtual Funambol::SyncItem* getFirstItem();
-        virtual int removeAllItems();
 };
 
 #endif // FUNAMBOLBACKEND_H

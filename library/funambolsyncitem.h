@@ -29,7 +29,7 @@ class FunambolSyncItem : public SyncItem
     public:
         FunambolSyncItem();
         virtual ~FunambolSyncItem();
-        Funambol::SyncItem *toFunambolItem();
+        Funambol::SyncItem toFunambolItem();
         
         QString getKey();
         QByteArray getData();

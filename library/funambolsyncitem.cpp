@@ -38,6 +38,7 @@ FunambolSyncItem::~FunambolSyncItem()
 
 FunambolSyncItem FunambolSyncItem::fromFunambolItem(Funambol::SyncItem &item)
 {
+    // note: this QByteArray is not \0 terminated.
     QByteArray data = QByteArray::fromRawData((const char*)item.getData(), item.getDataSize());
     QString key;
     
@@ -53,6 +54,19 @@ FunambolSyncItem FunambolSyncItem::fromFunambolItem(Funambol::SyncItem &item)
     i.setMimeType(mimetype);
     
     return i;
+}
+
+Funambol::SyncItem FunambolSyncItem::toFunambolItem()
+{
+    Funambol::SyncItem item;
+    
+    QByteArray data = d->data;
+    data.append('\0'); // FIXME: this should be an expensive operation (deep copy). can we avoid it?
+    item.setData(strcat(data.data(), '\0'), data.size()-1);
+    item.setKey(d->key.toLocal8Bit().data()); // FIXME: is local8bit the right method?
+    item.setDataType(d->mimeType.toLocal8Bit().data()); // FIXME: is local8bit the right method?
+    
+    return item;
 }
 
 QByteArray FunambolSyncItem::getData()

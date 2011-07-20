@@ -41,6 +41,7 @@ set(akunambolprivate_SRCS
     library/funambolsyncsource.cpp
     library/funambolconfig.cpp
     library/funambolbackend.cpp
+    library/cachedfunambolbackend.cpp
     library/funambolsyncitem.cpp
     library/funambolsyncjob.cpp
     library/syncsourceloader.cpp
