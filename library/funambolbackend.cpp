@@ -18,64 +18,79 @@
 
 
 #include "funambolbackend.h"
-/*
+
+FunambolBackend::FunambolBackend(const char* name, Funambol::AbstractSyncSourceConfig* sc)
+ : SyncSource(name, sc)
+{
+}
+
 int FunambolBackend::deleteItem(Funambol::SyncItem& item)
 {
-
+    FunambolSyncItem i = FunambolSyncItem::fromFunambolItem(item);
+    int result = deleteItem(i); //TODO eventually do something more here
+    return result;
 }
 
 int FunambolBackend::updateItem(Funambol::SyncItem& item)
 {
-
+    FunambolSyncItem i = FunambolSyncItem::fromFunambolItem(item);
+    int result = updateItem(i); //TODO eventually do something more here - key might have changed?
+    return result;
+    
 }
 
 int FunambolBackend::addItem(Funambol::SyncItem& item)
 {
-
+    FunambolSyncItem i = FunambolSyncItem::fromFunambolItem(item);
+    int result = addItem(i); //TODO eventually do something more here - key might have changed?
+    return result;
 }
 
 Funambol::SyncItem* FunambolBackend::getNextDeletedItem()
 {
-
+    // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
+    return nextDeletedItem()->toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getFirstDeletedItem()
 {
-
+    // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
+    return nextDeletedItem()->toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getNextUpdatedItem()
 {
-
+    // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
+    return nextDeletedItem()->toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getFirstUpdatedItem()
 {
-
+    // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
+    return nextDeletedItem()->toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getNextNewItem()
 {
-
+    // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
+    return nextDeletedItem()->toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getFirstNewItem()
 {
-
+    // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
+    return nextDeletedItem()->toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getNextItem()
 {
-
+    // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
+    return nextDeletedItem()->toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getFirstItem()
 {
-
+    // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
+    return nextDeletedItem()->toNewFunambolItem();
 }
 
-int FunambolBackend::removeAllItems()
-{
-
-}
-*/

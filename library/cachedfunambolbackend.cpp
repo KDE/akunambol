@@ -35,6 +35,11 @@ CachedFunambolBackend::CachedFunambolBackend(const char* name, Funambol::Abstrac
  : FunambolBackend(name, sc)
 {
     d = new Private(this);
+    init();
+}
+
+void CachedFunambolBackend::init()
+{
     d->itemsList = getAllItems();
 }
 
@@ -95,7 +100,8 @@ Funambol::SyncItem* CachedFunambolBackend::getFirstItem()
 
 int CachedFunambolBackend::removeAllItems()
 {
-    return FunambolBackend::removeAllItems();
+
+    return 0; // WRONG.
 }
 
 int CachedFunambolBackend::beginSync()

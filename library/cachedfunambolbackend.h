@@ -28,6 +28,9 @@ class CachedFunambolBackend : public FunambolBackend
 {
 
 public:
+    CachedFunambolBackend(const char*, Funambol::AbstractSyncSourceConfig*);
+    //virtual ~CachedFunambolBackend();
+    
     virtual int deleteItem(Funambol::SyncItem& item);
     virtual int updateItem(Funambol::SyncItem& item);
     virtual int addItem(Funambol::SyncItem& item);
@@ -46,11 +49,11 @@ public:
     /**
      * @return a list of UUIDs
      */
-    QStringList getAllItems();
+    virtual QStringList getAllItems() = 0;
     
-    CachedFunambolBackend(const char*, Funambol::AbstractSyncSourceConfig*);
-    //virtual ~CachedFunambolBackend();
 private:
+    void init();
+    
     class Private;
     Private *d;
 };

@@ -38,7 +38,8 @@ FunambolSyncItem::~FunambolSyncItem()
 
 FunambolSyncItem FunambolSyncItem::fromFunambolItem(Funambol::SyncItem &item)
 {
-    // note: this QByteArray is not \0 terminated.
+    // FIXME: all data should become base64 encoded.
+    // NOTE: this QByteArray is not \0 terminated. do we care?
     QByteArray data = QByteArray::fromRawData((const char*)item.getData(), item.getDataSize());
     QString key;
     
@@ -56,15 +57,14 @@ FunambolSyncItem FunambolSyncItem::fromFunambolItem(Funambol::SyncItem &item)
     return i;
 }
 
-Funambol::SyncItem FunambolSyncItem::toFunambolItem()
+Funambol::SyncItem* FunambolSyncItem::toNewFunambolItem()
 {
-    Funambol::SyncItem item;
+    Funambol::SyncItem *item = new Funambol::SyncItem;
     
-    QByteArray data = d->data;
-    data.append('\0'); // FIXME: this should be an expensive operation (deep copy). can we avoid it?
-    item.setData(strcat(data.data(), '\0'), data.size()-1);
-    item.setKey(d->key.toLocal8Bit().data()); // FIXME: is local8bit the right method?
-    item.setDataType(d->mimeType.toLocal8Bit().data()); // FIXME: is local8bit the right method?
+    item->setData(d->data.toBase64(), d->data.size());
+    item->setDataEncoding(Funambol::SyncItem::encodings::escaped);
+    item->setKey(d->key.toLocal8Bit().data()); // FIXME: is local8bit the right method?
+    item->setDataType(d->mimeType.toLocal8Bit().data()); // FIXME: is local8bit the right method?
     
     return item;
 }
