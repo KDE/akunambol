@@ -31,17 +31,22 @@ public:
     CachedFunambolBackend(const char*, Funambol::AbstractSyncSourceConfig*);
     //virtual ~CachedFunambolBackend();
     
-    virtual int deleteItem(Funambol::SyncItem& item);
-    virtual int updateItem(Funambol::SyncItem& item);
-    virtual int addItem(Funambol::SyncItem& item);
-    virtual Funambol::SyncItem* getNextDeletedItem();
-    virtual Funambol::SyncItem* getFirstDeletedItem();
-    virtual Funambol::SyncItem* getNextUpdatedItem();
-    virtual Funambol::SyncItem* getFirstUpdatedItem();
-    virtual Funambol::SyncItem* getNextNewItem();
-    virtual Funambol::SyncItem* getFirstNewItem();
-    virtual Funambol::SyncItem* getNextItem();
-    virtual Funambol::SyncItem* getFirstItem();
+    virtual int deleteItem(FunambolSyncItem& item) = 0;
+    virtual int updateItem(FunambolSyncItem& item) = 0;
+    virtual int addItem(FunambolSyncItem& item) = 0;
+    virtual FunambolSyncItem* nextDeletedItem();
+    virtual FunambolSyncItem* firstDeletedItem();
+    virtual FunambolSyncItem* nextUpdatedItem();
+    virtual FunambolSyncItem* firstUpdatedItem();
+    virtual FunambolSyncItem* nextNewItem();
+    virtual FunambolSyncItem* firstNewItem();
+    virtual FunambolSyncItem* nextItem();
+    virtual FunambolSyncItem* firstItem();
+    
+    /**
+     * Reimplement this if you can do it in a more efficient way
+     * than calling deleteItem on every item.
+     */
     virtual int removeAllItems();
     virtual int beginSync();
     virtual int endSync();
@@ -50,6 +55,8 @@ public:
      * @return a list of UUIDs
      */
     virtual QStringList getAllItems() = 0;
+    
+    virtual FunambolSyncItem getItem(const QString &key) = 0;
     
 private:
     void init();

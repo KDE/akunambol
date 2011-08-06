@@ -19,14 +19,45 @@
 #include "cachedfunambolbackend.h"
 
 #include <spds/AbstractSyncSourceConfig.h>
+
 #include <QStringList>
+#include <QVariant>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 class CachedFunambolBackend::Private {
-public:
     Private(CachedFunambolBackend *p) { parent = p; }
+
+    void openDatabase() {
+        QString path = ""; // appdata+syncsource name+something?
+        bool newDB = true; // Check if the database file exists or it's a new one
+
+        // Find QSLite driver
+        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+        db.setDatabaseName(path);
     
+        // Open database
+        if (db.open()) {
+            if (newDB) {
+                QSqlQuery query;
+                query.exec("CREATE TABLE keys "
+                           "(key varchar(10))"); // NOTE: key size is arbitrary (from SQLite's FAQ #9)
+            }
+            retrieveAllKeys();
+        } else {
+            // OUCH!
+        }
+    }
+
+    void retrieveAllKeys() {
+        QSqlQuery query("SELECT * FROM keys");
+        if (query.next()) {
+            itemsList.append(query.value(0).toString());
+        }
+        
+    }
+
     QStringList itemsList;
-    
     CachedFunambolBackend *parent;
     friend class CachedFunambolBackend;
 };
@@ -35,7 +66,10 @@ CachedFunambolBackend::CachedFunambolBackend(const char* name, Funambol::Abstrac
  : FunambolBackend(name, sc)
 {
     d = new Private(this);
-    init();
+    d->openDatabase(); // wait until we're ready? (we've loaded all the keys)
+    
+    init(); // make it an async slot?
+    
 }
 
 void CachedFunambolBackend::init()
@@ -43,57 +77,42 @@ void CachedFunambolBackend::init()
     d->itemsList = getAllItems();
 }
 
-int CachedFunambolBackend::deleteItem(Funambol::SyncItem& item)
+/*
+FunambolSyncItem* CachedFunambolBackend::nextDeletedItem()
 {
-    return FunambolBackend::deleteItem(item);
 }
 
-int CachedFunambolBackend::updateItem(Funambol::SyncItem& item)
-{
-    return FunambolBackend::updateItem(item);
-}
-
-int CachedFunambolBackend::addItem(Funambol::SyncItem& item)
-{
-    return FunambolBackend::addItem(item);
-}
-
-Funambol::SyncItem* CachedFunambolBackend::getNextDeletedItem()
-{
-    return FunambolBackend::getNextDeletedItem();
-}
-
-Funambol::SyncItem* CachedFunambolBackend::getFirstDeletedItem()
+FunambolSyncItem* CachedFunambolBackend::firstDeletedItem()
 {
     return FunambolBackend::getFirstDeletedItem();
 }
 
-Funambol::SyncItem* CachedFunambolBackend::getNextUpdatedItem()
+FunambolSyncItem* CachedFunambolBackend::nextUpdatedItem()
 {
     return FunambolBackend::getNextUpdatedItem();
 }
 
-Funambol::SyncItem* CachedFunambolBackend::getFirstUpdatedItem()
+FunambolSyncItem* CachedFunambolBackend::firstUpdatedItem()
 {
     return FunambolBackend::getFirstUpdatedItem();
 }
 
-Funambol::SyncItem* CachedFunambolBackend::getNextNewItem()
+FunambolSyncItem* CachedFunambolBackend::nextNewItem()
 {
     return FunambolBackend::getNextNewItem();
 }
 
-Funambol::SyncItem* CachedFunambolBackend::getFirstNewItem()
+FunambolSyncItem* CachedFunambolBackend::firstNewItem()
 {
     return FunambolBackend::getFirstNewItem();
 }
 
-Funambol::SyncItem* CachedFunambolBackend::getNextItem()
+FunambolSyncItem* CachedFunambolBackend::nextItem()
 {
     return FunambolBackend::getNextItem();
 }
 
-Funambol::SyncItem* CachedFunambolBackend::getFirstItem()
+FunambolSyncItem* CachedFunambolBackend::firstItem()
 {
     return FunambolBackend::getFirstItem();
 }
@@ -102,7 +121,7 @@ int CachedFunambolBackend::removeAllItems()
 {
 
     return 0; // WRONG.
-}
+}*/
 
 int CachedFunambolBackend::beginSync()
 {

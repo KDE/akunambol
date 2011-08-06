@@ -53,7 +53,7 @@ set(akunambolprivate_SRCS
 ## FIXME STATIC??? WTF???
 kde4_add_library(akunambolprivate SHARED ${akunambolprivate_SRCS})
 
-target_link_libraries(akunambolprivate ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambolprivate_LINK_LIBS})
+target_link_libraries(akunambolprivate ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambolprivate_LINK_LIBS})
 set_target_properties(akunambolprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS akunambolprivate ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
