@@ -77,51 +77,52 @@ void CachedFunambolBackend::init()
     d->itemsList = getAllItems();
 }
 
-/*
+
 FunambolSyncItem* CachedFunambolBackend::nextDeletedItem()
 {
+    return new FunambolSyncItem; // WRONG.
 }
 
 FunambolSyncItem* CachedFunambolBackend::firstDeletedItem()
 {
-    return FunambolBackend::getFirstDeletedItem();
+    return new FunambolSyncItem; // WRONG.
 }
 
 FunambolSyncItem* CachedFunambolBackend::nextUpdatedItem()
 {
-    return FunambolBackend::getNextUpdatedItem();
+    return new FunambolSyncItem; // WRONG.
 }
 
 FunambolSyncItem* CachedFunambolBackend::firstUpdatedItem()
 {
-    return FunambolBackend::getFirstUpdatedItem();
+    return new FunambolSyncItem; // WRONG.
 }
 
 FunambolSyncItem* CachedFunambolBackend::nextNewItem()
 {
-    return FunambolBackend::getNextNewItem();
+    return new FunambolSyncItem; // WRONG.
 }
 
 FunambolSyncItem* CachedFunambolBackend::firstNewItem()
 {
-    return FunambolBackend::getFirstNewItem();
+    return new FunambolSyncItem; // WRONG.
 }
 
 FunambolSyncItem* CachedFunambolBackend::nextItem()
 {
-    return FunambolBackend::getNextItem();
+    return new FunambolSyncItem; // WRONG.
 }
 
 FunambolSyncItem* CachedFunambolBackend::firstItem()
 {
-    return FunambolBackend::getFirstItem();
+    return new FunambolSyncItem; // WRONG.
 }
 
 int CachedFunambolBackend::removeAllItems()
 {
 
     return 0; // WRONG.
-}*/
+}
 
 int CachedFunambolBackend::beginSync()
 {
