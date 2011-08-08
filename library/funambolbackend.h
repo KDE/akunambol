@@ -55,6 +55,11 @@ class KDE_EXPORT FunambolBackend : public Funambol::SyncSource
         virtual Funambol::SyncItem* getFirstNewItem();
         virtual Funambol::SyncItem* getNextItem();
         virtual Funambol::SyncItem* getFirstItem();
+        
+protected:
+    void init(const QString &uuid){};
+    
+    friend class FunambolSyncSource;
 };
 
 #endif // FUNAMBOLBACKEND_H

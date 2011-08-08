@@ -68,8 +68,9 @@ public:
     virtual FunambolSyncItem getItem(const QString &key) = 0;
     
 private:
-    void init();
+    void init(const QString &uuid);
     
+//     friend class FunambolSyncSource;s
     class Private;
     Private *d;
 };

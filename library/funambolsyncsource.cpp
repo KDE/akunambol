@@ -132,6 +132,10 @@ SyncJob* FunambolSyncSource::syncJob()
     // FIXME: disallow multiple concurrent jobs.
     d->initConfig(); // Initialize the configuration (if it's needed)
     FunambolSyncJob *job = new FunambolSyncJob(this);
+    
+    d->backend->init(d->sourceName); // Init the backend with an unique ID.
+                                     // (especially useful for the database)
+    
     job->setBackend(d->backend);
     job->setConfig(d->config);
     
@@ -140,7 +144,7 @@ SyncJob* FunambolSyncSource::syncJob()
 
 QWidget* FunambolSyncSource::configurationInterface()
 {
-    return (new QWidget);
+    return new QWidget;
 }
 
 // kate: indent-mode cstyle; space-indent on; indent-width 0;  replace-tabs on;

@@ -75,15 +75,14 @@ CachedFunambolBackend::CachedFunambolBackend(const char* name, Funambol::Abstrac
  : FunambolBackend(name, sc)
 {
     d = new Private(this);
-    d->sourceUID = name; // FIXME: is this an UID?
-    d->openDatabase(); // wait until we're ready? (we've loaded all the keys)
-    
-    init(); // make it an async slot?
     
 }
 
-void CachedFunambolBackend::init()
+void CachedFunambolBackend::init(const QString &uuid)
 {
+    d->sourceUID = uuid;
+    d->openDatabase(); // wait until we're ready? (we've loaded all the keys)
+    
     QStringList newItemList = getAllItems();
     QStringList cachedItemList = d->itemList;
     QStringList deletedItems;

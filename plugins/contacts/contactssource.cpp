@@ -16,7 +16,8 @@
 */
 
 #include "contactssource.h"
-// #include <funambolsyncsource.h>
+#include "contactsbackend.h"
+
 #include <KDebug>
 #include <QWidget>
 
@@ -24,6 +25,10 @@ ContactsSource::ContactsSource(QObject* parent, const QVariantList& args)
     : FunambolSyncSource(parent, args)
 {
     
+    setSourceUID("contacts-test-stub-plugin");
+    /*void setSyncMimeType(const QString &mimeType);
+    void setBackend(FunambolBackend *backend);
+    */void setRemoteURI(const QString &uri, Encoding encodingType);
 }
 
 ContactsSource::~ContactsSource()
