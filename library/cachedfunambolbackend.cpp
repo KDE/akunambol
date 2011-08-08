@@ -140,7 +140,8 @@ FunambolSyncItem CachedFunambolBackend::nextDeletedItem()
 
 FunambolSyncItem CachedFunambolBackend::firstDeletedItem()
 {
-    return getItem(""); // WRONG.
+    QString key = d->deletedItems.takeFirst();
+    return getItem(key);
 }
 
 FunambolSyncItem CachedFunambolBackend::nextUpdatedItem()
