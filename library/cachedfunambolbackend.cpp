@@ -54,16 +54,19 @@ class CachedFunambolBackend::Private {
     void retrieveAllKeys() {
         QSqlQuery query("SELECT * FROM keys");
         if (query.next()) {
-            itemsList.append(query.value(0).toString());
+            itemList.append(query.value(0).toString());
         }
-        
+    }
+
+    void removeKey(const QString &key) {
+        QSqlQuery query(QString("DELETE from keys WHERE key='%1'").arg(key));
     }
 
     void insertKey(const QString &key) {
-        // TODO
+        QSqlQuery query(QString("INSERT into keys VALUES ('%1')").arg(key));
     }
 
-    QStringList itemsList, newItems, deletedItems;
+    QStringList itemList, newItems, deletedItems;
     QString sourceUID;
     CachedFunambolBackend *parent;
     friend class CachedFunambolBackend;
@@ -83,7 +86,7 @@ CachedFunambolBackend::CachedFunambolBackend(const char* name, Funambol::Abstrac
 void CachedFunambolBackend::init()
 {
     QStringList newItemList = getAllItems();
-    QStringList cachedItemList = d->itemsList;
+    QStringList cachedItemList = d->itemList;
     QStringList deletedItems;
     QStringList newItems;
     int i, j;
@@ -117,7 +120,16 @@ void CachedFunambolBackend::init()
     d->deletedItems = deletedItems;
     d->newItems = newItems;
     
-    // insert keys? do the rest of the stuff...
+    // Now that we have seen what has changed, let's update the database.
+    foreach (const QString key, d->newItems) {
+        d->insertKey(key);
+    }
+    
+    foreach (const QString key, d->deletedItems) {
+        d->removeKey(key);
+    }
+    
+    d->itemList = newItemList;
 }
 
 FunambolSyncItem CachedFunambolBackend::nextDeletedItem()
@@ -156,20 +168,20 @@ FunambolSyncItem CachedFunambolBackend::firstNewItem()
 
 FunambolSyncItem CachedFunambolBackend::nextItem()
 {
-    QString key = d->itemsList.takeFirst();
+    QString key = d->itemList.takeFirst();
     return getItem(key);
 }
 
 FunambolSyncItem CachedFunambolBackend::firstItem()
 {
-    QString key = d->itemsList.takeFirst();
+    QString key = d->itemList.takeFirst();
     return getItem(key);
 }
 
 int CachedFunambolBackend::removeAllItems()
 {
     int error;
-    foreach (const QString key, d->itemsList) {
+    foreach (const QString key, d->itemList) {
         error = deleteItem(key);
         if (error) {
             return error;
