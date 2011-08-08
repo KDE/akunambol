@@ -24,7 +24,9 @@
 #include <spds/SyncItem.h>
 #include <qstring.h>
 
-class FunambolSyncItem : public SyncItem
+#include <kdemacros.h>
+
+class KDE_EXPORT FunambolSyncItem : public SyncItem
 {
     public:
         FunambolSyncItem();

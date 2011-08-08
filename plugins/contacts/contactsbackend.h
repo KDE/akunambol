@@ -20,7 +20,7 @@
 #ifndef CONTACTSBACKEND_H
 #define CONTACTSBACKEND_H
 
-#include <../../home/ruphy/git/akunambol/library/cachedfunambolbackend.h>
+#include <cachedfunambolbackend.h>
 
 
 class ContactsBackend : public CachedFunambolBackend

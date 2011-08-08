@@ -20,7 +20,6 @@
 
 #include <spds/AbstractSyncSourceConfig.h>
 
-#include <QStringList>
 #include <QVariant>
 #include <QSqlDatabase>
 #include <QSqlQuery>

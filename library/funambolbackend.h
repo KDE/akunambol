@@ -24,7 +24,9 @@
 
 #include "funambolsyncitem.h"
 
-class FunambolBackend : public Funambol::SyncSource
+#include <kdemacros.h>
+
+class KDE_EXPORT FunambolBackend : public Funambol::SyncSource
 {
     public:
         FunambolBackend(const char* name, Funambol::AbstractSyncSourceConfig* sc);

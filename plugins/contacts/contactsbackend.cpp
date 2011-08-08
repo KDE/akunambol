@@ -21,26 +21,28 @@
 
 FunambolSyncItem ContactsBackend::getItem(const QString& key)
 {
-
+    return FunambolSyncItem();
 }
 
 QStringList ContactsBackend::getAllItems()
 {
-
+    return QStringList();
 }
 
 int ContactsBackend::addItem(FunambolSyncItem& item)
 {
-
+    return 0;
 }
 
 int ContactsBackend::updateItem(FunambolSyncItem& item)
 {
+    return 0;
 
 }
 
 int ContactsBackend::deleteItem(FunambolSyncItem& item)
 {
+    return 0;
 
 }
 

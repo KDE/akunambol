@@ -20,11 +20,12 @@
 #ifndef CACHEDFUNAMBOLBACKEND_H
 #define CACHEDFUNAMBOLBACKEND_H
 
-#include <library/funambolbackend.h>
+#include "funambolbackend.h"
 
-class QStringList;
+#include <QStringList>
+#include <kdemacros.h>
 
-class CachedFunambolBackend : public FunambolBackend
+class KDE_EXPORT CachedFunambolBackend : public FunambolBackend
 {
 
 public:
