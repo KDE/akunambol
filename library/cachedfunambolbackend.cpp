@@ -25,12 +25,13 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
+#include <KStandardDirs>
+
 class CachedFunambolBackend::Private {
     Private(CachedFunambolBackend *p) { parent = p; }
 
     void openDatabase() {
-        QString path = ""; // appdata+syncsource name+something?
-        bool newDB = true; // Check if the database file exists or it's a new one
+        QString path = KStandardDirs::locateLocal("appdata", QString("%1/cachedb.sqlite").arg(sourceUID));
 
         // Find QSLite driver
         QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
@@ -38,10 +39,11 @@ class CachedFunambolBackend::Private {
     
         // Open database
         if (db.open()) {
-            if (newDB) {
+            if (KStandardDirs::exists(path)) {
                 QSqlQuery query;
                 query.exec("CREATE TABLE keys "
-                           "(key varchar(10))"); // NOTE: key size is arbitrary (from SQLite's FAQ #9)
+                           "(key varchar(10))"); // NOTE: key size is arbitrary, more than 10 char are allowed (from SQLite's FAQ #9)
+                                                 // NOTE #2: Looks like Funambol doesn't accept keys bigger than 256. See SyncItem.h
             }
             retrieveAllKeys();
         } else {
@@ -57,7 +59,12 @@ class CachedFunambolBackend::Private {
         
     }
 
-    QStringList itemsList;
+    void insertKey(const QString &key) {
+        // TODO
+    }
+
+    QStringList itemsList, newItems, deletedItems;
+    QString sourceUID;
     CachedFunambolBackend *parent;
     friend class CachedFunambolBackend;
 };
@@ -66,6 +73,7 @@ CachedFunambolBackend::CachedFunambolBackend(const char* name, Funambol::Abstrac
  : FunambolBackend(name, sc)
 {
     d = new Private(this);
+    d->sourceUID = name; // FIXME: is this an UID?
     d->openDatabase(); // wait until we're ready? (we've loaded all the keys)
     
     init(); // make it an async slot?
@@ -74,54 +82,100 @@ CachedFunambolBackend::CachedFunambolBackend(const char* name, Funambol::Abstrac
 
 void CachedFunambolBackend::init()
 {
-    d->itemsList = getAllItems();
+    QStringList newItemList = getAllItems();
+    QStringList cachedItemList = d->itemsList;
+    QStringList deletedItems;
+    QStringList newItems;
+    int i, j;
+    
+    // We use qSort so that we sort using operator>()
+    qSort(newItemList.begin(), newItemList.end());
+    qSort(cachedItemList.begin(), cachedItemList.end());
+    
+    // i -> newItemList
+    // j -> cachedItemList
+    while (i < newItemList.size() && j < cachedItemList.size()) {
+    
+        if (newItemList.at(i) == cachedItemList.at(j)) {
+            i++;
+            j++;
+            continue;
+        }
+        
+        if (newItemList.at(i) < cachedItemList.at(j)) {
+            newItems.append(newItemList.at(i));
+            i++;
+            continue;
+        } else {
+            deletedItems.append(cachedItemList.at(j));
+            j++;
+            continue;
+        }
+        
+    }
+    
+    d->deletedItems = deletedItems;
+    d->newItems = newItems;
+    
+    // insert keys? do the rest of the stuff...
 }
 
-
-FunambolSyncItem* CachedFunambolBackend::nextDeletedItem()
+FunambolSyncItem CachedFunambolBackend::nextDeletedItem()
 {
-    return new FunambolSyncItem; // WRONG.
+    QString key = d->deletedItems.takeFirst();
+    return getItem(key);
 }
 
-FunambolSyncItem* CachedFunambolBackend::firstDeletedItem()
+FunambolSyncItem CachedFunambolBackend::firstDeletedItem()
 {
-    return new FunambolSyncItem; // WRONG.
+    return getItem(""); // WRONG.
 }
 
-FunambolSyncItem* CachedFunambolBackend::nextUpdatedItem()
+FunambolSyncItem CachedFunambolBackend::nextUpdatedItem()
 {
-    return new FunambolSyncItem; // WRONG.
+    return getItem(""); // WRONG.
 }
 
-FunambolSyncItem* CachedFunambolBackend::firstUpdatedItem()
+FunambolSyncItem CachedFunambolBackend::firstUpdatedItem()
 {
-    return new FunambolSyncItem; // WRONG.
+    return getItem(""); // WRONG.
 }
 
-FunambolSyncItem* CachedFunambolBackend::nextNewItem()
+FunambolSyncItem CachedFunambolBackend::nextNewItem()
 {
-    return new FunambolSyncItem; // WRONG.
+    QString key = d->newItems.takeFirst();
+    return getItem(key);
 }
 
-FunambolSyncItem* CachedFunambolBackend::firstNewItem()
+// FIXME: check - do we need to takeFirst or just return the first?
+FunambolSyncItem CachedFunambolBackend::firstNewItem()
 {
-    return new FunambolSyncItem; // WRONG.
+    QString key = d->newItems.takeFirst();
+    return getItem(key);
 }
 
-FunambolSyncItem* CachedFunambolBackend::nextItem()
+FunambolSyncItem CachedFunambolBackend::nextItem()
 {
-    return new FunambolSyncItem; // WRONG.
+    QString key = d->itemsList.takeFirst();
+    return getItem(key);
 }
 
-FunambolSyncItem* CachedFunambolBackend::firstItem()
+FunambolSyncItem CachedFunambolBackend::firstItem()
 {
-    return new FunambolSyncItem; // WRONG.
+    QString key = d->itemsList.takeFirst();
+    return getItem(key);
 }
 
 int CachedFunambolBackend::removeAllItems()
 {
-
-    return 0; // WRONG.
+    int error;
+    foreach (const QString key, d->itemsList) {
+        error = deleteItem(key);
+        if (error) {
+            return error;
+        }
+    }
+    return STC_OK; // FIXME Marco: is STC_OK the right code?
 }
 
 int CachedFunambolBackend::beginSync()
@@ -132,6 +186,12 @@ int CachedFunambolBackend::beginSync()
 int CachedFunambolBackend::endSync()
 {
     return Funambol::SyncSource::endSync();
+}
+
+int CachedFunambolBackend::deleteItem(const QString& key)
+{
+    FunambolSyncItem item = getItem(key);
+    return deleteItem(item);
 }
 
 

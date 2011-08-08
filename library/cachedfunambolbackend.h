@@ -32,22 +32,30 @@ public:
     //virtual ~CachedFunambolBackend();
     
     virtual int deleteItem(FunambolSyncItem& item) = 0;
-    virtual int updateItem(FunambolSyncItem& item) = 0;
-    virtual int addItem(FunambolSyncItem& item) = 0;
-    virtual FunambolSyncItem* nextDeletedItem();
-    virtual FunambolSyncItem* firstDeletedItem();
-    virtual FunambolSyncItem* nextUpdatedItem();
-    virtual FunambolSyncItem* firstUpdatedItem();
-    virtual FunambolSyncItem* nextNewItem();
-    virtual FunambolSyncItem* firstNewItem();
-    virtual FunambolSyncItem* nextItem();
-    virtual FunambolSyncItem* firstItem();
     
     /**
-     * Reimplement this if you can do it in a more efficient way
-     * than calling deleteItem on every item.
+     * If you can delete an item just by its key, reimplement this. If you don't do it,
+     * this is equivalent to deleteItem(getItem(key));
+     */
+    virtual int deleteItem(const QString &key);
+    
+    virtual int updateItem(FunambolSyncItem& item) = 0;
+    virtual int addItem(FunambolSyncItem& item) = 0;
+    virtual FunambolSyncItem nextDeletedItem();
+    virtual FunambolSyncItem firstDeletedItem();
+    virtual FunambolSyncItem nextUpdatedItem();
+    virtual FunambolSyncItem firstUpdatedItem();
+    virtual FunambolSyncItem nextNewItem();
+    virtual FunambolSyncItem firstNewItem();
+    virtual FunambolSyncItem nextItem();
+    virtual FunambolSyncItem firstItem();
+    
+    /**
+     * Reimplement this function if you can do it in a more efficient way
+     * than simply calling deleteItem on every item.
      */
     virtual int removeAllItems();
+    
     virtual int beginSync();
     virtual int endSync();
     

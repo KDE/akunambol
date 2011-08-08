@@ -32,14 +32,14 @@ class FunambolBackend : public Funambol::SyncSource
         virtual int deleteItem(FunambolSyncItem& item) = 0;
         virtual int updateItem(FunambolSyncItem& item) = 0;
         virtual int addItem(FunambolSyncItem& item) = 0;
-        virtual FunambolSyncItem* nextDeletedItem() = 0;
-        virtual FunambolSyncItem* firstDeletedItem() = 0;
-        virtual FunambolSyncItem* nextUpdatedItem() = 0;
-        virtual FunambolSyncItem* firstUpdatedItem() = 0;
-        virtual FunambolSyncItem* nextNewItem() = 0;
-        virtual FunambolSyncItem* firstNewItem() = 0;
-        virtual FunambolSyncItem* nextItem() = 0;
-        virtual FunambolSyncItem* firstItem() = 0;
+        virtual FunambolSyncItem nextDeletedItem() = 0;
+        virtual FunambolSyncItem firstDeletedItem() = 0;
+        virtual FunambolSyncItem nextUpdatedItem() = 0;
+        virtual FunambolSyncItem firstUpdatedItem() = 0;
+        virtual FunambolSyncItem nextNewItem() = 0;
+        virtual FunambolSyncItem firstNewItem() = 0;
+        virtual FunambolSyncItem nextItem() = 0;
+        virtual FunambolSyncItem firstItem() = 0;
         virtual int removeAllItems() = 0;
         
         virtual int deleteItem(Funambol::SyncItem& item);

@@ -49,48 +49,48 @@ int FunambolBackend::addItem(Funambol::SyncItem& item)
 Funambol::SyncItem* FunambolBackend::getNextDeletedItem()
 {
     // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
-    return nextDeletedItem()->toNewFunambolItem();
+    return nextDeletedItem().toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getFirstDeletedItem()
 {
     // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
-    return nextDeletedItem()->toNewFunambolItem();
+    return nextDeletedItem().toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getNextUpdatedItem()
 {
     // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
-    return nextDeletedItem()->toNewFunambolItem();
+    return nextDeletedItem().toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getFirstUpdatedItem()
 {
     // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
-    return nextDeletedItem()->toNewFunambolItem();
+    return nextDeletedItem().toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getNextNewItem()
 {
     // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
-    return nextDeletedItem()->toNewFunambolItem();
+    return nextDeletedItem().toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getFirstNewItem()
 {
     // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
-    return nextDeletedItem()->toNewFunambolItem();
+    return nextDeletedItem().toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getNextItem()
 {
     // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
-    return nextDeletedItem()->toNewFunambolItem();
+    return nextDeletedItem().toNewFunambolItem();
 }
 
 Funambol::SyncItem* FunambolBackend::getFirstItem()
 {
     // NOTE: possible memory leak: have to understand if the sdk automatically deletes this object.
-    return nextDeletedItem()->toNewFunambolItem();
+    return nextDeletedItem().toNewFunambolItem();
 }
 
