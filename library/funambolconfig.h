@@ -25,7 +25,7 @@
 
 class QString;
 
-class FunambolConfig : public Funambol::DMTClientConfig, public SyncCredentials
+class KDE_EXPORT FunambolConfig : public Funambol::DMTClientConfig, public SyncCredentials
 {
 
     public:

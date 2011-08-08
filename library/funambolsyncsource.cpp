@@ -122,6 +122,11 @@ void FunambolSyncSource::setSyncMimeType(const QString &mimeType)
     d->syncMimeType = mimeType;
 }
 
+FunambolConfig* FunambolSyncSource::getConfig()
+{
+    return d->config;
+}
+
 void FunambolSyncSource::setBackend(FunambolBackend* backend)
 {
     d->backend = backend;

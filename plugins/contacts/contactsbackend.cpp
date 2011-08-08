@@ -19,6 +19,12 @@
 
 #include "contactsbackend.h"
 
+ContactsBackend::ContactsBackend(const char* name, Funambol::AbstractSyncSourceConfig* config)
+    : CachedFunambolBackend(name, config)
+{
+
+}
+
 FunambolSyncItem ContactsBackend::getItem(const QString& key)
 {
     return FunambolSyncItem();

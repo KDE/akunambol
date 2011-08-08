@@ -18,6 +18,8 @@
 #include "contactssource.h"
 #include "contactsbackend.h"
 
+#include <funambolconfig.h>
+
 #include <KDebug>
 #include <QWidget>
 
@@ -26,9 +28,12 @@ ContactsSource::ContactsSource(QObject* parent, const QVariantList& args)
 {
     
     setSourceUID("contacts-test-stub-plugin");
-    /*void setSyncMimeType(const QString &mimeType);
-    void setBackend(FunambolBackend *backend);
-    */void setRemoteURI(const QString &uri, Encoding encodingType);
+    setSyncMimeType("application/base64"); // test
+    
+    kDebug() << getConfig();
+
+//     setBackend(new ContactsBackend);
+    setRemoteURI("http://localhost", Base64);
 }
 
 ContactsSource::~ContactsSource()
@@ -49,6 +54,10 @@ QString ContactsSource::controlText() const
 
 void ContactsSource::doSync()
 {
+    ContactsBackend *backend = new ContactsBackend("contacts-test-stub-plugin",
+                                   dynamic_cast<Funambol::AbstractSyncSourceConfig *>(getConfig()));
+    setBackend(backend);
+//     kDebug() << 
     kDebug() << "sync";
 }
 

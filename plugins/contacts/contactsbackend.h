@@ -25,8 +25,9 @@
 
 class ContactsBackend : public CachedFunambolBackend
 {
-
 public:
+    ContactsBackend(const char* , Funambol::AbstractSyncSourceConfig* );
+    
     virtual FunambolSyncItem getItem(const QString& key);
     virtual QStringList getAllItems();
     virtual int addItem(FunambolSyncItem& item);

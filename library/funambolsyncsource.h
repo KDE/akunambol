@@ -42,13 +42,15 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
 
         virtual void setCredentials(SyncCredentials *c);
         
-
         virtual QString controlText() const = 0;
         virtual QWidget* configurationInterface();
         
         virtual SyncJob* syncJob();
 
     protected:
+        
+        FunambolConfig* getConfig();
+        
         // TODO: implement a public getter for each setter, and vice versa
         void setSourceUID(const QString &uid);
         void setSyncMimeType(const QString &mimeType);
