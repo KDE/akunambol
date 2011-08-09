@@ -68,6 +68,7 @@ void SyncSource2::handleJobResult(KJob *job)
     } else {
         kDebug() << "Sync has finished successfully.";
         setStatus(SyncSuccess);
+        setStatusMessage(i18n("Synchronization successful."));
     }
     job->deleteLater();
 }

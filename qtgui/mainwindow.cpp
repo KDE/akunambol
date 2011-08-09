@@ -159,6 +159,8 @@ void MainWindow::pluginLoaded(SyncSource2* s)
     // add settings
     
     connect(b, SIGNAL(clicked()), s, SLOT(triggerSync()));
+//     connect(s, SIGNAL(newStatusMessage(QString)), m_syncDialog, SLOT(setLabelText(QString)));
+    connect(s, SIGNAL(newStatusMessage(QString)), statusBar(), SLOT(showMessage(QString)));
 }
 
 void MainWindow::syncStatusChanged(SyncSource2::SyncStatus status)
