@@ -135,5 +135,10 @@ SyncCredentials* SyncSource2::credentials()
     return d->config;
 }
 
+void SyncSource2::configChanged()
+{
+
+}
+
 #include "syncsource.moc"
 

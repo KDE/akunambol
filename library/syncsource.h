@@ -102,6 +102,12 @@ class KDE_EXPORT SyncSource2 : public QObject
         void setStatus(SyncSource2::SyncStatus newStatus);
         void setStatusMessage(const QString& newMessage);
         
+        /**
+         * configChanged() is called whenever the configuration has changed (such as the user
+         * clicked on the apply button of the configure dialog).
+         */
+        virtual void configChanged();
+        
     protected:
     
        /**
