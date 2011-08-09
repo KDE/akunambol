@@ -29,6 +29,7 @@
 #include "akunambol_macros.h"
 #include "funambolsyncjob.h"
 #include "funambolconfig.h"
+#include <QFormLayout>
 
 class FunambolSyncSource::Private
 {
@@ -157,11 +158,14 @@ QWidget* FunambolSyncSource::configurationInterface()
     if (!d->configWidget) {
         kDebug() << "creating the config widget...";
         d->configWidget = new QWidget;
-        QVBoxLayout *l = new QVBoxLayout(d->configWidget);
+        QFormLayout *l = new QFormLayout(d->configWidget);
         KLineEdit *u = new KLineEdit(d->configWidget);
         KLineEdit *p = new KLineEdit(d->configWidget);
-        l->addWidget(u);
-        l->addWidget(p);
+        KLineEdit *s = new KLineEdit(d->configWidget);
+        p->setPasswordMode(true);
+        l->addRow(i18n("Username"), u);
+        l->addRow(i18n("Password"), p);
+        l->addRow(i18n("Server URL"), s);
         d->configWidget->setLayout(l);
     }
     return d->configWidget;
