@@ -99,9 +99,8 @@ class KDE_EXPORT SyncSource2 : public QObject
         void triggerSync();
         
     protected Q_SLOTS:
-        
-        void setStatus(SyncStatus newStatus);
-        void setStatusMessage(QString message);
+        void setStatus(SyncSource2::SyncStatus newStatus);
+        void setStatusMessage(const QString& newMessage);
         
     protected:
     
@@ -109,7 +108,7 @@ class KDE_EXPORT SyncSource2 : public QObject
         * This function is called when the user, or any other event, triggers a sync.
         * This should launch the sync until finished, and should use the signals to notify the UI.
         */
-        virtual void doSync() = 0;
+//         virtual void doSync() = 0;
     
         
     Q_SIGNALS:
@@ -121,13 +120,16 @@ class KDE_EXPORT SyncSource2 : public QObject
          * This signal is emitted whenever we have a new status, except for "NoSync".
          * If you want to see if a synchronization is finished check for SyncError or SyncSuccess.
          */
-        void newStatus(SyncStatus);
+        void newStatus(SyncSource2::SyncStatus);
+    private Q_SLOTS:
+        void handleJobResult(KJob *);
         
     private:
         class SyncSourcePrivate;
         SyncSourcePrivate * const d;
 };
 
+Q_DECLARE_METATYPE(SyncSource2::SyncStatus)
 
 #define EXPORT_AKUNAMBOL_SYNCSOURCE(libname, classname) \
 K_PLUGIN_FACTORY(SyncSourceFactory, registerPlugin<classname>();) \

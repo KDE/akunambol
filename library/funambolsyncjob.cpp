@@ -25,6 +25,10 @@
 #include "funambolconfig.h"
 #include "funambolbackend.h"
 
+#include <KDebug>
+#include <KLocalizedString>
+#include <QTimer>
+
 class FunambolSyncJob::Private {
 public:
     FunambolBackend *backend;
@@ -62,18 +66,24 @@ void FunambolSyncJob::setConfig(FunambolConfig* config)
     d->config = config;
 }
 
-void FunambolSyncJob::start()
+void FunambolSyncJob::doStart()
 {
     // FIXME: move all this into FunambolSyncSource
     
     // The config() object is manipulated from the private class, and is not used directly.
     // FIXME: is this a good thing? This is not very elegant, so Riccardo accepts suggestions
     if (!d->config->isComplete()) {
+        
+        kDebug() << "#1: Configuration incomplete";
+        setError(ConfigIncomplete);
+        setErrorText(i18n("The configuration is incomplete"));
+        emitResult();
         //setStatus(SyncError);
         //setStatusMessage(i18n("Please set your credentials and synchronization URL."));
         return; // TODO: maybe this should be moved to be handled from the individual sources?
     } else if (!d->backend) {
         qFatal("No backend set. This is a -very- bad thing.");
+//         setStatus(SyncError);
         return;
     }
 
@@ -90,10 +100,24 @@ void FunambolSyncJob::start()
     Funambol::SyncSource* ssArray[] = { d->backend, NULL } ;
     
     if (d->client->sync(*(d->config), ssArray)) {
+        kDebug() << "Sync Error";
+        setError(SyncError);
+        emitResult();
         //setStatus(SyncError);
         //setStatusMessage(i18n("Sync failed.")); // TODO: we need finer grained errors
     }
     
     d->config->save();
+    setError(SyncSuccess);
+    emitResult();
 }
+
+void FunambolSyncJob::start()
+{
+    kDebug() << "Starting the sync job...";
+    QTimer::singleShot(0, this, SLOT(doStart()));
+}
+
+#include "funambolsyncjob.moc"
+
 

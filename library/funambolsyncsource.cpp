@@ -24,6 +24,7 @@
 
 // Qt/KDE
 #include <QWidget>
+#include <QPointer>
 
 // Akunambol
 #include "akunambol_macros.h"
@@ -74,6 +75,7 @@ public:
     QString sourceName, syncMimeType, remoteURI;
     FunambolSyncSource::Encoding encoding;
     FunambolBackend *backend;
+    QPointer<FunambolSyncJob> job;
 };
 
 // -------------------
@@ -134,17 +136,18 @@ void FunambolSyncSource::setBackend(FunambolBackend* backend)
 
 SyncJob* FunambolSyncSource::syncJob()
 {
-    // FIXME: disallow multiple concurrent jobs.
-    d->initConfig(); // Initialize the configuration (if it's needed)
-    FunambolSyncJob *job = new FunambolSyncJob(this);
+    if (d->job.isNull()) {
+        d->initConfig(); // Initialize the configuration (if it's needed)
+        FunambolSyncJob *job = new FunambolSyncJob(this);
+
+        d->backend->init(d->sourceName); // Init the backend with a guaranteed unique ID.
+        
+        job->setBackend(d->backend);
+        job->setConfig(d->config);
+        d->job = job;
+    }
     
-    d->backend->init(d->sourceName); // Init the backend with an unique ID.
-                                     // (especially useful for the database)
-    
-    job->setBackend(d->backend);
-    job->setConfig(d->config);
-    
-    return job; //FIXME make sure this job is created, and initialized.
+    return d->job.data();
 }
 
 QWidget* FunambolSyncSource::configurationInterface()

@@ -25,24 +25,33 @@
 class FunambolConfig;
 class FunambolBackend;
 
-class FunambolSyncJob : public SyncJob
+class KDE_EXPORT FunambolSyncJob : public SyncJob
 {
-public:
-    FunambolSyncJob(QObject *parent);
-    virtual void start();
-    
-    FunambolBackend *backend();
-    FunambolConfig *config();
-    
-private:
-    
-    void setBackend(FunambolBackend *backend);
-    void setConfig(FunambolConfig *config);
-    
-    friend class FunambolSyncSource;
-    
-    class Private;
-    FunambolSyncJob::Private *d;
+    Q_OBJECT
+    public:
+        FunambolSyncJob(QObject *parent);
+        virtual void start();
+        
+        FunambolBackend *backend();
+        FunambolConfig *config();
+        
+    private Q_SLOTS:
+        void doStart();
+        
+    private:
+        enum {
+            SyncSuccess = 0,
+            ConfigIncomplete = 1,
+            SyncError = 2
+        };
+        
+        void setBackend(FunambolBackend *backend);
+        void setConfig(FunambolConfig *config);
+        
+        friend class FunambolSyncSource;
+        
+        class Private;
+        FunambolSyncJob::Private *d;
 };
 
 #endif // FUNAMBOLSYNCJOB_H

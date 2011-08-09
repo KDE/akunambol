@@ -31,10 +31,6 @@ class ContactsSource : public FunambolSyncSource
         QString controlText() const;
         
         QWidget* configurationInterface();
-        
-    protected:
-        virtual void doSync();
-    
 };
 
 

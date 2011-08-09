@@ -16,7 +16,8 @@
 */
 
 #include "syncsource.h"
-#include "syncsource.h"
+#include "syncjob.h"
+
 #include <QMutex>
 #include <QTimer>
 
@@ -35,6 +36,7 @@ SyncSource2::SyncSource2(QObject* parent, const QVariantList& args)
     d(new SyncSourcePrivate(this))
 {
     d->status = NoSync;
+    qRegisterMetaType<SyncSource2::SyncStatus>();
     Q_UNUSED(args);
 }
 
@@ -45,14 +47,29 @@ SyncSource2::~SyncSource2()
 
 void SyncSource2::triggerSync()
 {
-    setStatus(SyncStarted);
+    setStatus(SyncStarted); // TODO: refactor this code: is locking really necessary?
+                            // we should do that with the jobs
     if (tryLock()) {
-        doSync(); // TODO: make me run in another thread
+        syncJob()->start(); // TODO: make me run in another thread
+        connect(syncJob(), SIGNAL(finished(KJob*)), this, SLOT(handleJobResult(KJob*)));
         unlock();
     } else {
         setStatus(SyncError);
         setStatusMessage(i18n("A synchronization is already in progress."));
     }
+}
+
+void SyncSource2::handleJobResult(KJob *job)
+{
+    if (job->error()) {
+        kDebug() << "Sync has finished with an error.";
+        setStatus(SyncError);
+        setStatusMessage(job->errorString());
+    } else {
+        kDebug() << "Sync has finished successfully.";
+        setStatus(SyncSuccess);
+    }
+    job->deleteLater();
 }
 
 void SyncSource2::setStatus(SyncSource2::SyncStatus _newStatus)
@@ -68,11 +85,11 @@ void SyncSource2::setStatus(SyncSource2::SyncStatus _newStatus)
     }
     
     if (_newStatus == SyncError || _newStatus == SyncSuccess) {
-        QTimer::singleShot(0, this, SLOT(setStatus(NoSync)));
+        QMetaObject::invokeMethod(this, "setStatus", Qt::QueuedConnection, Q_ARG(SyncSource2::SyncStatus, NoSync));
     }
 }
 
-void SyncSource2::setStatusMessage(QString newMessage)
+void SyncSource2::setStatusMessage(const QString &newMessage)
 {
     if (newMessage == d->statusMessage) {
         return;
@@ -117,5 +134,5 @@ SyncCredentials* SyncSource2::credentials()
     return d->config;
 }
 
-
+#include "syncsource.moc"
 

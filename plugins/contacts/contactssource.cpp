@@ -26,14 +26,13 @@
 ContactsSource::ContactsSource(QObject* parent, const QVariantList& args)
     : FunambolSyncSource(parent, args)
 {
-    
     setSourceUID("contacts-test-stub-plugin");
     setSyncMimeType("application/base64"); // test
+    setRemoteURI("http://localhost/", Base64); // Is this needed?
     
-    kDebug() << getConfig();
-
-//     setBackend(new ContactsBackend);
-    setRemoteURI("http://localhost", Base64);
+    ContactsBackend *backend = new ContactsBackend("contacts-test-stub-plugin",
+                                   dynamic_cast<Funambol::AbstractSyncSourceConfig *>(getConfig()));
+    setBackend(backend);
 }
 
 ContactsSource::~ContactsSource()
@@ -49,18 +48,9 @@ QWidget* ContactsSource::configurationInterface()
 QString ContactsSource::controlText() const
 {
     return "Sync contacts";
+    
 }
-
-
-void ContactsSource::doSync()
-{
-    ContactsBackend *backend = new ContactsBackend("contacts-test-stub-plugin",
-                                   dynamic_cast<Funambol::AbstractSyncSourceConfig *>(getConfig()));
-    setBackend(backend);
-//     kDebug() << 
-    kDebug() << "sync";
-}
-
-
 
 EXPORT_AKUNAMBOL_SYNCSOURCE(contacts, ContactsSource)
+
+#include "contactssource.moc"

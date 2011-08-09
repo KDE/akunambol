@@ -19,6 +19,8 @@
 
 #include "contactsbackend.h"
 
+#include <KDebug>
+
 ContactsBackend::ContactsBackend(const char* name, Funambol::AbstractSyncSourceConfig* config)
     : CachedFunambolBackend(name, config)
 {
@@ -27,28 +29,34 @@ ContactsBackend::ContactsBackend(const char* name, Funambol::AbstractSyncSourceC
 
 FunambolSyncItem ContactsBackend::getItem(const QString& key)
 {
-    return FunambolSyncItem();
+    FunambolSyncItem item;
+    item.setKey(key);
+    item.setData("aaa");
+    return item;
 }
 
 QStringList ContactsBackend::getAllItems()
 {
-    return QStringList();
+    QStringList list;
+    list << "a" << "b";
+    return list;
 }
 
 int ContactsBackend::addItem(FunambolSyncItem& item)
 {
+    kDebug() << "adding item" << item.getKey();
     return 0;
 }
 
 int ContactsBackend::updateItem(FunambolSyncItem& item)
 {
+    kDebug() << "updating item" << item.getKey();
     return 0;
-
 }
 
 int ContactsBackend::deleteItem(FunambolSyncItem& item)
 {
+    kDebug() << "deleting item" << item.getKey();
     return 0;
-
 }
 

@@ -25,9 +25,9 @@
  * Abstract class to represent a synchronization job
  */
 
-class SyncJob : public KJob
+class KDE_EXPORT SyncJob : public KJob
 {
-
+Q_OBJECT
 public:
     SyncJob(QObject* parent = 0);
     virtual void start() = 0;

@@ -25,3 +25,4 @@ SyncJob::SyncJob(QObject* parent)
 
 }
 
+#include "syncjob.moc"
