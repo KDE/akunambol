@@ -19,12 +19,11 @@
 
 #include "funambolsyncsource.h"
 
-// Funambol
-//#include "spds/SyncItem.h"
-
 // Qt/KDE
 #include <QWidget>
 #include <QPointer>
+#include <QVBoxLayout>
+#include <KLineEdit>
 
 // Akunambol
 #include "akunambol_macros.h"
@@ -36,6 +35,7 @@ class FunambolSyncSource::Private
 public:
     Private() {
         config = new FunambolConfig;
+        configWidget = 0;
         backend = 0;
     }
     
@@ -76,6 +76,7 @@ public:
     FunambolSyncSource::Encoding encoding;
     FunambolBackend *backend;
     QPointer<FunambolSyncJob> job;
+    QWidget *configWidget;
 };
 
 // -------------------
@@ -152,7 +153,18 @@ SyncJob* FunambolSyncSource::syncJob()
 
 QWidget* FunambolSyncSource::configurationInterface()
 {
-    return new QWidget;
+    kDebug() << "Asking for the config widget...";
+    if (!d->configWidget) {
+        kDebug() << "creating the config widget...";
+        d->configWidget = new QWidget;
+        QVBoxLayout *l = new QVBoxLayout(d->configWidget);
+        KLineEdit *u = new KLineEdit(d->configWidget);
+        KLineEdit *p = new KLineEdit(d->configWidget);
+        l->addWidget(u);
+        l->addWidget(p);
+        d->configWidget->setLayout(l);
+    }
+    return d->configWidget;
 }
 
 // kate: indent-mode cstyle; space-indent on; indent-width 0;  replace-tabs on;

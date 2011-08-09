@@ -31,6 +31,9 @@ class ContactsSource : public FunambolSyncSource
         QString controlText() const;
         
         QWidget* configurationInterface();
+    private:
+        class Private;
+        Private *d;
 };
 
 

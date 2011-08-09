@@ -22,9 +22,20 @@
 
 #include <KDebug>
 #include <QWidget>
+#include <KDialog>
+#include <QHBoxLayout>
+
+class ContactsSource::Private {
+public:
+    Private() {
+        confDialog = 0;
+    }
+    KDialog *confDialog;
+};
 
 ContactsSource::ContactsSource(QObject* parent, const QVariantList& args)
-    : FunambolSyncSource(parent, args)
+    : FunambolSyncSource(parent, args),
+    d(new ContactsSource::Private)
 {
     setSourceUID("contacts-test-stub-plugin");
     setSyncMimeType("application/base64"); // test
@@ -37,12 +48,21 @@ ContactsSource::ContactsSource(QObject* parent, const QVariantList& args)
 
 ContactsSource::~ContactsSource()
 {
-
+    delete d;
 }
 
 QWidget* ContactsSource::configurationInterface()
 {
-    return new QWidget;
+    if (!d->confDialog) {
+        KDialog *di = new KDialog;
+        QWidget *in = FunambolSyncSource::configurationInterface();
+//         QHBoxLayout *l = new QHBoxLayout;
+//         in->show();
+//         l->addWidget(in);
+        di->setMainWidget(in);
+        d->confDialog = di;
+    }
+    return d->confDialog;
 }
 
 QString ContactsSource::controlText() const
