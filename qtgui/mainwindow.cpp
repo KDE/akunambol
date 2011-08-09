@@ -152,13 +152,24 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 
 void MainWindow::pluginLoaded(SyncSource2* s)
 {
+    QHBoxLayout *l = new QHBoxLayout;
     QPushButton *b = new QPushButton(s->controlText(), this);
-    m_controlsLayout->addWidget(b);
+    QPushButton *bc = new QPushButton(i18n("Configure"), this);
+    
+    l->addWidget(b);
+    l->addWidget(bc);
+    
+    m_controlsLayout->addItem(l);
     
     connect(s, SIGNAL(newStatus(SyncSource2::SyncStatus)), this, SLOT(syncStatusChanged(SyncSource2::SyncStatus)));
     // add settings
     
     connect(b, SIGNAL(clicked()), s, SLOT(triggerSync()));
+    QWidget *w = s->configurationInterface();
+//  FIXME: w must be a child window of "this"
+    connect(bc, SIGNAL(clicked()), w, SLOT(show()));
+    
+//  FIXME: do what is written below:
 //     connect(s, SIGNAL(newStatusMessage(QString)), m_syncDialog, SLOT(setLabelText(QString)));
     connect(s, SIGNAL(newStatusMessage(QString)), statusBar(), SLOT(showMessage(QString)));
 }

@@ -140,7 +140,7 @@ SyncJob* FunambolSyncSource::syncJob()
         d->initConfig(); // Initialize the configuration (if it's needed)
         FunambolSyncJob *job = new FunambolSyncJob(this);
 
-        d->backend->init(d->sourceName); // Init the backend with a guaranteed unique ID.
+        d->backend->init(d->sourceName); // Init the backend with a guaranteed(?) unique ID.
         
         job->setBackend(d->backend);
         job->setConfig(d->config);
