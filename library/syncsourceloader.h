@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <kdemacros.h>
+#include <KService>
 
 class SyncSource2;
 
@@ -27,10 +28,24 @@ class KDE_EXPORT SyncSourceLoader : public QObject
 {
     Q_OBJECT
     public:
-        SyncSourceLoader(QObject* parent = 0) {};
+        SyncSourceLoader(QObject* parent = 0);
 //         virtual ~SyncSourceLoader();
         
+        /**
+         * Load all the Sync Sources that are saved in the configuration.
+         */
         void loadAllSyncSources();
+        
+        /**
+         * Load a new Sync Source with name "name"
+         */
+        void loadSyncSource(const QString &name);
+        
+    private:
+        QString generateUUID(const QString &name) const;
+        void loadPlugin(const KService::Ptr*& service);
+        class Private;
+        Private *d;
         
     signals:
         void syncSourceLoaded(SyncSource2 *s);

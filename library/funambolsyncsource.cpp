@@ -152,6 +152,22 @@ SyncJob* FunambolSyncSource::syncJob()
     return d->job.data();
 }
 
+void FunambolSyncSource::createConfigurationInterface(KConfigDialog* parent)
+{
+    kDebug() << "creating the config widget...";
+    d->configWidget = new QWidget;
+    QFormLayout *l = new QFormLayout(d->configWidget);
+    KLineEdit *u = new KLineEdit(d->configWidget);
+    KLineEdit *p = new KLineEdit(d->configWidget);
+    KLineEdit *s = new KLineEdit(d->configWidget);
+    p->setPasswordMode(true);
+    l->addRow(i18n("Username"), u);
+    l->addRow(i18n("Password"), p);
+    l->addRow(i18n("Server URL"), s);
+    d->configWidget->setLayout(l);
+    parent->addPage(d->configWidget, i18n("SyncML settings"));
+}
+
 QWidget* FunambolSyncSource::configurationInterface()
 {
     kDebug() << "Asking for the config widget...";

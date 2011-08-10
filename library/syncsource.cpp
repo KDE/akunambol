@@ -20,6 +20,7 @@
 
 #include <QMutex>
 #include <QTimer>
+#include <QRegExp>
 
 class SyncSource2::SyncSourcePrivate {
     public:
@@ -29,6 +30,7 @@ class SyncSource2::SyncSourcePrivate {
         QMutex lock;
         QString statusMessage;
         SyncSource2::SyncStatus status;
+        QString uuid;
 };
 
 SyncSource2::SyncSource2(QObject* parent, const QVariantList& args)
@@ -105,7 +107,7 @@ SyncSource2::SyncStatus SyncSource2::status()
     return d->status;
 }
 
-QString SyncSource2::statusMessage()
+QString SyncSource2::statusMessage() const
 {
     return d->statusMessage;
 }
@@ -133,6 +135,17 @@ void SyncSource2::setCredentials(SyncCredentials* c)
 SyncCredentials* SyncSource2::credentials()
 {
     return d->config;
+}
+
+void SyncSource2::setUUID(const QString& uuid)
+{
+    d->uuid = uuid;
+    // FIXME need anything else?
+}
+
+QString SyncSource2::uuid() const
+{
+    return d->uuid;
 }
 
 void SyncSource2::configChanged()

@@ -145,9 +145,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 
     resize(260, 230);
     
-    SyncSourceLoader *l = new SyncSourceLoader(this);
-    connect(l, SIGNAL(syncSourceLoaded(SyncSource2*)), SLOT(pluginLoaded(SyncSource2*)));
-    l->loadAllSyncSources();
+    m_loader = new SyncSourceLoader(this);
+    connect(m_loader, SIGNAL(syncSourceLoaded(SyncSource2*)), SLOT(pluginLoaded(SyncSource2*)));
+    m_loader->loadAllSyncSources();
 }
 
 void MainWindow::pluginLoaded(SyncSource2* s)
@@ -165,10 +165,18 @@ void MainWindow::pluginLoaded(SyncSource2* s)
     // add settings
     
     connect(b, SIGNAL(clicked()), s, SLOT(triggerSync()));
-    QWidget *w = s->configurationInterface();
-//  FIXME: w must be a child window of "this"
-    connect(bc, SIGNAL(clicked()), w, SLOT(show()));
     
+#if 0
+    KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", s->))
+//     KConfigSkeleton *skeleton = new KConfigSkeleton();
+    // Show settings
+    KConfigDialog *dialog = new KConfigDialog(this, i18n("Settings"), );
+    s->createConfigurationInterface(dialog);
+    connect(dialog, SIGNAL(settingsChanged(const QString&)), s, SLOT(configChanged()));
+//     QWidget *w = s->configurationInterface();
+//  FIXME: w must be a child window of "this"
+    connect(bc, SIGNAL(clicked()), dialog, SLOT(show()));
+#endif
 //  FIXME: do what is written below:
 //     connect(s, SIGNAL(newStatusMessage(QString)), m_syncDialog, SLOT(setLabelText(QString)));
     connect(s, SIGNAL(newStatusMessage(QString)), statusBar(), SLOT(showMessage(QString)));

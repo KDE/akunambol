@@ -47,6 +47,8 @@ class KDE_EXPORT FunambolSyncSource : public SyncSource2
         
         virtual SyncJob* syncJob();
 
+        virtual void createConfigurationInterface(KConfigDialog *parent);
+        
     protected:
         
         FunambolConfig* getConfig();

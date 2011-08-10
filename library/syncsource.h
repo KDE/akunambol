@@ -22,6 +22,7 @@
 #include <kdemacros.h>
 #include <KGenericFactory>
 #include <KJob>
+#include <KConfigDialog>
 
 class SyncJob;
 class SyncCredentials;
@@ -80,17 +81,24 @@ class KDE_EXPORT SyncSource2 : public QObject
         /**
          * Reimplement to provide a configuration interface to the user.
          */
-        virtual QWidget* configurationInterface() = 0;
+//         virtual QWidget* configurationInterface() = 0;
+        virtual void createConfigurationInterface(KConfigDialog *parent) = 0;
         
         // TODO: do like Plasma::Applet here: KConfig config();
         
         SyncStatus status();
-        QString statusMessage();
+        QString statusMessage() const;
         
         /**
          * Return a KJob that represents the synchronization.
          */
         virtual SyncJob *syncJob() = 0;
+        
+        /**
+         * Returns a UUID that uniquely identifies the SyncSource. It is guaranteed
+         * to be unique.
+         */
+        QString uuid() const;
         
     public Q_SLOTS:
         /**
@@ -108,15 +116,6 @@ class KDE_EXPORT SyncSource2 : public QObject
          */
         virtual void configChanged();
         
-    protected:
-    
-       /**
-        * This function is called when the user, or any other event, triggers a sync.
-        * This should launch the sync until finished, and should use the signals to notify the UI.
-        */
-//         virtual void doSync() = 0;
-    
-        
     Q_SIGNALS:
         /**
          * This signal is emitted whenever we have a new message state.
@@ -131,6 +130,9 @@ class KDE_EXPORT SyncSource2 : public QObject
         void handleJobResult(KJob *);
         
     private:
+        friend class SyncSourceLoader; // needed to set the UUID -only- from there
+        void setUUID(const QString &uuid);
+        
         class SyncSourcePrivate;
         SyncSourcePrivate * const d;
 };

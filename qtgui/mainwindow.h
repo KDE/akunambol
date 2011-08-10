@@ -45,8 +45,9 @@
 
 #include <spds/SyncReport.h>
 
-#include<client/appsyncsource.h>
+#include <client/appsyncsource.h>
 #include <library/syncsource.h>
+#include <library/syncsourceloader.h>
 
 class Config;
 class Settings;
@@ -97,7 +98,8 @@ private:
 private:
     Settings *m_s;
     SourceManager *m_sourceManager;
-
+    SyncSourceLoader *m_loader;
+    
     QVBoxLayout *m_controlsLayout;
     
     QString m_user;
