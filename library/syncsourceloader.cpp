@@ -105,3 +105,8 @@ void SyncSourceLoader::loadPlugin(const KService::Ptr* &service)
 
 }
 
+void SyncSourceLoader::loadSyncSource(const QString& name)
+{
+
+}
+
