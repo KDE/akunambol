@@ -49,6 +49,12 @@ class KDE_EXPORT SyncSourceLoader : public QObject
         void loadSyncSource(const QString &name);
         
     private:
+        /**
+         * Generates an UUID for a given syncsource given:
+         * - name, as provided by KService
+         * - the list of sync sources already loaded (retrieved by the 
+         * d-pointer)
+         */
         QString generateUUID(const QString &name) const;
         void loadPlugin(const KService::Ptr*& service);
         class Private;

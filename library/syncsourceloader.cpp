@@ -24,42 +24,44 @@
 
 class SyncSourceLoader::Private {
 public:
+    /**
+     * Holds the list of the sync sources loaded until now.
+     */
     QStringList uuidList;
+    
     QHash<QString, QString> pluginsHash;
+    
+    /**
+     * Holds the list of the sync sources written on disk, in the config.
+     */
     QStringList syncSourcesList;
 };
 
-// TODO
 SyncSourceLoader::SyncSourceLoader(QObject* parent)
     : QObject(parent),
       d(new SyncSourceLoader::Private)
 {
     
 }
-// TODO
+
+// TODO: NEED_UNIT_TEST
 QString SyncSourceLoader::generateUUID(const QString& name) const
 {
-    QString uuid = name; // let's mangle this
-    QRegExp regExp("*_\\d+"); // anything followed by an underscore and digits
-    if (!regExp.exactMatch(uuid)) {
-        uuid += "_0";
-    }
+    QString uuid = name; // we can't modify a const...
     
-//     KConfigGroup cfg = KGlobal::config()->group("GlobalSourcesSettings");
-//     QStringList uuidList = cfg.readEntry("uuid-list", QStringList());
+    QStringList sameName = d->uuidList.filter(uuid);
     
-    if (d->uuidList.contains(uuid)) {
-        QStringList tempUUID = uuid.split("_");
+    if (!sameName.isEmpty()) {
+        sameName.sort();
+        QStringList tempUUID = sameName.last().split("_");
         QString lastDigit = tempUUID.takeLast();
         tempUUID.append(QString::number(lastDigit.toInt()+1));
         uuid = tempUUID.join("_");
+    } else {
+        uuid += "_0";
     }
     
-    kDebug() << "New source uuid:" << uuid;
-    d->uuidList.append(uuid);
     return uuid;
-//     cfg.writeEntry("uuid-list", uuidList);
-//     cfg.sync();
 }
 
 // TODO
@@ -85,7 +87,10 @@ void SyncSourceLoader::loadAllSyncSources()
 
             SyncSource2 *plugin = factory->create<SyncSource2>(this);
             if (plugin) {
-                plugin->setUUID(generateUUID(service->name()));
+                QString uuid = generateUUID(service->name());
+                plugin->setUUID(uuid);
+                d->uuidList.append(uuid);
+                
                 kDebug() << "Load plugin:" << plugin->uuid();
                 
                 emit syncSourceLoaded(plugin);
