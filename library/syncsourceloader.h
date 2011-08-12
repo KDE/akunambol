@@ -24,6 +24,13 @@
 
 class SyncSource2;
 
+/**
+ * A class to load sync sources. Uses standard dirs, for now.
+ * 
+ * FIXME: do we want all sync sources to have a single appdata or not?
+ * 
+ */
+
 class KDE_EXPORT SyncSourceLoader : public QObject
 {
     Q_OBJECT

@@ -25,21 +25,22 @@
 class SyncSourceLoader::Private {
 public:
     QStringList uuidList;
-    QHash<QString, int> pluginsHash;
+    QHash<QString, QString> pluginsHash;
     QStringList syncSourcesList;
 };
 
+// TODO
 SyncSourceLoader::SyncSourceLoader(QObject* parent)
     : QObject(parent),
       d(new SyncSourceLoader::Private)
 {
     
 }
-
+// TODO
 QString SyncSourceLoader::generateUUID(const QString& name) const
 {
     QString uuid = name; // let's mangle this
-    QRegExp regExp("*_\\d+"); // anything followed by an underscore and digit
+    QRegExp regExp("*_\\d+"); // anything followed by an underscore and digits
     if (!regExp.exactMatch(uuid)) {
         uuid += "_0";
     }
@@ -61,9 +62,9 @@ QString SyncSourceLoader::generateUUID(const QString& name) const
 //     cfg.sync();
 }
 
+// TODO
 void SyncSourceLoader::loadAllSyncSources()
 {
-    
     KConfigGroup cfg = KGlobal::config()->group("GlobalSourcesSettings");
     d->syncSourcesList = cfg.readEntry("syncSourceList", QStringList());
     
@@ -71,40 +72,30 @@ void SyncSourceLoader::loadAllSyncSources()
     KService::List services = trader->query("Akunambol/SyncSource");
     
     foreach (const KService::Ptr &service, services) {
-        for (int i = 0; i < d->pluginsHash[service->name()]; i++) {
-            QString error;
-
+        
+        int count = d->syncSourcesList.filter(service->name()).size();
+        
+        for (int i = 0; i < count; i++) {
             KPluginFactory *factory = KPluginLoader(service->library()).factory();
 
             if (!factory) {
-                //KMessageBox::error(0, i18n("<html><p>KPluginFactory could not load the plugin:<br/><i>%1</i></p></html>",
-                //                         service->library()));
-                kError(5001) << "KPluginFactory could not load the plugin:" << service->library();
+                kError() << "KPluginFactory could not load the plugin:" << service->library();
                 continue;
             }
 
             SyncSource2 *plugin = factory->create<SyncSource2>(this);
             if (plugin) {
-                plugin->setUUID( QString("%1_%2").arg(service->name(), d->pluginsHash[service->name()]) );
+                plugin->setUUID(generateUUID(service->name()));
                 kDebug() << "Load plugin:" << plugin->uuid();
                 
                 emit syncSourceLoaded(plugin);
-            } else {
-                kDebug() << error;
             }
         }
-//         if (!d->seenPlugins.contains(service->name()))  {
-//             d->pluginCount[service->name()] = 0;
-//         }
-//         for (int i = 0; )
     }
 }
 
-void SyncSourceLoader::loadPlugin(const KService::Ptr* &service)
-{
 
-}
-
+// TODO
 void SyncSourceLoader::loadSyncSource(const QString& name)
 {
 
