@@ -37,7 +37,7 @@ public:
     QStringList syncSourcesList;
     
     /**
-     * List of Akunambol Syncsources
+     * List of Akunambol Syncsources, as KService
      */
     KService::List services;
     
@@ -48,12 +48,22 @@ public:
      * been loaded, returns a uuid.
      * 
      * @note syncSourcesList MUST NOT BE EMPTY
+     * 
+     * This is the inverse function of uniqueUnderscoreDecode.
      */
-    QString underscoreEncode(const QString &name) const;
-    QString underscoreDecode(const QString &uuid) const;
+    QString uniqueUnderscoreEncode(const QString &name) const;
+    
+    /**
+     * Function: uuid --> name that uses a custom encoding called "underscore".
+     * 
+     * Takes an uuid encoded with uniqueUnderscoreEncode and returns its generic name.
+     * 
+     * Inverse function of uniqueUnderscoreEncode.
+     */
+    QString uniqueUnderscoreDecode(const QString &uuid) const;
 };
 
-QString SyncSourceLoader::Private::underscoreEncode ( const QString& name ) const
+QString SyncSourceLoader::Private::uniqueUnderscoreEncode ( const QString& name ) const
 {
     if (syncSourcesList.isEmpty()) {
         kError() << "d->syncSourcesList must be filled before calling underscoreEncode!!!";
@@ -78,7 +88,7 @@ QString SyncSourceLoader::Private::underscoreEncode ( const QString& name ) cons
 
 }
 
-QString SyncSourceLoader::Private::underscoreDecode(const QString& uuid) const
+QString SyncSourceLoader::Private::uniqueUnderscoreDecode(const QString& uuid) const
 {
     QStringList nameList = uuid.split("_");
     nameList.removeLast();
@@ -94,7 +104,27 @@ SyncSourceLoader::SyncSourceLoader(QObject* parent)
 // TODO: NEED_UNIT_TEST
 QString SyncSourceLoader::generateNewUUID(const QString& name) const
 {
-    return d->underscoreEncode(name);
+    return d->uniqueUnderscoreEncode(name);
+}
+
+unsigned int SyncSourceLoader::countIdenticalSources(const QString& uuid) const
+{
+     QStringList result;
+     int counter = 0;
+     QString decodedUUID = d->uniqueUnderscoreDecode(uuid);
+     
+     // Decode all the list
+     foreach (const QString &str, d->syncSourcesList) {
+        result += d->uniqueUnderscoreDecode(str);
+     }
+     
+     foreach (const QString &str, result) {
+         if (str.contains(decodedUUID)) {
+             counter++;
+         }
+     }
+
+     return counter;
 }
 
 // TODO
@@ -107,7 +137,7 @@ void SyncSourceLoader::loadAllSyncSources()
     d->services = trader->query("Akunambol/SyncSource");
     
     foreach (const QString &source, d->syncSourcesList) {
-        loadSyncSource(source);   
+        loadSyncSource(source);
     }
     
 }
@@ -122,7 +152,7 @@ void SyncSourceLoader::loadSyncSource(const QString& name)
             continue;
         }
         
-        int count = d->syncSourcesList.filter(service->name()).size();
+        int count = countIdenticalSources(name);
         
         for (int i = 0; i < count; i++) {
             KPluginFactory *factory = KPluginLoader(service->library()).factory();
