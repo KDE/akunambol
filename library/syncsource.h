@@ -98,7 +98,7 @@ class KDE_EXPORT SyncSource2 : public QObject
          * Returns a UUID that uniquely identifies the SyncSource. It is guaranteed
          * to be unique.
          */
-        QString uuid() const;
+        QString uid() const;
         
     public Q_SLOTS:
         /**
@@ -131,7 +131,7 @@ class KDE_EXPORT SyncSource2 : public QObject
         
     private:
         friend class SyncSourceLoader; // needed to set the UUID -only- from there
-        void setUUID(const QString &uuid);
+        void setUID(const QString &uuid);
         
         class SyncSourcePrivate;
         SyncSourcePrivate * const d;

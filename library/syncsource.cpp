@@ -137,13 +137,13 @@ SyncCredentials* SyncSource2::credentials()
     return d->config;
 }
 
-void SyncSource2::setUUID(const QString& uuid)
+void SyncSource2::setUID(const QString& uuid)
 {
     d->uuid = uuid;
     // FIXME need anything else?
 }
 
-QString SyncSource2::uuid() const
+QString SyncSource2::uid() const
 {
     return d->uuid;
 }

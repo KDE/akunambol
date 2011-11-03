@@ -33,6 +33,8 @@ public:
     
     QHash<QString, QString> pluginsHash;
     
+    QHash<QString, int> biggestInstanceNumber;
+    
     /**
      * Holds the list of the sync sources written on disk, in the config.
      * It is a list of the uids directly, the plugin name is stored in the config.
@@ -107,7 +109,10 @@ SyncSourceLoader::SyncSourceLoader(QObject* parent)
       d(new SyncSourceLoader::Private)
 {
     KConfigGroup cfg = KGlobal::config()->group("GlobalSourcesSettings");
+    
+    // Store the list of sync sources (uid) into the d-pointer, for later usage
     d->syncSources = cfg.readEntry("syncSources", QStringList());
+    d->biggestInstanceNumber = QHash<QString, int>();
 }
 
 // TODO: NEED_UNIT_TEST
@@ -143,54 +148,58 @@ void SyncSourceLoader::loadAllSyncSources()
     d->services = trader->query("Akunambol/SyncSource");
     
     foreach (const QString &uid, d->syncSources) {
-        
         KConfigGroup sourceConfig = Private::configGroupFor(uid);
-        QString name = sourceConfig.readEntry("Plugin name", QString());
-        int instance = sourceConfig.readEntry("Instance ID", -1);
         
-        if (!name.isEmpty()) {
-            loadSyncSource(name, uid, instance);
-        }
+        QString name = sourceConfig.readEntry("Plugin name", QString());
+        int instance = sourceConfig.readEntry("Instance Counter", -1);
+        
+        loadPlugin(name, uid, instance);
     }
-    
-    
-//     foreach (const QString &source, d->syncSourcesList) {
-//         loadSyncSource(source);
-//     }
-//     
 }
 
-
-// TODO
-void SyncSourceLoader::loadSyncSource(const QString& name, const QString &uid, int instance)
+void SyncSourceLoader::loadSyncSource(const QString& name)
 {
-//     foreach (const KService::Ptr &service, d->services) {
-//         
-//         if (service->name() != name) {
-//             continue;
-//         }
-//         
-//         int count = countIdenticalSources(name);
-//         
-//         for (int i = 0; i < count; i++) {
-//             KPluginFactory *factory = KPluginLoader(service->library()).factory();
-// 
-//             if (!factory) {
-//                 kError() << "KPluginFactory could not load the plugin:" << service->library();
-//                 continue;
-//             }
-// 
-//             SyncSource2 *plugin = factory->create<SyncSource2>(this);
-//             if (plugin) {
-//                 QString uuid = generateNewUUID(service->name());
-//                 plugin->setUUID(uuid);
-//                 d->uuidList.append(uuid);
-//                 
-//                 kDebug() << "Load plugin:" << plugin->uuid();
-//                 
-//                 emit syncSourceLoaded(plugin);
-//             }
-//         }
-//     }
+
+}
+
+void SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int instance)
+{
+    if (name.isEmpty() || instance == -1) {
+        kError() << "Invalid plugin:" << uid << "; name =" << name << "instance =" << instance;
+        return;
+    }
+    
+    // It's somewhat inefficient to go through all the plugins all the time, but it allows for safer code,
+    // and we don't expect to find more than a few dozens of plugins at maximum anyways.
+    // You can come back and optimize me at a later time, when you are sure you're not breaking stuff.
+    
+    foreach (const KService::Ptr &service, d->services) {
+        
+        if (service->name() != name) {
+            continue;
+        }
+        
+        KPluginFactory *factory = KPluginLoader(service->library()).factory();
+
+        if (!factory) {
+            kError() << "KPluginFactory could not load the plugin:" << service->library();
+            continue;
+        }
+
+        SyncSource2 *plugin = factory->create<SyncSource2>(this);
+        
+        if (plugin) {
+            plugin->setUID(uid);
+            
+            // NOTE: in case the key is not there yet the value is automatically assigned to 0
+            if (instance > d->biggestInstanceNumber[name]) {
+                d->biggestInstanceNumber[name] = instance;
+            }
+
+            kDebug() << "Loaded plugin:" << plugin->uid();
+            
+            emit syncSourceLoaded(plugin);
+        }
+    }
 }
 
