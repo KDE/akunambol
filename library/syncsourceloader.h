@@ -49,7 +49,7 @@ class KDE_EXPORT SyncSourceLoader : public QObject
         /**
          * Load a new Sync Source with name "name"
          */
-        void loadSyncSource(const QString &name);
+        void loadSyncSource(const QString& name, const QString& uid, int instance);
         
     private:
         /**
@@ -69,7 +69,7 @@ class KDE_EXPORT SyncSourceLoader : public QObject
         unsigned int countIdenticalSources(const QString &uuid) const;
         
         class Private;
-        Private *d;
+        Private * const d;
         
     signals:
         void syncSourceLoaded(SyncSource2 *s);

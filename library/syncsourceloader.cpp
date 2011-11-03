@@ -18,6 +18,8 @@
 #include "syncsourceloader.h"
 #include "syncsource.h"
 
+#include <QMap>
+
 #include <KDebug>
 #include <KService>
 #include <KServiceTypeTrader>
@@ -33,8 +35,9 @@ public:
     
     /**
      * Holds the list of the sync sources written on disk, in the config.
+     * It is a list of the uids directly, the plugin name is stored in the config.
      */
-    QStringList syncSourcesList;
+    QStringList syncSources;
     
     /**
      * List of Akunambol Syncsources, as KService
@@ -61,11 +64,15 @@ public:
      * Inverse function of uniqueUnderscoreEncode.
      */
     QString uniqueUnderscoreDecode(const QString &uuid) const;
+    
+    static KConfigGroup configGroupFor(const QString &uid) {
+        return KGlobal::config()->group("GlobalSourcesSettings").group(uid);
+    }
 };
 
-QString SyncSourceLoader::Private::uniqueUnderscoreEncode ( const QString& name ) const
+QString SyncSourceLoader::Private::uniqueUnderscoreEncode(const QString& name) const
 {
-    if (syncSourcesList.isEmpty()) {
+    if (syncSources.isEmpty()) {
         kError() << "d->syncSourcesList must be filled before calling underscoreEncode!!!";
         return QString();
     }
@@ -98,7 +105,9 @@ QString SyncSourceLoader::Private::uniqueUnderscoreDecode(const QString& uuid) c
 SyncSourceLoader::SyncSourceLoader(QObject* parent)
     : QObject(parent),
       d(new SyncSourceLoader::Private)
-{   
+{
+    KConfigGroup cfg = KGlobal::config()->group("GlobalSourcesSettings");
+    d->syncSources = cfg.readEntry("syncSources", QStringList());
 }
 
 // TODO: NEED_UNIT_TEST
@@ -114,9 +123,9 @@ unsigned int SyncSourceLoader::countIdenticalSources(const QString& uuid) const
      QString decodedUUID = d->uniqueUnderscoreDecode(uuid);
      
      // Decode all the list
-     foreach (const QString &str, d->syncSourcesList) {
-        result += d->uniqueUnderscoreDecode(str);
-     }
+//      foreach (const QString &str, d->syncSourcesList) {
+//         result += d->uniqueUnderscoreDecode(str);
+//      }
      
      foreach (const QString &str, result) {
          if (str.contains(decodedUUID)) {
@@ -130,49 +139,58 @@ unsigned int SyncSourceLoader::countIdenticalSources(const QString& uuid) const
 // TODO
 void SyncSourceLoader::loadAllSyncSources()
 {
-    KConfigGroup cfg = KGlobal::config()->group("GlobalSourcesSettings");
-    d->syncSourcesList = cfg.readEntry("syncSourceList", QStringList());
-    
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
     d->services = trader->query("Akunambol/SyncSource");
     
-    foreach (const QString &source, d->syncSourcesList) {
-        loadSyncSource(source);
+    foreach (const QString &uid, d->syncSources) {
+        
+        KConfigGroup sourceConfig = Private::configGroupFor(uid);
+        QString name = sourceConfig.readEntry("Plugin name", QString());
+        int instance = sourceConfig.readEntry("Instance ID", -1);
+        
+        if (!name.isEmpty()) {
+            loadSyncSource(name, uid, instance);
+        }
     }
     
+    
+//     foreach (const QString &source, d->syncSourcesList) {
+//         loadSyncSource(source);
+//     }
+//     
 }
 
 
 // TODO
-void SyncSourceLoader::loadSyncSource(const QString& name)
+void SyncSourceLoader::loadSyncSource(const QString& name, const QString &uid, int instance)
 {
-    foreach (const KService::Ptr &service, d->services) {
-        
-        if (service->name() != name) {
-            continue;
-        }
-        
-        int count = countIdenticalSources(name);
-        
-        for (int i = 0; i < count; i++) {
-            KPluginFactory *factory = KPluginLoader(service->library()).factory();
-
-            if (!factory) {
-                kError() << "KPluginFactory could not load the plugin:" << service->library();
-                continue;
-            }
-
-            SyncSource2 *plugin = factory->create<SyncSource2>(this);
-            if (plugin) {
-                QString uuid = generateNewUUID(service->name());
-                plugin->setUUID(uuid);
-                d->uuidList.append(uuid);
-                
-                kDebug() << "Load plugin:" << plugin->uuid();
-                
-                emit syncSourceLoaded(plugin);
-            }
-        }
-    }
+//     foreach (const KService::Ptr &service, d->services) {
+//         
+//         if (service->name() != name) {
+//             continue;
+//         }
+//         
+//         int count = countIdenticalSources(name);
+//         
+//         for (int i = 0; i < count; i++) {
+//             KPluginFactory *factory = KPluginLoader(service->library()).factory();
+// 
+//             if (!factory) {
+//                 kError() << "KPluginFactory could not load the plugin:" << service->library();
+//                 continue;
+//             }
+// 
+//             SyncSource2 *plugin = factory->create<SyncSource2>(this);
+//             if (plugin) {
+//                 QString uuid = generateNewUUID(service->name());
+//                 plugin->setUUID(uuid);
+//                 d->uuidList.append(uuid);
+//                 
+//                 kDebug() << "Load plugin:" << plugin->uuid();
+//                 
+//                 emit syncSourceLoaded(plugin);
+//             }
+//         }
+//     }
 }
 
