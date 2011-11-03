@@ -35,21 +35,34 @@ public:
      * Holds the list of the sync sources written on disk, in the config.
      */
     QStringList syncSourcesList;
+    
+    /**
+     * List of Akunambol Syncsources
+     */
+    KService::List services;
+    
+    /**
+     * Function: name --> uuid that uses a custom encoding called "underscore".
+     * 
+     * Takes a generic name of a SyncSource, and basing on what has already
+     * been loaded, returns a uuid.
+     * 
+     * @note syncSourcesList MUST NOT BE EMPTY
+     */
+    QString underscoreEncode(const QString &name) const;
+    QString underscoreDecode(const QString &uuid) const;
 };
 
-SyncSourceLoader::SyncSourceLoader(QObject* parent)
-    : QObject(parent),
-      d(new SyncSourceLoader::Private)
+QString SyncSourceLoader::Private::underscoreEncode ( const QString& name ) const
 {
+    if (syncSourcesList.isEmpty()) {
+        kError() << "d->syncSourcesList must be filled before calling underscoreEncode!!!";
+        return QString();
+    }
     
-}
-
-// TODO: NEED_UNIT_TEST
-QString SyncSourceLoader::generateUUID(const QString& name) const
-{
     QString uuid = name; // we can't modify a const...
     
-    QStringList sameName = d->uuidList.filter(uuid);
+    QStringList sameName = uuidList.filter(uuid);
     
     if (!sameName.isEmpty()) {
         sameName.sort();
@@ -62,6 +75,26 @@ QString SyncSourceLoader::generateUUID(const QString& name) const
     }
     
     return uuid;
+
+}
+
+QString SyncSourceLoader::Private::underscoreDecode(const QString& uuid) const
+{
+    QStringList nameList = uuid.split("_");
+    nameList.removeLast();
+    return nameList.join("_");
+}
+
+SyncSourceLoader::SyncSourceLoader(QObject* parent)
+    : QObject(parent),
+      d(new SyncSourceLoader::Private)
+{   
+}
+
+// TODO: NEED_UNIT_TEST
+QString SyncSourceLoader::generateNewUUID(const QString& name) const
+{
+    return d->underscoreEncode(name);
 }
 
 // TODO
@@ -71,9 +104,23 @@ void SyncSourceLoader::loadAllSyncSources()
     d->syncSourcesList = cfg.readEntry("syncSourceList", QStringList());
     
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
-    KService::List services = trader->query("Akunambol/SyncSource");
+    d->services = trader->query("Akunambol/SyncSource");
     
-    foreach (const KService::Ptr &service, services) {
+    foreach (const QString &source, d->syncSourcesList) {
+        loadSyncSource(source);   
+    }
+    
+}
+
+
+// TODO
+void SyncSourceLoader::loadSyncSource(const QString& name)
+{
+    foreach (const KService::Ptr &service, d->services) {
+        
+        if (service->name() != name) {
+            continue;
+        }
         
         int count = d->syncSourcesList.filter(service->name()).size();
         
@@ -87,7 +134,7 @@ void SyncSourceLoader::loadAllSyncSources()
 
             SyncSource2 *plugin = factory->create<SyncSource2>(this);
             if (plugin) {
-                QString uuid = generateUUID(service->name());
+                QString uuid = generateNewUUID(service->name());
                 plugin->setUUID(uuid);
                 d->uuidList.append(uuid);
                 
@@ -97,12 +144,5 @@ void SyncSourceLoader::loadAllSyncSources()
             }
         }
     }
-}
-
-
-// TODO
-void SyncSourceLoader::loadSyncSource(const QString& name)
-{
-
 }
 
