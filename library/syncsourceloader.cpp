@@ -38,13 +38,6 @@ public:
     }
     
     /**
-     * Holds the list of the sync sources loaded until now.
-     */
-    QStringList uuidList;
-    
-    QHash<QString, QString> pluginsHash;
-    
-    /**
      * Holds a map which contains, for every plugin, what has been the biggest
      * instance number.
      */
@@ -61,6 +54,9 @@ public:
      */
     KService::List services;
     
+    /**
+     * the name of the KConfigGroup used to store global configuration
+     */
     const QString mainConfigGroup;
     
 private:
@@ -98,9 +94,7 @@ void SyncSourceLoader::Private::saveConfig()
 SyncSourceLoader::SyncSourceLoader(QObject* parent)
     : QObject(parent),
       d(new SyncSourceLoader::Private)
-{
-    
-}
+{}
 
 void SyncSourceLoader::loadAllSavedSyncSources()
 {
@@ -168,12 +162,7 @@ bool SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int i
         
         if (plugin) {
             plugin->setUID(uid);
-            
-            // NOTE: in case the key is not there yet the value is automatically assigned to 0
-            if (instanceID > d->biggestInstanceNumberKnown[name]) {
-                d->biggestInstanceNumberKnown[name] = instanceID;
-            }
-
+            // FIXME plugin -> setConfig()
             kDebug() << "Loaded plugin:" << plugin->uid();
             
             emit syncSourceLoaded(plugin);
