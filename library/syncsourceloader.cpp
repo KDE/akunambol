@@ -115,6 +115,26 @@ SyncSourceLoader::SyncSourceLoader(QObject* parent)
     d->biggestInstanceNumber = QHash<QString, int>();
 }
 
+void SyncSourceLoader::loadAllSyncSources()
+{
+    KServiceTypeTrader* trader = KServiceTypeTrader::self();
+    d->services = trader->query("Akunambol/SyncSource");
+    
+    foreach (const QString &uid, d->syncSources) {
+        KConfigGroup sourceConfig = Private::configGroupFor(uid);
+        
+        QString name = sourceConfig.readEntry("Plugin name", QString());
+        int instance = sourceConfig.readEntry("Instance Counter", -1);
+        
+        loadPlugin(name, uid, instance);
+    }
+}
+
+void SyncSourceLoader::loadSyncSource(const QString& name)
+{
+
+}
+
 // TODO: NEED_UNIT_TEST
 QString SyncSourceLoader::generateNewUUID(const QString& name) const
 {
@@ -141,26 +161,7 @@ unsigned int SyncSourceLoader::countIdenticalSources(const QString& uuid) const
      return counter;
 }
 
-// TODO
-void SyncSourceLoader::loadAllSyncSources()
-{
-    KServiceTypeTrader* trader = KServiceTypeTrader::self();
-    d->services = trader->query("Akunambol/SyncSource");
-    
-    foreach (const QString &uid, d->syncSources) {
-        KConfigGroup sourceConfig = Private::configGroupFor(uid);
-        
-        QString name = sourceConfig.readEntry("Plugin name", QString());
-        int instance = sourceConfig.readEntry("Instance Counter", -1);
-        
-        loadPlugin(name, uid, instance);
-    }
-}
 
-void SyncSourceLoader::loadSyncSource(const QString& name)
-{
-
-}
 
 void SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int instance)
 {
