@@ -138,8 +138,8 @@ void SyncSourceLoader::loadAllSyncSources()
 void SyncSourceLoader::loadNewSyncSource(const QString& name)
 {
     int instanceID = d->biggestInstanceNumberKnown[name]+1;
-    
-    loadPlugin(name, instanceID);
+    // TODO
+//     loadPlugin(name, instanceID);
 }
 
 // TODO: NEED_UNIT_TEST
