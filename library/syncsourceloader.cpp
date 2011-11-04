@@ -115,14 +115,13 @@ void SyncSourceLoader::loadAllSavedSyncSources()
 void SyncSourceLoader::loadNewSyncSource(const QString &name)
 {
     int instanceID = d->biggestInstanceNumberKnown[name]+1;
-    QString uid = name+QString::number(instanceID);
+    QString uid = QString("%1_%2").arg(name).arg(QString::number(instanceID));
     
-    // Create new configuration
+    // Create new configuration, set the stuff
     KConfigGroup config = KGlobal::config()->group(d->mainConfigGroup).group(uid);
     config.writeEntry("Plugin name", name);
     config.writeEntry("Instance Counter", instanceID);
     
-    // loadPlugin already increments d->biggestInstanceNumberKnown[name]
     if (loadPlugin(name, uid, instanceID)) {
         d->biggestInstanceNumberKnown[name]++;
     }
