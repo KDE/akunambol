@@ -26,6 +26,17 @@
 
 class SyncSourceLoader::Private {
 public:
+    Private()
+     : mainConfigGroup("AkuLibGlobalSourcesSettings")
+    {
+        loadConfig();
+    }
+    
+    ~Private()
+    {
+        saveConfig();
+    }
+    
     /**
      * Holds the list of the sync sources loaded until now.
      */
@@ -50,73 +61,45 @@ public:
      */
     KService::List services;
     
-    /**
-     * Function: name --> uuid that uses a custom encoding called "underscore".
-     * 
-     * Takes a generic name of a SyncSource, and basing on what has already
-     * been loaded, returns a uuid.
-     * 
-     * @note syncSourcesList MUST NOT BE EMPTY
-     * 
-     * This is the inverse function of uniqueUnderscoreDecode.
-     */
-    QString uniqueUnderscoreEncode(const QString &name) const;
+    const QString mainConfigGroup;
     
-    /**
-     * Function: uuid --> name that uses a custom encoding called "underscore".
-     * 
-     * Takes an uuid encoded with uniqueUnderscoreEncode and returns its generic name.
-     * 
-     * Inverse function of uniqueUnderscoreEncode.
-     */
-    QString uniqueUnderscoreDecode(const QString &uuid) const;
-    
-    static KConfigGroup configGroupFor(const QString &uid) {
-        return KGlobal::config()->group("GlobalSourcesSettings").group(uid);
-    }
+private:
+    void saveConfig();
+    void loadConfig();
 };
 
-QString SyncSourceLoader::Private::uniqueUnderscoreEncode(const QString& name) const
+void SyncSourceLoader::Private::loadConfig()
 {
-    if (syncSources.isEmpty()) {
-        kError() << "d->syncSourcesList must be filled before calling underscoreEncode!!!";
-        return QString();
-    }
+    KConfigGroup cfg = KGlobal::config()->group(mainConfigGroup);
+ 
+    QByteArray ba = cfg.readEntry("biggestInstanceNumberKnownHash", QByteArray());   
+    QDataStream ds(&ba, QIODevice::ReadOnly);
+    ds.setVersion(QDataStream::Qt_4_7);
+    ds >> biggestInstanceNumberKnown;
     
-    QString uuid = name; // we can't modify a const...
-    
-    QStringList sameName = uuidList.filter(uuid);
-    
-    if (!sameName.isEmpty()) {
-        sameName.sort();
-        QStringList tempUUID = sameName.last().split("_");
-        QString lastDigit = tempUUID.takeLast();
-        tempUUID.append(QString::number(lastDigit.toInt()+1));
-        uuid = tempUUID.join("_");
-    } else {
-        uuid += "_0";
-    }
-    
-    return uuid;
-
+    syncSources = cfg.readEntry("syncSources", QStringList());
 }
 
-QString SyncSourceLoader::Private::uniqueUnderscoreDecode(const QString& uuid) const
+void SyncSourceLoader::Private::saveConfig()
 {
-    QStringList nameList = uuid.split("_");
-    nameList.removeLast();
-    return nameList.join("_");
+    KConfigGroup cfg = KGlobal::config()->group(mainConfigGroup);
+    
+    QByteArray ba;
+    QDataStream ds(&ba, QIODevice::WriteOnly);
+    ds.setVersion(QDataStream::Qt_4_7);
+    ds << biggestInstanceNumberKnown;
+    
+    cfg.writeEntry("biggestInstanceNumberKnownHash", ba);
+    cfg.writeEntry("syncSources", syncSources);
+    
+    cfg.sync();
 }
 
 SyncSourceLoader::SyncSourceLoader(QObject* parent)
     : QObject(parent),
       d(new SyncSourceLoader::Private)
 {
-    KConfigGroup cfg = KGlobal::config()->group("GlobalSourcesSettings");
     
-    // Store the list of sync sources (uid) into the d-pointer, for later usage
-    d->syncSources = cfg.readEntry("syncSources", QStringList());
-    d->biggestInstanceNumberKnown = QHash<QString, int>();
 }
 
 void SyncSourceLoader::loadAllSyncSources()
@@ -125,7 +108,7 @@ void SyncSourceLoader::loadAllSyncSources()
     d->services = trader->query("Akunambol/SyncSource");
     
     foreach (const QString &uid, d->syncSources) {
-        KConfigGroup sourceConfig = Private::configGroupFor(uid);
+        KConfigGroup sourceConfig = KGlobal::config()->group(d->mainConfigGroup).group(uid);;
         
         QString name = sourceConfig.readEntry("Plugin name", QString());
         int instance = sourceConfig.readEntry("Instance Counter", -1);
@@ -135,44 +118,27 @@ void SyncSourceLoader::loadAllSyncSources()
 }
 
 // Load a new sync source
-void SyncSourceLoader::loadNewSyncSource(const QString& name)
+void SyncSourceLoader::loadNewSyncSource(const QString &name)
 {
     int instanceID = d->biggestInstanceNumberKnown[name]+1;
-    // TODO
-//     loadPlugin(name, instanceID);
+    QString uid = name+QString::number(instanceID);
+    
+    // Create new configuration
+    KConfigGroup config = KGlobal::config()->group(d->mainConfigGroup).group(uid);
+    config.writeEntry("Plugin name", name);
+    config.writeEntry("Instance Counter", instanceID);
+    
+    // loadPlugin already increments d->biggestInstanceNumberKnown[name]
+    if (loadPlugin(name, uid, instanceID)) {
+        d->biggestInstanceNumberKnown[name]++;
+    }
 }
 
-// TODO: NEED_UNIT_TEST
-QString SyncSourceLoader::generateNewUUID(const QString& name) const
-{
-    return d->uniqueUnderscoreEncode(name);
-}
-
-unsigned int SyncSourceLoader::countIdenticalSources(const QString& uuid) const
-{
-     QStringList result;
-     int counter = 0;
-     QString decodedUUID = d->uniqueUnderscoreDecode(uuid);
-     
-     // Decode all the list
-//      foreach (const QString &str, d->syncSourcesList) {
-//         result += d->uniqueUnderscoreDecode(str);
-//      }
-     
-     foreach (const QString &str, result) {
-         if (str.contains(decodedUUID)) {
-             counter++;
-         }
-     }
-
-     return counter;
-}
-
-void SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int instanceID)
+bool SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int instanceID)
 {
     if (name.isEmpty() || instanceID == -1) {
         kError() << "Invalid plugin:" << uid << "; name =" << name << "instance =" << instanceID;
-        return;
+        return false;
     }
     
     // Populate the list of services in case it is empty.
@@ -211,7 +177,10 @@ void SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int i
             kDebug() << "Loaded plugin:" << plugin->uid();
             
             emit syncSourceLoaded(plugin);
+            return true;
         }
     }
+    
+    return false;
 }
 
