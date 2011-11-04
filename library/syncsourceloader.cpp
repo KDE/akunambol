@@ -32,18 +32,18 @@ public:
     
     /**
      * Holds a map which contains, for every plugin, what has been the biggest
-     * instance number.
+     * instance number ever seen. Saved and loaded from the configuration.
      */
     QHash<QString, int> biggestInstanceNumberKnown;
     
     /**
-     * Holds the list of the sync sources written on disk, in the config.
-     * It is a list of the uids directly, the plugin name is stored in the config.
+     * Holds the list of the sync sources written on disk, in the configuration.
+     * It is a list of the uids directly, the plugin name is stored in a subgroup.
      */
-    QStringList syncSources;
+    QStringList savedSyncSources;
     
     /**
-     * List of Akunambol Syncsources, as KService
+     * List of Akunambol Syncsources, as KService(s)
      */
     KService::List services;
     
@@ -65,7 +65,7 @@ void SyncSourceLoader::Private::loadConfig()
     ds.setVersion(QDataStream::Qt_4_7);
     ds >> biggestInstanceNumberKnown;
     
-    syncSources = cfg.readEntry("syncSources", QStringList());
+    savedSyncSources = cfg.readEntry("syncSources", QStringList());
 }
 
 void SyncSourceLoader::Private::saveConfig()
@@ -78,7 +78,7 @@ void SyncSourceLoader::Private::saveConfig()
     ds << biggestInstanceNumberKnown;
     
     cfg.writeEntry("biggestInstanceNumberKnownHash", ba);
-    cfg.writeEntry("syncSources", syncSources);
+    cfg.writeEntry("syncSources", savedSyncSources);
     
     cfg.sync();
 }
@@ -97,8 +97,8 @@ SyncSourceLoader::~SyncSourceLoader()
 
 void SyncSourceLoader::loadAllSavedSyncSources()
 {   
-    foreach (const QString &uid, d->syncSources) {
-        KConfigGroup sourceConfig = KGlobal::config()->group(d->mainConfigGroup).group(uid);;
+    foreach (const QString &uid, d->savedSyncSources) {
+        KConfigGroup sourceConfig = KGlobal::config()->group(d->mainConfigGroup).group(uid);
         
         QString name = sourceConfig.readEntry("Plugin name", QString());
         int instance = sourceConfig.readEntry("Instance Counter", -1);
@@ -113,13 +113,14 @@ void SyncSourceLoader::loadNewSyncSource(const QString &name)
     int instanceID = d->biggestInstanceNumberKnown[name]+1;
     QString uid = QString("%1_%2").arg(name).arg(QString::number(instanceID));
     
-    // Create new configuration, set the needed data
+    // Create new configuration for the source, set the needed data
     KConfigGroup config = KGlobal::config()->group(d->mainConfigGroup).group(uid);
     config.writeEntry("Plugin name", name);
     config.writeEntry("Instance Counter", instanceID);
     
     if (loadPlugin(name, uid, instanceID)) {
         d->biggestInstanceNumberKnown[name]++;
+        d->savedSyncSources.append(uid);
     }
 }
 
