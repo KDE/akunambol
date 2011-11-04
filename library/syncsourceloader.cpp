@@ -33,7 +33,11 @@ public:
     
     QHash<QString, QString> pluginsHash;
     
-    QHash<QString, int> biggestInstanceNumber;
+    /**
+     * Holds a map which contains, for every plugin, what has been the biggest
+     * instance number.
+     */
+    QHash<QString, int> biggestInstanceNumberKnown;
     
     /**
      * Holds the list of the sync sources written on disk, in the config.
@@ -112,7 +116,7 @@ SyncSourceLoader::SyncSourceLoader(QObject* parent)
     
     // Store the list of sync sources (uid) into the d-pointer, for later usage
     d->syncSources = cfg.readEntry("syncSources", QStringList());
-    d->biggestInstanceNumber = QHash<QString, int>();
+    d->biggestInstanceNumberKnown = QHash<QString, int>();
 }
 
 void SyncSourceLoader::loadAllSyncSources()
@@ -130,9 +134,12 @@ void SyncSourceLoader::loadAllSyncSources()
     }
 }
 
-void SyncSourceLoader::loadSyncSource(const QString& name)
+// Load a new sync source
+void SyncSourceLoader::loadNewSyncSource(const QString& name)
 {
-
+    int instanceID = d->biggestInstanceNumberKnown[name]+1;
+    
+    loadPlugin(name, instanceID);
 }
 
 // TODO: NEED_UNIT_TEST
@@ -161,15 +168,19 @@ unsigned int SyncSourceLoader::countIdenticalSources(const QString& uuid) const
      return counter;
 }
 
-
-
-void SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int instance)
+void SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int instanceID)
 {
-    if (name.isEmpty() || instance == -1) {
-        kError() << "Invalid plugin:" << uid << "; name =" << name << "instance =" << instance;
+    if (name.isEmpty() || instanceID == -1) {
+        kError() << "Invalid plugin:" << uid << "; name =" << name << "instance =" << instanceID;
         return;
     }
     
+    // Populate the list of services in case it is empty.
+    if (d->services.isEmpty()) {
+        KServiceTypeTrader* trader = KServiceTypeTrader::self();
+        d->services = trader->query("Akunambol/SyncSource");
+    }
+        
     // It's somewhat inefficient to go through all the plugins all the time, but it allows for safer code,
     // and we don't expect to find more than a few dozens of plugins at maximum anyways.
     // You can come back and optimize me at a later time, when you are sure you're not breaking stuff.
@@ -193,8 +204,8 @@ void SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int i
             plugin->setUID(uid);
             
             // NOTE: in case the key is not there yet the value is automatically assigned to 0
-            if (instance > d->biggestInstanceNumber[name]) {
-                d->biggestInstanceNumber[name] = instance;
+            if (instanceID > d->biggestInstanceNumberKnown[name]) {
+                d->biggestInstanceNumberKnown[name] = instanceID;
             }
 
             kDebug() << "Loaded plugin:" << plugin->uid();

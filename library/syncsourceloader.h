@@ -49,7 +49,7 @@ class KDE_EXPORT SyncSourceLoader : public QObject
         /**
          * Load a new Sync Source with name "name"
          */
-        void loadSyncSource(const QString& name);
+        void loadNewSyncSource(const QString& name);
         
     private:
         /**
@@ -61,7 +61,18 @@ class KDE_EXPORT SyncSourceLoader : public QObject
         QString generateNewUUID(const QString &name) const;
         
         /**
-         * Load a new Sync Source with name "name"
+         * Load a new Sync Source with name "name".
+         * 
+         * @param name The plugin name (identical to KService::name()) to load
+         * 
+         * @param instanceUID The instance number: a counter which knows how many plugins
+         * of the same kind have ever been loaded. No plugins can share the same instance
+         * number, and numbers of plugins deleted from the config are never taken again.
+         * 
+         * @param uid An unique id, which identifies the plugin. It is used as basename
+         * for stuff like configuration storage. Can be composed of something like
+         * name+"_"+instance
+         * 
          */
         void loadPlugin(const QString& name, const QString& uid, int instance);
         
