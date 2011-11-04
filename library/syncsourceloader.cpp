@@ -107,20 +107,23 @@ void SyncSourceLoader::loadAllSavedSyncSources()
     }
 }
 
-// Loads a new sync source
 void SyncSourceLoader::loadNewSyncSource(const QString &name)
 {
+    // instanceID is always 1 if it's the first time we load a syncsource of that
+    // type (QHash has 0 as default value).
     int instanceID = d->biggestInstanceNumberKnown[name]+1;
     QString uid = QString("%1_%2").arg(name).arg(QString::number(instanceID));
-    
-    // Create new configuration for the source, set the needed data
-    KConfigGroup config = KGlobal::config()->group(d->mainConfigGroup).group(uid);
-    config.writeEntry("Plugin name", name);
-    config.writeEntry("Instance Counter", instanceID);
-    
+        
     if (loadPlugin(name, uid, instanceID)) {
+        // The plugin has been successfully loaded and the correct signals have been emitted.
+        // Let's reflect the fact that we have a new source in internal data structures too.
         d->biggestInstanceNumberKnown[name]++;
         d->savedSyncSources.append(uid);
+        // Create a new configuration group for the source, also write the needed data.
+        KConfigGroup config = KGlobal::config()->group(d->mainConfigGroup).group(uid);
+        config.writeEntry("Plugin name", name);
+        config.writeEntry("Instance Counter", instanceID);
+        config.sync();
     }
 }
 
@@ -158,10 +161,11 @@ bool SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int i
         
         if (plugin) {
             plugin->setUID(uid);
-            // FIXME plugin -> setConfig()
-            kDebug() << "Loaded plugin:" << plugin->uid();
+            // TODO write a plugin->setConfig() or something like that?
             
+            kDebug() << "Loaded plugin:" << plugin->uid();
             emit syncSourceLoaded(plugin);
+            
             return true;
         }
     }
