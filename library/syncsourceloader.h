@@ -44,7 +44,7 @@ class KDE_EXPORT SyncSourceLoader : public QObject
          * This function gets a list of sync sources that are saved in the
          * configuration, accessed through KGlobal::config().
          */
-        void loadAllSyncSources();
+        void loadAllSavedSyncSources();
         
         /**
          * Load a new Sync Source with name "name"

@@ -102,7 +102,7 @@ SyncSourceLoader::SyncSourceLoader(QObject* parent)
     
 }
 
-void SyncSourceLoader::loadAllSyncSources()
+void SyncSourceLoader::loadAllSavedSyncSources()
 {
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
     d->services = trader->query("Akunambol/SyncSource");

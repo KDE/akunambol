@@ -147,7 +147,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     
     m_loader = new SyncSourceLoader(this);
     connect(m_loader, SIGNAL(syncSourceLoaded(SyncSource2*)), SLOT(pluginLoaded(SyncSource2*)));
-    m_loader->loadAllSyncSources();
+    m_loader->loadAllSavedSyncSources();
 }
 
 void MainWindow::pluginLoaded(SyncSource2* s)
