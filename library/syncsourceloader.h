@@ -36,7 +36,7 @@ class KDE_EXPORT SyncSourceLoader : public QObject
     Q_OBJECT
     public:
         SyncSourceLoader(QObject* parent = 0);
-//         virtual ~SyncSourceLoader();
+        virtual ~SyncSourceLoader();
         
         /**
          * Load all the Sync Sources.

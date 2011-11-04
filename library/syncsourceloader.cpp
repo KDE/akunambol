@@ -28,14 +28,7 @@ class SyncSourceLoader::Private {
 public:
     Private()
      : mainConfigGroup("AkuLibGlobalSourcesSettings")
-    {
-        loadConfig();
-    }
-    
-    ~Private()
-    {
-        saveConfig();
-    }
+    {}
     
     /**
      * Holds a map which contains, for every plugin, what has been the biggest
@@ -59,7 +52,6 @@ public:
      */
     const QString mainConfigGroup;
     
-private:
     void saveConfig();
     void loadConfig();
 };
@@ -94,13 +86,17 @@ void SyncSourceLoader::Private::saveConfig()
 SyncSourceLoader::SyncSourceLoader(QObject* parent)
     : QObject(parent),
       d(new SyncSourceLoader::Private)
-{}
+{
+    d->loadConfig();
+}
+
+SyncSourceLoader::~SyncSourceLoader()
+{
+    d->saveConfig();
+}
 
 void SyncSourceLoader::loadAllSavedSyncSources()
-{
-    KServiceTypeTrader* trader = KServiceTypeTrader::self();
-    d->services = trader->query("Akunambol/SyncSource");
-    
+{   
     foreach (const QString &uid, d->syncSources) {
         KConfigGroup sourceConfig = KGlobal::config()->group(d->mainConfigGroup).group(uid);;
         
@@ -111,13 +107,13 @@ void SyncSourceLoader::loadAllSavedSyncSources()
     }
 }
 
-// Load a new sync source
+// Loads a new sync source
 void SyncSourceLoader::loadNewSyncSource(const QString &name)
 {
     int instanceID = d->biggestInstanceNumberKnown[name]+1;
     QString uid = QString("%1_%2").arg(name).arg(QString::number(instanceID));
     
-    // Create new configuration, set the stuff
+    // Create new configuration, set the needed data
     KConfigGroup config = KGlobal::config()->group(d->mainConfigGroup).group(uid);
     config.writeEntry("Plugin name", name);
     config.writeEntry("Instance Counter", instanceID);
