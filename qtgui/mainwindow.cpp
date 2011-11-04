@@ -148,6 +148,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     m_loader = new SyncSourceLoader(this);
     connect(m_loader, SIGNAL(syncSourceLoaded(SyncSource2*)), SLOT(pluginLoaded(SyncSource2*)));
     m_loader->loadAllSavedSyncSources();
+//     m_loader->loadNewSyncSource("akunambol_syncsource_contacts");
 }
 
 void MainWindow::pluginLoaded(SyncSource2* s)

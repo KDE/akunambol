@@ -107,21 +107,21 @@ void SyncSourceLoader::loadAllSavedSyncSources()
     }
 }
 
-void SyncSourceLoader::loadNewSyncSource(const QString &name)
+void SyncSourceLoader::loadNewSyncSource(const QString &library)
 {
     // instanceID is always 1 if it's the first time we load a syncsource of that
     // type (QHash has 0 as default value).
-    int instanceID = d->biggestInstanceNumberKnown[name]+1;
-    QString uid = QString("%1_%2").arg(name).arg(QString::number(instanceID));
+    int instanceID = d->biggestInstanceNumberKnown[library]+1;
+    QString uid = QString("%1_%2").arg(library).arg(QString::number(instanceID));
         
-    if (loadPlugin(name, uid, instanceID)) {
+    if (loadPlugin(library, uid, instanceID)) {
         // The plugin has been successfully loaded and the correct signals have been emitted.
         // Let's reflect the fact that we have a new source in internal data structures too.
-        d->biggestInstanceNumberKnown[name]++;
+        d->biggestInstanceNumberKnown[library]++;
         d->savedSyncSources.append(uid);
         // Create a new configuration group for the source, also write the needed data.
         KConfigGroup config = KGlobal::config()->group(d->mainConfigGroup).group(uid);
-        config.writeEntry("Plugin name", name);
+        config.writeEntry("Plugin name", library);
         config.writeEntry("Instance Counter", instanceID);
         config.sync();
     }
@@ -129,6 +129,8 @@ void SyncSourceLoader::loadNewSyncSource(const QString &name)
 
 bool SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int instanceID)
 {
+    kDebug() << "Trying to load" << name << "plugin. UID =" << uid << "and instance =" << instanceID;
+    
     if (name.isEmpty() || instanceID == -1) {
         kError() << "Invalid plugin:" << uid << "; name =" << name << "instance =" << instanceID;
         return false;
@@ -146,7 +148,9 @@ bool SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int i
     
     foreach (const KService::Ptr &service, d->services) {
         
-        if (service->name() != name) {
+        kDebug() << "Got service" << service->library();
+        
+        if (service->library() != name) {
             continue;
         }
         

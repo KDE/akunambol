@@ -47,9 +47,9 @@ class KDE_EXPORT SyncSourceLoader : public QObject
         void loadAllSavedSyncSources();
         
         /**
-         * Load a new Sync Source with name "name"
+         * Load a new Sync Source with X-KDE-Library=library
          */
-        void loadNewSyncSource(const QString& name);
+        void loadNewSyncSource(const QString& library);
         
     private:
         /**
