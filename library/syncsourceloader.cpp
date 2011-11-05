@@ -144,7 +144,8 @@ bool SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int i
         
     // It's somewhat inefficient to go through all the plugins all the time, but it allows for safer code,
     // and we don't expect to find more than a few dozens of plugins at maximum anyways.
-    // You can come back and optimize me at a later time, when you are sure you're not breaking stuff.
+    // This should be almost instantaneous, but you can come back and optimize me at a later time,
+    // when you are sure you're not breaking stuff.
     
     foreach (const KService::Ptr &service, d->services) {
         
