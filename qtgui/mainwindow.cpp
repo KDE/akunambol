@@ -82,6 +82,8 @@
 #include <kstandardaction.h>
 #include <QTimer>
 
+#include <KPluginSelector>
+
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     : KMainWindow(parent, flags)
 {
@@ -121,6 +123,12 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     
     loadConfig();
     
+    
+    m_selectorDialog = new KDialog(this);
+    m_selector = new KPluginSelector(m_selectorDialog);
+    m_selectorDialog->setMainWidget(m_selector);
+    
+    
     statusBar()->showMessage(tr("Configuration loaded."));
     KMenu *file = new KMenu(i18n("File"));
     file->addAction(KStandardAction::quit(this, SLOT(close()), this));
@@ -130,7 +138,11 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     configureAction->setShortcut(QString("Ctrl+s"));
     connect(configureAction, SIGNAL(triggered()), this, SLOT(launchConfigDialog()));
     
+    KAction *configurePluginsAction = new KAction(KIcon("configure"), i18n("Add a new synchronization"), this);
+    connect(configurePluginsAction, SIGNAL(triggered()), m_selectorDialog, SLOT(show()));
+    
     settings->addAction(configureAction);
+    settings->addAction(configurePluginsAction);
     KMenu *help = helpMenu(i18n("Help"));
     
     menuBar()->addMenu(file);
@@ -147,8 +159,14 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     
     m_loader = new SyncSourceLoader(this);
     connect(m_loader, SIGNAL(syncSourceLoaded(SyncSource2*)), SLOT(pluginLoaded(SyncSource2*)));
-    m_loader->loadAllSavedSyncSources();
+//     m_loader->loadAllSavedSyncSources();
 //     m_loader->loadNewSyncSource("akunambol_syncsource_contacts");
+    
+    
+    m_selector->addPlugins(m_loader->syncSourcesInfo());
+    m_selector->load(); // only loads the STATE of plugins
+    m_selector->save();
+    
 }
 
 void MainWindow::pluginLoaded(SyncSource2* s)
@@ -387,6 +405,7 @@ void MainWindow::launchConfigDialog()
     m_s->setPassword(m_password);
     m_s->setSyncUrl(m_syncUrl);
     m_s->setLogLevel(m_logLevel);
+    
     m_s->exec();
     parseConfigDialog();
 }

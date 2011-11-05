@@ -21,13 +21,14 @@
 #include <QObject>
 #include <kdemacros.h>
 #include <KService>
+#include <KPluginInfo>
 
 class SyncSource2;
 
 /**
  * A class to load sync sources. Uses standard dirs, for now.
  * 
- * FIXME: do we want all sync sources to have a single appdata or not?
+ * FIXME: for now assuming all sync sources to have a single appdata.
  * 
  */
 
@@ -50,6 +51,17 @@ class KDE_EXPORT SyncSourceLoader : public QObject
          * Load a new Sync Source with X-KDE-Library=library
          */
         void loadNewSyncSource(const QString& library);
+        
+        /**
+         * Refresh the list of sync sources from KSyCoCa.
+         */
+        void refreshSyncSourcesList();
+        
+        /**
+         * @returns a list of KPluginInfo about all the syncsources that we
+         * know of, to be used e.g. to feed KPluginSelector.
+         */
+        QList<KPluginInfo> syncSourcesInfo();
         
     private:
         /**

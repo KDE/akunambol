@@ -114,7 +114,7 @@ Qt4_add_resources(akunambol_SRCS ${akunambol_RCCS})
 kde4_add_executable(akunambol ${akunambol_SRCS})
 
 
-target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} akunambolprivate -lkcal)
+target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} akunambolprivate -lkcal)
 
 install(FILES akunambol.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 

@@ -49,6 +49,7 @@
 #include <library/syncsource.h>
 #include <library/syncsourceloader.h>
 
+class KPluginSelector;
 class Config;
 class Settings;
 class SourceManager;
@@ -99,6 +100,9 @@ private:
     Settings *m_s;
     SourceManager *m_sourceManager;
     SyncSourceLoader *m_loader;
+    
+    KPluginSelector *m_selector;
+    KDialog *m_selectorDialog;
     
     QVBoxLayout *m_controlsLayout;
     

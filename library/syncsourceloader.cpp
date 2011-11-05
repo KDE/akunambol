@@ -127,6 +127,27 @@ void SyncSourceLoader::loadNewSyncSource(const QString &library)
     }
 }
 
+void SyncSourceLoader::refreshSyncSourcesList()
+{
+    KServiceTypeTrader* trader = KServiceTypeTrader::self();
+    d->services = trader->query("Akunambol/SyncSource");
+}
+
+QList< KPluginInfo > SyncSourceLoader::syncSourcesInfo()
+{
+    QList<KPluginInfo> list;
+    
+    // Populate the list of services in case it is empty.
+    if (d->services.isEmpty()) {
+        refreshSyncSourcesList();
+    }
+    
+    foreach (const KService::Ptr &service, d->services) {
+        list.append(KPluginInfo(service));
+    }
+    return list;
+}
+
 bool SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int instanceID)
 {
     kDebug() << "Trying to load" << name << "plugin. UID =" << uid << "and instance =" << instanceID;
@@ -138,8 +159,7 @@ bool SyncSourceLoader::loadPlugin(const QString& name, const QString &uid, int i
     
     // Populate the list of services in case it is empty.
     if (d->services.isEmpty()) {
-        KServiceTypeTrader* trader = KServiceTypeTrader::self();
-        d->services = trader->query("Akunambol/SyncSource");
+        refreshSyncSourcesList();
     }
         
     // It's somewhat inefficient to go through all the plugins all the time, but it allows for safer code,
