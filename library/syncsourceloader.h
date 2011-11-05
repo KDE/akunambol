@@ -28,7 +28,8 @@ class SyncSource2;
 /**
  * A class to load sync sources. Uses standard dirs, for now.
  * 
- * FIXME: for now assuming all sync sources to have a single appdata.
+ * @note for now assuming all sync sources will use configuration of
+ * the caller application and be relevant only to it.
  * 
  */
 
