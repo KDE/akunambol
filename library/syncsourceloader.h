@@ -63,6 +63,15 @@ class KDE_EXPORT SyncSourceLoader : public QObject
          */
         QList<KPluginInfo> syncSourcesInfo();
         
+        /**
+         * Removes all references to a syncSource with uid @param uid from the
+         * configuration; The caller must make sure to also delete any no longer
+         * needed data that the source might have created.
+         * 
+         * @note The plugin is NOT unloaded.
+         */
+        void removeSyncSource(const QString &uid);
+        
     private:
         /**
          * Generates an UUID for a given syncsource given:

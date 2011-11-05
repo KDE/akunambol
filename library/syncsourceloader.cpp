@@ -18,11 +18,15 @@
 #include "syncsourceloader.h"
 #include "syncsource.h"
 
-#include <QMap>
+// #include "boost/tuple/tuple.hpp"
+
+#include <QHash>
 
 #include <KDebug>
 #include <KService>
 #include <KServiceTypeTrader>
+
+// typedef tuple<> wa;
 
 class SyncSourceLoader::Private {
 public:
@@ -124,7 +128,17 @@ void SyncSourceLoader::loadNewSyncSource(const QString &library)
         config.writeEntry("Plugin name", library);
         config.writeEntry("Instance Counter", instanceID);
         config.sync();
+        d->saveConfig();
     }
+}
+
+void SyncSourceLoader::removeSyncSource(const QString& uid)
+{
+    d->savedSyncSources.removeAll(uid);
+    KConfigGroup config = KGlobal::config()->group(d->mainConfigGroup);
+    config.deleteGroup(uid);
+    config.sync();
+    d->saveConfig();
 }
 
 void SyncSourceLoader::refreshSyncSourcesList()
