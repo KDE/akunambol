@@ -6,6 +6,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 # Search KDE packages
 find_package(KDE4 REQUIRED)
 
+# include(KDE4Defaults)
+include(KDE4Defaults)
+
 find_package(KdepimLibs)
 macro_log_feature(KdepimLibs_FOUND "KDE PIM Libs" "KDE Libraries for PIM" "http://pim.kde.org/" TRUE "" "Required to build Akunambol")
 
@@ -21,12 +24,6 @@ endif( NOT LIKEBACK_FOUND )
 
 find_package(Funambol)
 macro_log_feature(Funambol_FOUND "LibFunambol" "SyncML client engine" "http://funambol.com" TRUE "" "")
-
-# include(KDE4Defaults)
-
-include(KDE4Defaults)
-include(MacroLibrary)
-include(CheckIncludeFiles)
 
 add_subdirectory(images/icons)
 
