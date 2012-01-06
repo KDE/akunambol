@@ -1,7 +1,7 @@
 project(akunambol)
 
 # Search for Funambol
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
 # Search KDE packages
 find_package(KDE4 REQUIRED)
@@ -23,14 +23,14 @@ if( NOT LIKEBACK_FOUND )
 endif( NOT LIKEBACK_FOUND )
 
 find_package(Funambol)
-macro_log_feature(Funambol_FOUND "LibFunambol" "SyncML client engine" "http://funambol.com" TRUE "" "")
+macro_log_feature(FUNAMBOL_FOUND "LibFunambol" "SyncML client engine" "http://funambol.com" TRUE "" "")
 
 add_subdirectory(images/icons)
 
 set(VERSION "0.2.70")
 configure_file(${CMAKE_SOURCE_DIR}/config.h.cmake  ${CMAKE_CURRENT_BINARY_DIR}/aku-auto-config.h)
 
-add_definitions(-DENABLE_FUNAMBOL_NAMESPACE -DQT_STRICT_ITERATORS)
+add_definitions(${Funambol_DEFINITIONS} -DQT_STRICT_ITERATORS)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 
@@ -89,12 +89,11 @@ set(client_SRCS
 
 set(akunambol_LINK_LIBS
     ${KDE4_KDEUI_LIBS}
-    ${Kdepimlibs_LIBS}
-    ${KDE4_KMIME_LIBS}
-    ${KDE4_AKONADI_KMIME_LIBS}
-    ${KDE4_KABC_LIBS}
-    ${KDE4_KPIMUTILS_LIBS}
-    ${KDE4_AKONADI_LIBS}
+    ${KDEPIMLIBS_KMIME_LIBS}
+    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+    ${KDEPIMLIBS_KABC_LIBS}
+    ${KDEPIMLIBS_KPIMUTILS_LIBS}
+    ${KDEPIMLIBS_AKONADI_LIBS}
     ${LIKEBACK_LIBRARIES}
     microblog
 )
@@ -122,7 +121,14 @@ Qt4_add_resources(akunambol_SRCS ${akunambol_RCCS})
 kde4_add_executable(akunambol ${akunambol_SRCS})
 
 
-target_link_libraries(akunambol ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS} ${Funambol_LIBRARY} ${akunambol_LINK_LIBS} akunambolprivate -lkcal)
+target_link_libraries(akunambol
+                      ${Funambol_LIBRARY}
+                      ${KDE4_KDEUI_LIBS}
+                      ${KDE4_KUTILS_LIBS}
+                      ${KDEPIMLIBS_KCAL_LIBS}
+                      ${akunambol_LINK_LIBS}
+                      akunambolprivate
+                      )
 
 install(FILES akunambol.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 
