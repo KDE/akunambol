@@ -5,8 +5,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # Search KDE packages
 find_package(KDE4 REQUIRED)
-find_package(Akonadi REQUIRED)
-find_package(KdepimLibs REQUIRED)
+
+find_package(KdepimLibs)
+macro_log_feature(KdepimLibs_FOUND "KDE PIM Libs" "KDE Libraries for PIM" "http://pim.kde.org/" TRUE "" "Required to build Akunambol")
+
+# Set Akonadi_MIN_VERSION if needed
+find_package(Akonadi QUIET NO_MODULE)
+macro_log_feature(Akonadi_FOUND "Akonadi server libraries" "Access to PIM storage and services" "http://pim.kde.org/akonadi" TRUE "${Akonadi_MIN_VERSION}" "")
 
 macro_optional_find_package(LikeBack)
 
@@ -14,8 +19,8 @@ if( NOT LIKEBACK_FOUND )
     add_definitions("-DNO_LIKEBACK")
 endif( NOT LIKEBACK_FOUND )
 
-
-find_package(Funambol REQUIRED)
+find_package(Funambol)
+macro_log_feature(Funambol_FOUND "LibFunambol" "SyncML client engine" "http://funambol.com" TRUE "" "")
 
 # include(KDE4Defaults)
 
@@ -130,3 +135,4 @@ install(TARGETS akunambol DESTINATION ${BIN_INSTALL_DIR} )
 
 add_subdirectory(plugins/contacts)
 
+macro_display_feature_log()
