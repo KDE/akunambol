@@ -52,6 +52,7 @@ set(akunambolprivate_SRCS
     library/cachedfunambolbackend.cpp
     library/funambolsyncitem.cpp
     library/funambolsyncjob.cpp
+    library/sourcesdialog.cpp
     library/syncsourceloader.cpp
     library/synccredentials.cpp
     )

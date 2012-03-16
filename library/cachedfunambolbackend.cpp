@@ -75,7 +75,6 @@ CachedFunambolBackend::CachedFunambolBackend(const char* name, Funambol::Abstrac
  : FunambolBackend(name, sc)
 {
     d = new Private(this);
-    
 }
 
 void CachedFunambolBackend::init(const QString &uuid)
