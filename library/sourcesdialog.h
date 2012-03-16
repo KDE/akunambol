@@ -20,11 +20,13 @@
 #ifndef SOURCESDIALOG_H
 #define SOURCESDIALOG_H
 
-#include <kde4/kdialog.h>
+#include <KDialog>
 
-
-class SourcesDialog : public KDialog
+class KDE_EXPORT SourcesDialog : public KDialog
 {
+    explicit SourcesDialog (QWidget* parent = 0, Qt::WFlags flags = 0);
 };
 
 #endif // SOURCESDIALOG_H
+
+// kate: indent-mode cstyle; indent-width 4; replace-tabs on; 

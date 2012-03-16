@@ -19,3 +19,11 @@
 
 #include "sourcesdialog.h"
 
+SourcesDialog::SourcesDialog (QWidget* parent, Qt::WFlags flags)
+    : KDialog (parent, flags)
+{
+
+}
+
+
+// kate: indent-mode cstyle; indent-width 4; replace-tabs on; 
