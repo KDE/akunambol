@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SYNCCONFIG_H
-#define SYNCCONFIG_H
+#ifndef SYNCCREDENTIALS_H
+#define SYNCCREDENTIALS_H
 
 #include <QString>
 #include "akunambol_macros.h"
