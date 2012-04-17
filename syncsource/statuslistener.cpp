@@ -27,7 +27,7 @@ using namespace Funambol;
 void StatusListener::syncBegin(SyncEvent& event)
 {
     Funambol::SyncListener::syncBegin(event);
-    emit newStatus(i18n("Beginning syncronization..."));
+    emit newStatus(i18n("Beginning synchronization..."));
 }
 
 void StatusListener::sendInitialization(SyncEvent& event)
@@ -39,7 +39,7 @@ void StatusListener::sendInitialization(SyncEvent& event)
 void StatusListener::syncEnd(SyncEvent& event)
 {
     Funambol::SyncListener::syncEnd(event);
-    emit newStatus(i18n("Syncronization finished."));
+    emit newStatus(i18n("Synchronization finished."));
 }
 
 void StatusListener::sendFinalization(SyncEvent& event)
@@ -57,7 +57,7 @@ void StatusListener::sendModifications(SyncEvent& event)
 void StatusListener::syncError(SyncEvent& event)
 {
     Funambol::SyncListener::syncError(event);
-    emit error(i18n("Syncronization error. The problem is:\n%1", event.getMessage()));
+    emit error(i18n("Synchronization error. The problem is:\n%1", event.getMessage()));
 }
 
 #include "statuslistener.moc"

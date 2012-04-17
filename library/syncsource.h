@@ -39,7 +39,7 @@ class KDE_EXPORT SyncSource2 : public QObject
         * Status of the synchronization
         */
         enum SyncStatus {
-            NoSync = 1, /** No synchronization is in progess. **/
+            NoSync = 1, /** No synchronization is in progress. **/
             SyncStarted = 2, /** A synchronization has started. **/
             SyncError = 4, /** An error has happened. After this status is set,
                                 it will be changed immediately to NoSync **/

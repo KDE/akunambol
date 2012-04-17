@@ -41,8 +41,8 @@ KCMSync::KCMSync(QWidget *parent, const QVariantList &args) :
 {
 
     KGlobal::locale()->insertCatalog("kcm_sync");
-    setAboutData(new KAboutData("kcm_sync", 0, ki18n("Synchronisation"), "0.1",
-                                ki18n("The KDE Synchronisation System"), KAboutData::License_GPL_V2,
+    setAboutData(new KAboutData("kcm_sync", 0, ki18n("Synchronization"), "0.1",
+                                ki18n("The KDE Synchronization System"), KAboutData::License_GPL_V2,
                                 ki18n("2010 Authors info"),
                                 ki18n("Use this to configure your sync servers."),
                                 "http://is.there.any.web.site"));
