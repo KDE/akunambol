@@ -34,7 +34,7 @@
  * the words "Powered by Funambol".
  */
 
-// #include <QtGui>
+#include "mainwindow.h"
 
 #include <QList>
 #include <QStyle>
@@ -77,7 +77,6 @@
 #include "sourcepushbutton.h"
 #include "aku-auto-config.h"
 #include "settings.h"
-#include "mainwindow.h"
 #include <KAction>
 #include <kstandardaction.h>
 #include <QTimer>
