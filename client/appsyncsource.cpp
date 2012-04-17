@@ -34,15 +34,15 @@
  * the words "Powered by Funambol".
  */
 
+#include <qtgui/sourcepushbutton.h>
+
 #include <QWidget>
-#include <base/Log.h>
 
 #include <base/util/StringBuffer.h>
 #include <base/Log.h>
 
 #include <syncsource/akonadisource.h>
 #include <client/appsyncsource.h>
-#include <qtgui/sourcepushbutton.h>
 
 AppSyncSource::AppSyncSource(const char* n, AkonadiSource* s) : name(n),
                                                                 source(s),

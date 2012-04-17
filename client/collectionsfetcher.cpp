@@ -34,16 +34,16 @@
  * the words "Powered by Funambol".
  */
 
-#include<QList>
-#include<QStringList>
+#include "collectionsfetcher.h"
+
+#include <QList>
+#include <QStringList>
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionFetchJob>
 
 #include <base/Log.h>
 #include <base/util/StringBuffer.h>
-
-#include <client/collectionsfetcher.h>
 
 using namespace Akonadi;
 using namespace Funambol;

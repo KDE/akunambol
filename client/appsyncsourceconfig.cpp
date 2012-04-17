@@ -34,7 +34,10 @@
  * the words "Powered by Funambol".
  */
 
-#include<QWidget>
+
+#include "appsyncsourceconfig.h"
+
+#include <QWidget>
 
 #include <base/util/StringBuffer.h>
 #include <base/Log.h>
@@ -42,7 +45,6 @@
 #include <spdm/DeviceManagementNode.h>
 
 #include <syncsource/akonadisource.h>
-#include <client/appsyncsourceconfig.h>
 
 using namespace Funambol;
 
