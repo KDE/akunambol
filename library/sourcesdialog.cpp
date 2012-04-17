@@ -19,6 +19,10 @@
 
 #include "sourcesdialog.h"
 
+class SourcesDialog::Private {
+    friend class SourcesDialog;
+};
+
 SourcesDialog::SourcesDialog (QWidget* parent, Qt::WFlags flags)
     : KDialog (parent, flags)
 {

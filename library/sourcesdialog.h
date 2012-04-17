@@ -25,6 +25,9 @@
 class KDE_EXPORT SourcesDialog : public KDialog
 {
     explicit SourcesDialog (QWidget* parent = 0, Qt::WFlags flags = 0);
+private:
+    class Private;
+    Private *d;
 };
 
 #endif // SOURCESDIALOG_H
