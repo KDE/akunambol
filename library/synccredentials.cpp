@@ -20,7 +20,6 @@
 
 SyncCredentials::SyncCredentials()
 {
-    m_url = m_password = m_user = QString();
 }
 
 void SyncCredentials::setUsername(const QString& user)
