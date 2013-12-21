@@ -237,7 +237,7 @@ void MainWindow::syncTriggered()
 //     numClientItems = -1;
     
     m_syncDialog = new QProgressDialog(this);
-    m_syncDialog->setLabelText(i18n("Connecting.."));
+    m_syncDialog->setLabelText(i18n("Connecting..."));
     m_syncDialog->setMinimum(0);
     m_syncDialog->setMaximum(0);
     // FIXME TODO: enable the cancel button to interrupt the sync
