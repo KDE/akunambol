@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=Akunambol/SyncSource
 Comment=Akunambol synchronization plugin
 Comment[bs]=Akunambol sinhronizacijski dodatak
+Comment[ca]=Connector de sincronització Akunambol
 Comment[de]=Akunambol-Erweiterung zum Abgleichen
 Comment[es]=Complemento de sincronización Akunambol
 Comment[et]=Akunamboli sünkroonimisplugin
