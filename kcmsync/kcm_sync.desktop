@@ -29,7 +29,6 @@ X-KDE-Keywords[sk]=KCMSync,akonadi,funambol,sync
 X-KDE-Keywords[sv]=IM synkronisering,akonadi,funambol,synkronisering
 X-KDE-Keywords[tr]=KCMSync,akonadi,funambol,eşzamanla
 X-KDE-Keywords[uk]=KCMSync,akonadi,funambol,sync,синхронізація
-X-KDE-Keywords[x-test]=xxKCMSync,akonadi,funambol,syncxx
 
 Name=Akunambol sync
 Name[bs]=Akunambol sync
@@ -50,7 +49,6 @@ Name[sk]=Akunambol sync
 Name[sv]=Akunambol-synkronisering
 Name[tr]=Akunambol eşzamanlama
 Name[uk]=Синхронізація Akunambol
-Name[x-test]=xxAkunambol syncxx
 
 Comment=Configure your sync servers
 Comment[bs]=Konfigurišite Vaše sinhronizacijske servere
@@ -71,4 +69,3 @@ Comment[sk]=Nastaviť vaše synchronizačné servery
 Comment[sv]=Anpassa synkroniseringsservrar
 Comment[tr]=Eşitleme sunucularını yapılandırın
 Comment[uk]=Налаштування ваших серверів синхронізації
-Comment[x-test]=xxConfigure your sync serversxx
