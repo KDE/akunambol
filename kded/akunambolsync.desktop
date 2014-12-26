@@ -18,6 +18,7 @@ Name[sk]=Synchronizačný démon Akunambol
 Name[sv]=Akunambol-synkroniseringsdemon
 Name[tr]=Akunambol Eşzamanlama Yardımcısı
 Name[uk]=Фонова служба синхронізації Akunambol
+Name[x-test]=xxAkunambol Sync Daemonxx
 Type=Service
 X-KDE-ServiceTypes=KDEDModule
 X-KDE-ModuleType=Library

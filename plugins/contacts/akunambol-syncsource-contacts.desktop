@@ -22,6 +22,7 @@ Name[sv]=Kontakter
 Name[tr]=Kişiler
 Name[ug]=ئالاقەداشلار
 Name[uk]=Контакти
+Name[x-test]=xxContactsxx
 Comment=Contacts Synchronization
 Comment[bs]=Kontaktira sinhronizaciju
 Comment[ca]=Sincronització dels contactes
@@ -42,6 +43,7 @@ Comment[sk]=Synchronizácia kontaktov
 Comment[sv]=Kontaktsynkronisering
 Comment[tr]=Kişi Eşzamanlaması
 Comment[uk]=Синхронізація записів контактів
+Comment[x-test]=xxContacts Synchronizationxx
 Type=Service
 X-KDE-ServiceTypes=Akunambol/SyncSource
 
