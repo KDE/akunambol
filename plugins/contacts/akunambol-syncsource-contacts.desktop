@@ -2,6 +2,7 @@
 Name=Contacts
 Name[bs]=Kontakti
 Name[ca]=Contactes
+Name[ca@valencia]=Contactes
 Name[cs]=Kontakty
 Name[de]=Kontakte
 Name[es]=Contactos
@@ -28,6 +29,7 @@ Name[x-test]=xxContactsxx
 Comment=Contacts Synchronization
 Comment[bs]=Kontaktira sinhronizaciju
 Comment[ca]=Sincronització dels contactes
+Comment[ca@valencia]=Sincronització dels contactes
 Comment[cs]=Synchronizace kontaktů
 Comment[de]=Kontakte abgleichen
 Comment[es]=Sincronización de contactos
